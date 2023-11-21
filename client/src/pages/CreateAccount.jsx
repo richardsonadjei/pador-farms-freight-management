@@ -23,17 +23,24 @@ const CreateAccount = () => {
     category: 'all',
   });
 
+    // Loading and success states
+    const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState(false);
+
   // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Handle form submission
-  const handleSubmit = async (e) => {
+   // Handle form submission
+   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      // Set loading to true to show "Creating Account" on the button
+      setLoading(true);
+
       // Send the form data to the server using fetch
       const response = await fetch('/api/auth/register', {
         method: 'POST',
@@ -45,8 +52,11 @@ const CreateAccount = () => {
 
       // Check if the request was successful (status code 2xx)
       if (response.ok) {
-        console.log('Form submitted successfully');
-        // Optionally, you can reset the form or navigate to another page upon successful submission
+        // Set success to true to show success message
+        setSuccess(true);
+
+        // Redirect to /sign-in
+        window.location.href = '/sign-in';
       } else {
         // If the request was not successful, log the error
         console.error('Form submission failed:', response.statusText);
@@ -56,6 +66,9 @@ const CreateAccount = () => {
       // Handle any network or other errors that might occur during the fetch
       console.error('Error during form submission:', error);
       // Handle the error as needed (show an error message, etc.)
+    } finally {
+      // Set loading back to false regardless of success or failure
+      setLoading(false);
     }
   };
 
@@ -66,6 +79,13 @@ const CreateAccount = () => {
           <h2 className="text-white font-weight-bold mb-4 ">Create Account</h2>
         </Col>
       </Row>
+      {success && (
+          <Row>
+            <Col sm={12} className="mt-3">
+              <p className="text-success">Account created successfully! Redirecting to sign-in...</p>
+            </Col>
+          </Row>
+        )}
       <Form onSubmit={handleSubmit}>
         <Row>
           <Col md={6}>
@@ -184,7 +204,9 @@ const CreateAccount = () => {
         </Row>
         <FormGroup row>
           <Col sm={{ offset: 4, size: 8 }}>
-            <Button type="submit" color="primary">Submit</Button>
+            <Button type="submit" color="primary" disabled={loading}>
+              {loading ? 'Creating Account...' : 'Submit'}
+            </Button>
           </Col>
         </FormGroup>
       </Form>
