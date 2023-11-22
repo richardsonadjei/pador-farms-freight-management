@@ -101,3 +101,11 @@ export const signin = async (req, res, next) => {
     next(error);
   }
 };
+
+export const signout = (req, res) => {
+  // Clear the token cookie to sign the user out
+  res.clearCookie('access_token');
+
+  // Return a success response
+  return res.status(200).json({ success: true, message: 'User signed out successfully' });
+};
