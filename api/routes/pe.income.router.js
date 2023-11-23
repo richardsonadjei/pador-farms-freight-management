@@ -5,7 +5,7 @@ import {
   getIncomeHaulingById,
   updateIncomeHauling,
   deleteIncomeHauling,
-} from '../controllers/income.controller.js';
+} from '../controllers/pe.income.controller.js';
 
 const incomeRouter = express.Router();
 

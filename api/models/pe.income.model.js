@@ -10,6 +10,9 @@ const incomeHaulingSchema = new mongoose.Schema(
     category: {
         type: String,
       },
+      peNumber: {
+        type: String, // Change to String type
+      },
 truckRegistrationNumber: {
     type: String,
       required: true,

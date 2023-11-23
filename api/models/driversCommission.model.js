@@ -11,16 +11,22 @@ const driverCommissionSchema = new Schema(
     },
     peNumber: {
         type: String,
-        required: true,
     },
+    tripNumber: {
+      type: String, // Change to String type
+    },
+    
     driverName: {
+      type: String,
+      required: true,
+    },
+    category: {
       type: String,
       required: true,
     },
     commissionAmountPerBag: {
         type: Number,
         default: 1, // Set default value to 1
-        required: true,
       },
     totalCommissionAmount: {
         type: Number,

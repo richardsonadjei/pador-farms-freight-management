@@ -39,6 +39,17 @@ const BusinessSettings = () => {
             </div>
           </div>
         </div>
+        <div className="col-md-4 mb-4">
+          <div className="card">
+            <div className="card-body">
+              <h5 className="card-title">Create Expense Category</h5>
+              <p className="card-text">Create Expense Categeory</p>
+              <Link to="/expense-category" className="btn btn-primary">
+              Create
+              </Link>
+            </div>
+          </div>
+        </div>
         {/* Add more cards with buttons for other business settings features */}
       </div>
     </div>

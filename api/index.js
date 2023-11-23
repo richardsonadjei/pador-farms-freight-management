@@ -6,7 +6,13 @@ import vehicleRouter from './routes/vehicle.router.js';
 import driverRouter from './routes/driver.router.js';
 import incomeCategoryRouter from './routes/incomeCategory.router.js';
 import peRouter from './routes/pe.router.js';
-import incomeRouter from './routes/income.router.js';
+import incomeRouter from './routes/pe.income.router.js';
+import expenseCategoryRouter from './routes/expenditureCategory.router.js';
+import otRouter from './routes/ot.router.js';
+import peExpenseRouter from './routes/pe.expenditure.router.js';
+import otExpenseRouter from './routes/ot.expenditure.router.js';
+import generalExpenseRouter from './routes/generalExpenditure.router.js';
+import reportsRouter from './routes/reports.router.js';
 dotenv.config()
 const app = express();
 
@@ -31,6 +37,12 @@ app.use('/api/', driverRouter);
 app.use('/api/', incomeCategoryRouter);
 app.use('/api/', peRouter);
 app.use('/api', incomeRouter);
+app.use('/api', expenseCategoryRouter);
+app.use('/api', otRouter);
+app.use('/api', peExpenseRouter);
+app.use('/api', otExpenseRouter);
+app.use('/api', generalExpenseRouter);
+app.use('/api', reportsRouter);
 
 
 app.use((err, req, res, next) => {

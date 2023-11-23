@@ -1,4 +1,4 @@
-import IncomeHauling from '../models/income.model.js';
+import IncomeHauling from '../models/pe.income.model.js';
 
 const createIncomeHauling = async (req, res) => {
     try {

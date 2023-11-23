@@ -11,7 +11,7 @@ export default function Header() {
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary sticky-top">
       <div className="container-fluid">
-        <Link className="navbar-brand" to="/">
+        <Link className="navbar-brand" to="/dashboard">
           <span style={{ color: '#ff0000', fontWeight: 'bold' }}>Pador</span>{' '}
           <span style={{ color: '#00ff00', fontWeight: 'bold' }}>Farms</span>{' '}
           <span style={{ color: '#0000ff', fontWeight: 'bold' }}>Freight</span>{' '}
@@ -50,12 +50,12 @@ export default function Header() {
                 </Link>
                 <ul className="dropdown-menu">
                   <li>
-                    <Link className="dropdown-item" to="#">
+                    <Link className="dropdown-item" to="/pe">
                       Primary Evacuations
                     </Link>
                   </li>
                   <li>
-                    <Link className="dropdown-item" to="#">
+                    <Link className="dropdown-item" to="other-trips">
                       Other Trips
                     </Link>
                   </li>
@@ -85,7 +85,7 @@ export default function Header() {
                   </li>
                   
                   <li>
-                    <Link className="dropdown-item" to="#">
+                    <Link className="dropdown-item" to="business-settings">
                       Business Settings
                     </Link>
                   </li>
@@ -96,7 +96,7 @@ export default function Header() {
                   
                   {isAdmin && (
                     <li>
-                      <Link className="dropdown-item" to="/create-project">
+                      <Link className="dropdown-item" to="/reports">
                         Reports
                       </Link>
                     </li>

@@ -10,7 +10,7 @@ const Dashboard = () => {
     <div className="container-fluid">
       <div className="row">
         <div className="col-md-3 bg-dark text-light">
-          <h2 className="mt-3 mb-4">My Dashboard</h2>
+          <h2 className="mt-3 mb-4">Business Dashboard</h2>
           <ul className="nav flex-column">
             <li className="nav-item">
               <Link to="/pe" className="nav-link text-light">
@@ -18,22 +18,10 @@ const Dashboard = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/business-trips" className="nav-link text-light">
+              <Link to="/other-trips" className="nav-link text-light">
                 Other Trips
               </Link>
             </li>
-            
-            <li className="nav-item">
-              <Link to="/income" className="nav-link text-light">
-                Income
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/expenditure" className="nav-link text-light">
-                Expenditure
-              </Link>
-            </li>
-            
             <li className="nav-item">
               <Link to="/fleet-management" className="nav-link text-light">
                 Fleet Management
@@ -58,22 +46,20 @@ const Dashboard = () => {
             <div className="row">
               <div className="col-md-4">
                 <div className="card mb-4" id="primary-evacuation">
-                  <div className="card-body">
+                  <div className="card-body text-center">
                     <h3 className="card-title">Primary Evacuation</h3>
-                    <p className="card-text">Some description about primary evacuation.</p>
                     <Link to="/evacuation-subsection">
-                      <button className="btn btn-primary">Go to Evacuation Subsection</button>
+                      <button className="btn btn-primary">Record Evacuation</button>
                     </Link>
                   </div>
                 </div>
               </div>
               <div className="col-md-4">
-                <div className="card mb-4" id="business-trips">
-                  <div className="card-body">
+                <div className="card mb-4" id="other-trips">
+                  <div className="card-body text-center">
                     <h3 className="card-title">Other Trips</h3>
-                    <p className="card-text">Some description about business trips.</p>
-                    <Link to="/trips-subsection">
-                      <button className="btn btn-primary">Go to Trips Subsection</button>
+                    <Link to="/other-trips">
+                      <button className="btn btn-primary">Record Other Trips</button>
                     </Link>
                   </div>
                 </div>
@@ -81,11 +67,10 @@ const Dashboard = () => {
               {isAdmin && (
                 <div className="col-md-4">
                   <div className="card mb-4" id="reports">
-                    <div className="card-body">
+                    <div className="card-body text-center">
                       <h3 className="card-title">Reports</h3>
-                      <p className="card-text">Some description about reports.</p>
-                      <Link to="/reports-subsection">
-                        <button className="btn btn-primary">Go to Reports Subsection</button>
+                      <Link to="/reports">
+                        <button className="btn btn-primary">Reports</button>
                       </Link>
                     </div>
                   </div>
@@ -95,46 +80,27 @@ const Dashboard = () => {
             {/* Additional Dashboard Items */}
             <div className="row">
               <div className="col-md-4">
-                <div className="card mb-4" id="income">
-                  <div className="card-body">
-                    <h3 className="card-title">Income</h3>
-                    <p className="card-text">Some description about income.</p>
-                    <Link to="/income-subsection">
-                      <button className="btn btn-primary">Go to Income Subsection</button>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-4">
-                <div className="card mb-4" id="expenditure">
-                  <div className="card-body">
-                    <h3 className="card-title">Expenditure</h3>
-                    <p className="card-text">Some description about expenditure.</p>
-                    <Link to="/expenditure-subsection">
-                      <button className="btn btn-primary">Go to Expenditure Subsection</button>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-             
-              <div className="col-md-4">
                 <div className="card mb-4" id="fleet-management">
-                  <div className="card-body">
+                  <div className="card-body text-center">
                     <h3 className="card-title">Fleet Management</h3>
-                    <p className="card-text">Some description about fleet management.</p>
-                    <Link to="/fleet-management-subsection">
-                      <button className="btn btn-primary">Go to Fleet Management Subsection</button>
+                    <Link to="/renew-insurance">
+                      <button className="btn btn-primary mb-2">Renew Insurance</button>
+                    </Link>
+                    <Link to="/renew-roadworthy">
+                      <button className="btn btn-primary mb-2">Renew RoadWorthy</button>
+                    </Link>
+                    <Link to="/view-renewals">
+                      <button className="btn btn-primary">View All Renewals</button>
                     </Link>
                   </div>
                 </div>
               </div>
               <div className="col-md-4">
                 <div className="card mb-4" id="business-settings">
-                  <div className="card-body">
+                  <div className="card-body text-center">
                     <h3 className="card-title">Business Settings</h3>
-                    <p className="card-text">Some description about business settings.</p>
-                    <Link to="/business-settings-subsection">
-                      <button className="btn btn-primary">Go to Business Settings Subsection</button>
+                    <Link to="/business-settings">
+                      <button className="btn btn-primary">Click</button>
                     </Link>
                   </div>
                 </div>

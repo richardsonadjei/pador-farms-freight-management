@@ -1,5 +1,5 @@
 import CocoaHaulage from '../models/pe.model.js';
-import IncomeHauling from '../models/income.model.js';
+import IncomeHauling from '../models/pe.income.model.js';
 import DriverCommission from '../models/driversCommission.model.js'; // Import the DriverCommission model
 
 const createCocoaHaulage = async (req, res) => {
@@ -52,14 +52,15 @@ const createCocoaHaulage = async (req, res) => {
       totalTaxAmount,
       netTotalAmountPerbag,
       netTotalAmount,
-      description: description || defaultDescription, // Use provided description or default
+      description: description || defaultDescription,
+      peNumber: cocoaHaulage.peNumber, 
       recordedBy,
     });
 
     // Save new IncomeHauling instance
     await incomeHauling.save();
 
-    // Create new DriverCommission instance
+    // Create new DriverCommission instance with default category
     const commissionAmountPerBag = 1; // Set commissionAmountPerBag to 1
     const totalCommissionAmount = commissionAmountPerBag * quantity;
 
@@ -71,6 +72,7 @@ const createCocoaHaulage = async (req, res) => {
       description: `Commission from hauling ${quantity} bags of cocoa.`,
       recordedBy,
       peNumber: cocoaHaulage.peNumber, // Use peNumber from CocoaHaulage
+      category: 'Primary Evacuations', // Set default category
     });
 
     // Save new DriverCommission instance
@@ -84,3 +86,45 @@ const createCocoaHaulage = async (req, res) => {
 };
 
 export { createCocoaHaulage };
+
+
+
+const viewAllPEs = async (req, res) => {
+  try {
+    // Retrieve all CocoaHaulage records
+    const allPEs = await CocoaHaulage.find();
+
+    res.status(200).json(allPEs);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+export { viewAllPEs };
+
+const viewPEsByDateRange = async (req, res) => {
+  try {
+    // Destructure startDate and endDate from the request body
+    const { startDate, endDate } = req.body;
+
+    // Parse startDate and endDate strings into Date objects in UTC format
+    const parsedStartDate = new Date(startDate + 'T00:00:00Z'); // Assuming startDate is in YYYY-MM-DD format
+    const parsedEndDate = new Date(endDate + 'T23:59:59.999Z'); // Assuming endDate is in YYYY-MM-DD format
+
+    // Retrieve all CocoaHaulage records within the specified date range
+    const PEsWithinDateRange = await CocoaHaulage.find({
+      date: {
+        $gte: parsedStartDate,
+        $lte: parsedEndDate,
+      },
+    });
+
+    res.status(200).json(PEsWithinDateRange);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+export { viewPEsByDateRange };
