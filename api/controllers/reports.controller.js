@@ -1,5 +1,6 @@
 import OtherTripIncome from '../models/ot.income.model.js';
 import IncomeHauling from '../models/pe.income.model.js';
+import PEExpenditure from '../models/pe.expenditure.model.js';
 
 const getIncomeReport = async (req, res) => {
   try {
@@ -77,4 +78,30 @@ const getAllOtherTripIncome = async (req, res) => {
 };
 
 export { getAllOtherTripIncome };
+
+
+
+
+const viewFuelPEExpenditures = async (req, res) => {
+  try {
+    const { startDate, endDate } = req.query;
+
+    // Parse startDate and endDate strings into Date objects in UTC format
+    const parsedStartDate = new Date(startDate + 'T00:00:00Z'); // Assuming startDate is in YYYY-MM-DD format
+    const parsedEndDate = new Date(endDate + 'T23:59:59.999Z'); // Assuming endDate is in YYYY-MM-DD format
+
+    // Query the database for Fuel expenditures within the specified period
+    const fuelExpenditures = await PEExpenditure.find({
+      category: 'Fuel',
+      date: { $gte: parsedStartDate, $lte: parsedEndDate },
+    });
+
+    res.status(200).json(fuelExpenditures);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+export { viewFuelPEExpenditures };
 

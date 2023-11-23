@@ -26,6 +26,9 @@ import OTReport from './pages/OTReport';
 import AllIncomeReport from './pages/AllincomeReport';
 import PEIncomeReport from './pages/PEincomeReport';
 import OTincomeReport from './pages/OTincomeReport';
+import Expenditure from './pages/Expenditure';
+import ExpenditureReports from './pages/ExpenditureReports';
+import FuelPEReport from './pages/FuelPEReport';
 
 export default function App() {
   return (
@@ -56,6 +59,11 @@ export default function App() {
         <Route path='/ot-reports' element={<OTReport/>} />
         <Route path='/all-income-reports' element={<AllIncomeReport/>} />
         <Route path='/ot-income-reports' element={<OTincomeReport/>} />
+        <Route path='/pe-income-reports' element={<PEIncomeReport/>} />
+        <Route path='/expenditure' element={<Expenditure/>} />
+        <Route path='/expenditure-reports' element={<ExpenditureReports/>} />
+        <Route path='/pe-fuel-reports' element={<FuelPEReport/>} />
+        
        
         
         </Route>

@@ -22,6 +22,18 @@ const Dashboard = () => {
                 Other Trips
               </Link>
             </li>
+            
+            <li className="nav-item">
+              <Link to="/income" className="nav-link text-light">
+                Income
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/expenditure" className="nav-link text-light">
+                Expenditure
+              </Link>
+            </li>
+            
             <li className="nav-item">
               <Link to="/fleet-management" className="nav-link text-light">
                 Fleet Management
@@ -46,8 +58,9 @@ const Dashboard = () => {
             <div className="row">
               <div className="col-md-4">
                 <div className="card mb-4" id="primary-evacuation">
-                  <div className="card-body text-center">
+                  <div className="card-body">
                     <h3 className="card-title">Primary Evacuation</h3>
+                    <p className="card-text">Some description about primary evacuation.</p>
                     <Link to="/evacuation-subsection">
                       <button className="btn btn-primary">Record Evacuation</button>
                     </Link>
@@ -56,8 +69,9 @@ const Dashboard = () => {
               </div>
               <div className="col-md-4">
                 <div className="card mb-4" id="other-trips">
-                  <div className="card-body text-center">
+                  <div className="card-body">
                     <h3 className="card-title">Other Trips</h3>
+                    <p className="card-text">Some description about business trips.</p>
                     <Link to="/other-trips">
                       <button className="btn btn-primary">Record Other Trips</button>
                     </Link>
@@ -67,8 +81,9 @@ const Dashboard = () => {
               {isAdmin && (
                 <div className="col-md-4">
                   <div className="card mb-4" id="reports">
-                    <div className="card-body text-center">
+                    <div className="card-body">
                       <h3 className="card-title">Reports</h3>
+                      <p className="card-text">Some description about reports.</p>
                       <Link to="/reports">
                         <button className="btn btn-primary">Reports</button>
                       </Link>
@@ -80,27 +95,79 @@ const Dashboard = () => {
             {/* Additional Dashboard Items */}
             <div className="row">
               <div className="col-md-4">
-                <div className="card mb-4" id="fleet-management">
-                  <div className="card-body text-center">
-                    <h3 className="card-title">Fleet Management</h3>
-                    <Link to="/renew-insurance">
-                      <button className="btn btn-primary mb-2">Renew Insurance</button>
-                    </Link>
-                    <Link to="/renew-roadworthy">
-                      <button className="btn btn-primary mb-2">Renew RoadWorthy</button>
-                    </Link>
-                    <Link to="/view-renewals">
-                      <button className="btn btn-primary">View All Renewals</button>
+                <div className="card mb-4" id="pe-income">
+                  <div className="card-body">
+                    <h3 className="card-title">PE Income</h3>
+                    <p className="card-text">View PE Incomes</p>
+                    <Link to="/pe-income-reports">
+                      <button className="btn btn-primary">View PE incomes</button>
                     </Link>
                   </div>
                 </div>
               </div>
               <div className="col-md-4">
+                <div className="card mb-4" id="ot-income">
+                  <div className="card-body">
+                    <h3 className="card-title">Other Trips Income</h3>
+                    <p className="card-text">View Other Trips Income </p>
+                    <Link to="/ot-income-reports">
+                      <button className="btn btn-primary">View Other Trips Income</button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="col-md-4">
+                <div className="card mb-4" id="expenditure">
+                  <div className="card-body">
+                    <h3 className="card-title">Expenditure</h3>
+                    <p className="card-text">Some description about expenditure.</p>
+                    <Link to="/pe-expense">
+                      <button className="btn btn-primary mb-2"> Record PE Expenditure</button>
+                    </Link>
+                    <Link to="/ot-expense">
+                      <button className="btn btn-primary mb-2"> Record OT Expenditure</button>
+                    </Link>
+                    <Link to="/general-expense">
+                      <button className="btn btn-primary mb-2"> Record General Expense</button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+             
+              
+<div className="col-md-4">
+  <div className="card mb-4" id="fleet-management">
+    <div className="card-body">
+      <h3 className="card-title">Fleet Management</h3>
+      
+      <br />
+      <Link to="/renew-insurance">
+        <button className="btn btn-primary mb-2">Renew-Insurance</button>
+      </Link>
+      <br />
+      <Link to="/renew-roadworthy">
+        <button className="btn btn-primary mb-2">Renew-RoadWorthy</button>
+      </Link>
+      <br />
+      <Link to="/view-renewals">
+        <button className="btn btn-primary">View All Renewals</button>
+      </Link>
+    </div>
+  </div>
+</div>
+
+
+              <div className="col-md-4">
                 <div className="card mb-4" id="business-settings">
-                  <div className="card-body text-center">
+                  <div className="card-body">
                     <h3 className="card-title">Business Settings</h3>
-                    <Link to="/business-settings">
-                      <button className="btn btn-primary">Click</button>
+                    <p className="card-text">Some description about business settings.</p>
+                    <Link to="/income-category">
+                      <button className="btn btn-primary mb-2">Income Category</button>
+                    </Link>
+                    <Link to="/expense-category">
+                      <button className="btn btn-primary mb-2">Expense Category </button>
                     </Link>
                   </div>
                 </div>
@@ -114,3 +181,5 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+

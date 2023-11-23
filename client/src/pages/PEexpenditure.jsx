@@ -98,17 +98,17 @@ const RecordPEexpenditure = () => {
             </FormGroup>
           </Col>
           <Col md={6}>
-            <FormGroup>
-              <Label className="text-white">Category</Label>
-              <Input type="select" name="category" onChange={handleChange} required>
-                <option value="">Select Category</option>
-                {categories.map((category) => (
-                  <option key={category._id} value={category._id}>
-                    {category.name}
-                  </option>
-                ))}
-              </Input>
-            </FormGroup>
+          <FormGroup>
+    <Label className="text-white">Category</Label>
+    <Input type="select" name="category" onChange={handleChange} required>
+      <option value="">Select Category</option>
+      {categories.map((category) => (
+        <option key={category._id} value={category.name}>
+          {category.name}
+        </option>
+      ))}
+    </Input>
+  </FormGroup>
           </Col>
         </Row>
         <Row>
