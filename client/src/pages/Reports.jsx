@@ -23,12 +23,12 @@ const Reports = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/all-income-reports" className="nav-link text-light">
+              <Link to="/all-income-dashboard" className="nav-link text-light">
                 Income Reports
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/all-expense-reports" className="nav-link text-light">
+              <Link to="/all-expenditure-dashboard" className="nav-link text-light">
                 Expenditure Reports
               </Link>
             </li>
