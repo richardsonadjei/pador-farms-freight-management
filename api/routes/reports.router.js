@@ -1,5 +1,5 @@
 import express from 'express';
-import updateExpenditureStatus, { calculateAllOtherTripsProfitLoss, calculateAllProfitLoss, calculateOtherTripsProfitLoss, calculateProfitLoss, getAllExpendituresByDateRange, getAllOtherTripExpendituresByDateRange, getAllOtherTripIncome,  getIncomeReport,    viewFuelPEExpenditures, viewPEincomeByDateRange, viewRepairsAndMaintenanceExpenditures } from '../controllers/reports.controller.js';
+import updateExpenditureStatus, { calculateAllOtherTripsProfitLoss, calculateAllProfitLoss, calculateOtherTripsProfitLoss, calculateProfitLoss, getAllExpendituresByDateRange, getAllOtherTripExpendituresByDateRange, getAllOtherTripIncome,  getIncomeReport,    viewFuelPEExpenditures, viewPEincomeByDateRange, viewPaidGeneralExpendituresByDateRange, viewRepairsAndMaintenanceExpenditures } from '../controllers/reports.controller.js';
 
 const reportsRouter = express.Router();
 
@@ -16,6 +16,7 @@ reportsRouter.get('/pe-income-expenditure', calculateProfitLoss );
 reportsRouter.get('/all-pe-income-expenditure', calculateAllProfitLoss );
 reportsRouter.get('/ot-income-expenditure', calculateOtherTripsProfitLoss );
 reportsRouter.get('/all-ot-income-expenditure', calculateAllOtherTripsProfitLoss );
+reportsRouter.get('/all-all-general-expenditure', viewPaidGeneralExpendituresByDateRange );
 
 
 export default reportsRouter;

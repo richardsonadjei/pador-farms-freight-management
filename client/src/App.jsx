@@ -39,6 +39,7 @@ import AllPEIncomeAndExpenditureReport from './pages/AllPEIncomeAndExpenditureRe
 import OTIncomeAndExpenditureReport from './pages/OTIncomeAndExpenditureReport';
 import AllOTIncomeAndExpenditureReport from './pages/AllOTIncomeAndExpenditureReport';
 import UpdateUser from './pages/UpdateUserAccount';
+import GeneralExpenditureReport from './pages/GeneralExpenditureReport';
 
 
 
@@ -86,6 +87,7 @@ export default function App() {
         <Route path='/all-pe-income-expenditure' element={<AllPEIncomeAndExpenditureReport/>} />
         <Route path='/ot-income-expenditure' element={<OTIncomeAndExpenditureReport/>} />
         <Route path='/all-ot-income-expenditure' element={<AllOTIncomeAndExpenditureReport/>} />
+        <Route path='/all-general-expenditure' element={<GeneralExpenditureReport/>} />
         
         
        

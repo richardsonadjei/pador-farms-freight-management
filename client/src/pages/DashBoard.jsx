@@ -122,7 +122,7 @@ const Dashboard = () => {
                   <div className="card-body">
                     <h3 className="card-title">Expenditure</h3>
                     <p className="card-text">Some description about expenditure.</p>
-                    <Link to="/pe-expense">
+                    <Link to="/pe-expense" className="me-2">
                       <button className="btn btn-primary mb-2"> Record PE Expenditure</button>
                     </Link>
                     <Link to="/ot-expense">
@@ -163,7 +163,7 @@ const Dashboard = () => {
                   <div className="card-body">
                     <h3 className="card-title">Business Settings</h3>
                     <p className="card-text">Some description about business settings.</p>
-                    <Link to="/income-category">
+                    <Link to="/income-category" className="me-2">
                       <button className="btn btn-primary mb-2">Income Category</button>
                     </Link>
                     <Link to="/expense-category">

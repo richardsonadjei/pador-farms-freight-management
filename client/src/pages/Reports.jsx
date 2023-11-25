@@ -95,7 +95,7 @@ const Reports = () => {
                     <Link to="/ot-expense-reports">
                       <button className="btn btn-primary mb-2">View OT Expenditure Reports</button>
                     </Link>
-                    <Link to="/general-expense-reports">
+                    <Link to="/all-general-expenditure">
                       <button className="btn btn-primary mb-2">View General Expense Reports</button>
                     </Link>
                     <Link to="/all-expense-reports">
@@ -122,6 +122,20 @@ const Reports = () => {
                     </Link>
                     <Link to="/all-ot-income-expenditure" className="me-2">
                       <button className="btn btn-primary mb-2" >All OT Within A Period</button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-4">
+                <div className="card mb-4" id="renewals-section">
+                  <div className="card-body">
+                    <h3 className="card-title">Renewals Reports</h3>
+                    <p className="card-text">Renewal Of Regulatory Requirements</p>
+                    <Link to="/insurance-reports" className="me-2">
+                      <button className="btn btn-primary mb-2">Insurance Renewals</button>
+                    </Link>
+                    <Link to="/roadworhty-reports" className="me-2">
+                      <button className="btn btn-primary mb-2">RoadWorthy Renewals</button>
                     </Link>
                   </div>
                 </div>

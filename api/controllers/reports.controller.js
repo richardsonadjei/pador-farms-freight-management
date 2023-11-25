@@ -453,3 +453,31 @@ export const calculateAllOtherTripsProfitLoss = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+
+// controllers/generalExpenditureController.js
+
+
+
+const viewPaidGeneralExpendituresByDateRange = async (req, res) => {
+  try {
+    const { startDate, endDate } = req.query;
+
+    // Parse startDate and endDate strings into Date objects in UTC format
+    const parsedStartDate = new Date(startDate + 'T00:00:00Z');
+    const parsedEndDate = new Date(endDate + 'T23:59:59.999Z');
+
+    // Query the database for General Expenditures with status 'paid' within the specified period
+    const paidExpenditures = await GeneralExpenditure.find({
+      status: 'paid',
+      date: { $gte: parsedStartDate, $lte: parsedEndDate },
+    });
+
+    res.status(200).json(paidExpenditures);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+export { viewPaidGeneralExpendituresByDateRange };
