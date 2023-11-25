@@ -15,9 +15,13 @@ const otherTripExpenditureSchema = new mongoose.Schema(
       required: true,
     },
     tripNumber: {
-        type: String, // Change to String type
-        required: true,
-      },
+      type: String,
+      required: true,
+    },
+    amount: {
+      type: Number,
+      required: true,
+    },
     description: {
       type: String,
       required: true,
@@ -29,11 +33,9 @@ const otherTripExpenditureSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: ['paid', 'pending payment'],
-      default: 'pending payment', // Default status is set to 'pending payment'
+      default: 'pending payment',
       required: true,
     },
-
-    // You can add more fields as needed
   },
   {
     timestamps: true, // Add createdAt and updatedAt fields

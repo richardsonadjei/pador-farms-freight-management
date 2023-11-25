@@ -15,6 +15,7 @@ const OTExpenditure = () => {
     category: '',
     vehicleRegistrationNumber: '',
     tripNumber: '',
+    amount: '', // Include the amount field
     description: '',
     recordedBy: currentUser ? currentUser.userName : '',
     status: 'pending payment', // Set default status to 'pending payment'
@@ -42,7 +43,7 @@ const OTExpenditure = () => {
       })
       .catch((error) => console.error(error));
 
-      fetch('/api/other-trips')
+    fetch('/api/other-trips')
       .then((response) => response.json())
       .then((data) => {
         if (Array.isArray(data)) {
@@ -77,7 +78,7 @@ const OTExpenditure = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log('Server Response:', data); // Log the response
+       
         if (data._id) { // Check if the response contains the _id property
           setSuccess('Expenditure recorded successfully');
           setError(''); // Clear any previous errors
@@ -158,7 +159,13 @@ const OTExpenditure = () => {
           </Col>
         </Row>
         <Row>
-          <Col md={12}>
+          <Col md={6}>
+            <FormGroup>
+              <Label className="text-white">Amount</Label>
+              <Input type="number" name="amount" onChange={handleChange} required />
+            </FormGroup>
+          </Col>
+          <Col md={6}>
             <FormGroup>
               <Label className="text-white">Description</Label>
               <Input type="textarea" name="description" onChange={handleChange} required />

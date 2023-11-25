@@ -7,6 +7,7 @@ const recordOtherTripExpenditure = async (req, res) => {
       category,
       vehicleRegistrationNumber,
       tripNumber,
+      amount, // Add the amount field
       description,
       recordedBy,
       status = 'pending payment', // Set default status to 'pending payment'
@@ -18,6 +19,7 @@ const recordOtherTripExpenditure = async (req, res) => {
       category,
       vehicleRegistrationNumber,
       tripNumber,
+      amount, // Include the amount field
       description,
       recordedBy,
       status,

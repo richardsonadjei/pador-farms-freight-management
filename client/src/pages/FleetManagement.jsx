@@ -33,7 +33,7 @@ const FleetManagement = () => {
             <div className="card-body">
               <h5 className="card-title">Maintenance History</h5>
               <p className="card-text">View the maintenance history of your fleet.</p>
-              <Link to="/maintenance-history" className="btn btn-primary">
+              <Link to="/maintenance-reports" className="btn btn-primary">
                 Maintenance History
               </Link>
             </div>

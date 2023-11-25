@@ -44,7 +44,7 @@ const AllIncomeReport = () => {
   return (
     <Container>
       <Row className="mt-5">
-        <h2 className="mt-3 mb-4" style={{ color: 'white' }}>INCOME REPORT WITHIN A PERIOD</h2>
+        <h2 className="mt-3 mb-4" style={{ color: 'white' }}>All INCOME REPORT WITHIN A PERIOD</h2>
         <Col>
           <Form>
             <FormGroup row>

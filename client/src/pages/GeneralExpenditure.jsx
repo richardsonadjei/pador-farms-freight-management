@@ -12,6 +12,7 @@ const GeneralExpenditure = () => {
     date: '',
     category: '',
     description: '',
+    amount: '', // New field for amount
     recordedBy: currentUser ? currentUser.userName : '',
     status: 'pending payment', // Default status
   });
@@ -96,6 +97,14 @@ const GeneralExpenditure = () => {
           </Col>
           <Col md={6}>
             <FormGroup>
+              <Label className="text-white">Amount</Label>
+              <Input type="number" name="amount" onChange={handleChange} required />
+            </FormGroup>
+          </Col>
+        </Row>
+        <Row>
+          <Col md={6}>
+            <FormGroup>
               <Label className="text-white">Status</Label>
               <Input type="select" name="status" onChange={handleChange} required>
                 <option value="pending payment">Pending Payment</option>
@@ -103,9 +112,7 @@ const GeneralExpenditure = () => {
               </Input>
             </FormGroup>
           </Col>
-        </Row>
-        <Row>
-          <Col md={12}>
+          <Col md={6}>
             <FormGroup>
               <Label className="text-white">Recorded By</Label>
               <Input type="text" name="recordedBy" value={currentUser ? currentUser.userName : ''} readOnly />

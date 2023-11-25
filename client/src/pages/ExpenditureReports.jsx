@@ -86,8 +86,8 @@ const ExpenditureReports = () => {
                   <div className="card-body">
                     <h3 className="card-title">Repairs and Maintenance </h3>
                     <p className="card-text">Some description about repairs and maintenance reports.</p>
-                    <Link to="/repairs-maintenance-reports">
-                      <button className="btn btn-primary mb-2">View Repairs and Maintenance Reports</button>
+                    <Link to="/maintenance-reports">
+                      <button className="btn btn-primary mb-2">View Reports</button>
                     </Link>
                   </div>
                 </div>

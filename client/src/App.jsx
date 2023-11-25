@@ -7,6 +7,7 @@ import CreateAccount from './pages/CreateAccount';
 import Home from './pages/Home';
 import Header from './components/Header';
 import SignOut from './pages/SignOut';
+
 import PrivateRoute from './components/PrivateRoute';
 import Dashboard from './pages/DashBoard';
 import RegisterVehicle from './pages/RegisterVehicle';
@@ -29,6 +30,19 @@ import OTincomeReport from './pages/OTincomeReport';
 import Expenditure from './pages/Expenditure';
 import ExpenditureReports from './pages/ExpenditureReports';
 import FuelPEReport from './pages/FuelPEReport';
+import MaintenanceReport from './pages/MaintenanceReport';
+import AllExpenseReport from './pages/AllExpenseReport';
+import OTExpenseReport from './pages/OTExpenseReport';
+import UpdatePaymentStatus from './pages/UpdatePayment';
+import PEIncomeAndExpenditureReport from './pages/PEIncomeAndExpenditure';
+import AllPEIncomeAndExpenditureReport from './pages/AllPEIncomeAndExpenditureReport';
+import OTIncomeAndExpenditureReport from './pages/OTIncomeAndExpenditureReport';
+import AllOTIncomeAndExpenditureReport from './pages/AllOTIncomeAndExpenditureReport';
+import UpdateUser from './pages/UpdateUserAccount';
+
+
+
+
 
 export default function App() {
   return (
@@ -39,9 +53,10 @@ export default function App() {
         <Route path='/sign-in' element={<SignIn />} />
         <Route path='/create-account' element={<CreateAccount />} />
         <Route path='/sign-out' element={<SignOut />} />
-        
+     
         <Route element={<PrivateRoute />}>
         <Route path='/' element={<Home />} />
+        <Route path='/update-profile' element={<UpdateUser />} />
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/register-vehicle' element={<RegisterVehicle />} />
         <Route path='/fleet-management' element={<FleetManagement />} />
@@ -63,6 +78,15 @@ export default function App() {
         <Route path='/expenditure' element={<Expenditure/>} />
         <Route path='/expenditure-reports' element={<ExpenditureReports/>} />
         <Route path='/pe-fuel-reports' element={<FuelPEReport/>} />
+        <Route path='/maintenance-reports' element={<MaintenanceReport/>} />
+        <Route path='/all-expense-reports' element={<AllExpenseReport/>} />
+        <Route path='/ot-expense-reports' element={<OTExpenseReport/>} />
+        <Route path='/update-payment-status' element={<UpdatePaymentStatus/>} />
+        <Route path='/pe-income-expenditure' element={<PEIncomeAndExpenditureReport/>} />
+        <Route path='/all-pe-income-expenditure' element={<AllPEIncomeAndExpenditureReport/>} />
+        <Route path='/ot-income-expenditure' element={<OTIncomeAndExpenditureReport/>} />
+        <Route path='/all-ot-income-expenditure' element={<AllOTIncomeAndExpenditureReport/>} />
+        
         
        
         

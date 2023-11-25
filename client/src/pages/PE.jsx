@@ -67,7 +67,7 @@ const PE = () => {
   
   
       alert('Cocoa haulage and income transaction created successfully');
-      navigate('/');
+      navigate('/dashboard');
     } catch (error) {
       console.error('Error creating cocoa haulage:', error);
       alert('An error occurred while creating the cocoa haulage. Please try again.');

@@ -24,7 +24,7 @@ const Dashboard = () => {
             </li>
             
             <li className="nav-item">
-              <Link to="/income" className="nav-link text-light">
+              <Link to="/all-income-reports" className="nav-link text-light">
                 Income
               </Link>
             </li>
@@ -61,8 +61,8 @@ const Dashboard = () => {
                   <div className="card-body">
                     <h3 className="card-title">Primary Evacuation</h3>
                     <p className="card-text">Some description about primary evacuation.</p>
-                    <Link to="/evacuation-subsection">
-                      <button className="btn btn-primary">Record Evacuation</button>
+                    <Link to="/pe">
+                      <button className="btn btn-primary">Record PE</button>
                     </Link>
                   </div>
                 </div>

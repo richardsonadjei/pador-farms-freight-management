@@ -109,3 +109,32 @@ export const signout = (req, res) => {
   // Return a success response
   return res.status(200).json({ success: true, message: 'User signed out successfully' });
 };
+
+
+export const updateUser = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { userName, password } = req.body;
+
+    // Hash the new password if provided
+    const hashedPassword = password ? await bcryptjs.hash(password, 10) : undefined;
+
+    // Update the user's username and/or password
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      {
+        ...(userName && { userName }), // Update username if provided
+        ...(hashedPassword && { password: hashedPassword }), // Update password if provided
+      },
+      { new: true } // Return the updated user
+    );
+
+    if (!updatedUser) {
+      return next(errorHandler(404, 'User not found or could not be updated.'));
+    }
+
+    return res.status(200).json({ success: true, user: updatedUser });
+  } catch (error) {
+    next(error);
+  }
+};

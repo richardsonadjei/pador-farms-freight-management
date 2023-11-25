@@ -13,6 +13,10 @@ const generalExpenditureSchema = new Schema({
     type: String,
     required: true,
   },
+  amount: {
+    type: Number,
+    required: true,
+  },
   // other fields...
   description: {
     type: String,

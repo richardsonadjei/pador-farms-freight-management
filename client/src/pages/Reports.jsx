@@ -23,22 +23,16 @@ const Reports = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/income-reports" className="nav-link text-light">
+              <Link to="/all-income-reports" className="nav-link text-light">
                 Income Reports
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/expenditure-reports" className="nav-link text-light">
+              <Link to="/all-expense-reports" className="nav-link text-light">
                 Expenditure Reports
               </Link>
             </li>
-            {isAdmin && (
-              <li className="nav-item">
-                <Link to="/admin-reports" className="nav-link text-light">
-                  Admin Reports
-                </Link>
-              </li>
-            )}
+            
           </ul>
         </div>
         <div className="col-md-9">
@@ -53,7 +47,6 @@ const Reports = () => {
                     <Link to="/pe-reports">
                       <button className="btn btn-primary mb-2">View PE Reports</button>
                     </Link>
-                    
                   </div>
                 </div>
               </div>
@@ -65,9 +58,8 @@ const Reports = () => {
                     <h3 className="card-title">Other Trips Reports</h3>
                     <p className="card-text">Some description about other trips reports.</p>
                     <Link to="/ot-reports">
-                      <button className="btn btn-primary mb-2">View  OT Reports</button>
+                      <button className="btn btn-primary mb-2">View OT Reports</button>
                     </Link>
-                  
                   </div>
                 </div>
               </div>
@@ -78,10 +70,10 @@ const Reports = () => {
                   <div className="card-body">
                     <h3 className="card-title">Income Reports</h3>
                     <p className="card-text">Some description about income reports.</p>
-                    <Link to="/all-income-reports">
+                    <Link to="/all-income-reports" className="me-2">
                       <button className="btn btn-primary mb-2">View All Income Reports</button>
                     </Link>
-                    <Link to="/pe-income-reports">
+                    <Link to="/pe-income-reports" className="me-2">
                       <button className="btn btn-primary mb-2">View PE Income Reports</button>
                     </Link>
                     <Link to="/ot-income-reports">
@@ -90,10 +82,8 @@ const Reports = () => {
                   </div>
                 </div>
               </div>
-            </div>
-
-            {/* Expenditure Reports Subsection */}
-            <div className="row">
+              
+              {/* Expenditure Reports Subsection */}
               <div className="col-md-4">
                 <div className="card mb-4" id="expenditure-reports-section">
                   <div className="card-body">
@@ -108,11 +98,34 @@ const Reports = () => {
                     <Link to="/general-expense-reports">
                       <button className="btn btn-primary mb-2">View General Expense Reports</button>
                     </Link>
+                    <Link to="/all-expense-reports">
+                      <button className="btn btn-primary mb-2">View All Expense Reports</button>
+                    </Link>
                   </div>
                 </div>
               </div>
 
-              
+              {/* Income and Expenditure Reports Subsection */}
+              <div className="col-md-4">
+                <div className="card mb-4" id="income-expenditure-section">
+                  <div className="card-body">
+                    <h3 className="card-title">Income and Expenditure Reports</h3>
+                    <p className="card-text">Income And Expenses For PEs And Other Trips Including Driver's Commission And Net Balances</p>
+                    <Link to="/pe-income-expenditure" className="me-2">
+                      <button className="btn btn-primary mb-2">Each PE </button>
+                    </Link>
+                    <Link to="/ot-income-expenditure" className="me-2">
+                      <button className="btn btn-primary mb-2">Each OT</button>
+                    </Link>
+                    <Link to="/all-pe-income-expenditure" className="me-2">
+                      <button className="btn btn-primary mb-2" >All PEs Within A Period</button>
+                    </Link>
+                    <Link to="/all-ot-income-expenditure" className="me-2">
+                      <button className="btn btn-primary mb-2" >All OT Within A Period</button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

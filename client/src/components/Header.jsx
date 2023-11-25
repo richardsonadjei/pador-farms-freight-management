@@ -60,22 +60,13 @@ export default function Header() {
                     </Link>
                   </li>
                   <li>
-                    <Link className="dropdown-item" to="#">
-                      Income
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to="#">
+                    <Link className="dropdown-item" to="/expenditure">
                       Expenditure
                     </Link>
                   </li>
+                  
                   <li>
-                    <Link className="dropdown-item" to="#">
-                      Report
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to="#">
+                    <Link className="dropdown-item" to="/fleet-management">
                       Fleet Management
                     </Link>
                   </li>
@@ -129,6 +120,13 @@ export default function Header() {
                   <li>
                     <hr className="dropdown-divider" />
                   </li>
+                  {isAdmin && (
+                    <li>
+                      <Link className="dropdown-item" to="/update-profile">
+                        Update Your Account
+                      </Link>
+                    </li>
+                  )}
                   {isAdmin && (
                     <li>
                       <Link className="dropdown-item" to="/create-account">

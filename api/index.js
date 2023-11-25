@@ -13,6 +13,7 @@ import peExpenseRouter from './routes/pe.expenditure.router.js';
 import otExpenseRouter from './routes/ot.expenditure.router.js';
 import generalExpenseRouter from './routes/generalExpenditure.router.js';
 import reportsRouter from './routes/reports.router.js';
+import cookieParser from 'cookie-parser';
 dotenv.config()
 const app = express();
 
@@ -29,7 +30,7 @@ mongoose
   // Middleware to parse JSON in the request body
 app.use(express.json());
 
-
+app.use(cookieParser());
 // Use the auth routes
 app.use('/api/auth', authRouter);
 app.use('/api/', vehicleRouter);
@@ -55,6 +56,7 @@ app.use((err, req, res, next) => {
     message,
   });
 });
+
 
 app.listen(3000, () => {
     console.log('Server is running on port 3000!');
