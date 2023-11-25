@@ -56,7 +56,7 @@ const SignIn = () => {
         <Col xs="12" md="6">
           <Form onSubmit={handleSubmit}>
             <FormGroup>
-              <Label for="userNameOrEmail">Username or Email</Label>
+              <Label for="userNameOrEmail" style={{ color: 'white' }}>Username or Email</Label>
               <Input
                 type="text"
                 name="userNameOrEmail"
@@ -67,7 +67,7 @@ const SignIn = () => {
               />
             </FormGroup>
             <FormGroup>
-              <Label for="password">Password</Label>
+              <Label for="password" style={{ color: 'white' }}>Password</Label>
               <Input
                 type="password"
                 name="password"
