@@ -39,7 +39,7 @@ const Home = () => {
 
       {/* Footer */}
       <footer className="mt-8 md:mt-20 text-white font-weight-bold text-center py-2 md:py-4" style={{ position: 'absolute', bottom: '0', width: '100vw', }}>
-        <p>&copy; {new Date().getFullYear()} Pador Farms Warehouse. All rights reserved. </p>
+        <p>&copy; {new Date().getFullYear()} Pador Farms Freight Management. All rights reserved. </p>
         <p>Built By <span style={{ fontWeight: 'bold', fontStyle: 'italic' }}>@Richardson</span>.</p>
 
       </footer>
