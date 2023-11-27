@@ -138,3 +138,15 @@ export const updateUser = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getAllUsers = async (req, res, next) => {
+  try {
+    // Fetch all users from the database
+    const users = await User.find();
+
+    // Return the list of users in the response
+    return res.status(200).json({ success: true, users });
+  } catch (error) {
+    next(error);
+  }
+};

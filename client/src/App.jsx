@@ -42,6 +42,7 @@ import UpdateUser from './pages/UpdateUserAccount';
 import GeneralExpenditureReport from './pages/GeneralExpenditureReport';
 import ExpenseReportDashboard from './pages/ExpenseReportDashboard';
 import IncomeReportDashboard from './pages/IncomeReportsDashboard';
+import AllUsers from './pages/AllUsers';
 
 
 
@@ -92,6 +93,7 @@ export default function App() {
         <Route path='/all-general-expenditure' element={<GeneralExpenditureReport/>} />
         <Route path='/all-expenditure-dashboard' element={<ExpenseReportDashboard/>} />
         <Route path='/all-income-dashboard' element={<IncomeReportDashboard/>} />
+        <Route path='/all-users' element={<AllUsers/>} />
         
         
        
