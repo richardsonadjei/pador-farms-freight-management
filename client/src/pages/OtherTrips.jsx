@@ -13,7 +13,7 @@ const OtherTrips = () => {
     const [totalAmountCharged, setTotalAmountCharged] = useState('');
     const [destinationLocations, setDestinationLocations] = useState('');
     const [description, setDescription] = useState('');
-    const [recordedBy, setRecordedBy] = useState(currentUser ? currentUser.userName : '');
+    const [recordedBy, setRecordedBy] = useState(currentUser ? currentUser.username : '');
     const [category, setCategory] = useState('');
     const [incomeCategories, setIncomeCategories] = useState([]);
     const [vehicleRegistrationNumbers, setVehicleRegistrationNumbers] = useState([]);
@@ -92,7 +92,7 @@ const OtherTrips = () => {
           totalAmountCharged,
           destinationLocations,
           description,
-          recordedBy: currentUser ? currentUser.userName : '',
+          recordedBy: currentUser ? currentUser.username : '',
           category,
         }),
       });

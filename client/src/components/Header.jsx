@@ -105,7 +105,7 @@ export default function Header() {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  {currentUser.userName}
+                  {currentUser.username}
                   <i
                     className="bi bi-person-circle"
                     style={{ fontSize: '32px' }}

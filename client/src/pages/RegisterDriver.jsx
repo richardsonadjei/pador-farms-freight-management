@@ -19,7 +19,7 @@ const RegisterDriver = () => {
   const [ghanaCardId, setGhanaCardId] = useState('');
   const [witnessName, setWitnessName] = useState('');
   const [witnessContact, setWitnessContact] = useState('');
-  const [registeredBy, setRegisteredBy] = useState(currentUser ? currentUser.userName : '');
+  const [registeredBy, setRegisteredBy] = useState(currentUser ? currentUser.username : '');
 
   const navigate = useNavigate();
 
@@ -39,7 +39,7 @@ const RegisterDriver = () => {
       ghanaCardId,
       witnessName,
       witnessContact,
-      registeredBy,
+      recordedBy: currentUser ? currentUser.username : '',
     };
 
     try {

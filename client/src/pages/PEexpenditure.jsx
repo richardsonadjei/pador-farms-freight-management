@@ -16,7 +16,7 @@ const RecordPEexpenditure = () => {
     truckRegistrationNumber: '',
     expenditureAmount: '',
     description: '',
-    recordedBy: currentUser ? currentUser.userName : '', // Set recordedBy to current user
+    recordedBy: currentUser ? currentUser.username : '', // Set recordedBy to current user
     status: 'pending payment', // Set default status
   });
 

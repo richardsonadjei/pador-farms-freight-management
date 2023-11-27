@@ -9,7 +9,7 @@ const ExpenseCategory = () => {
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [recordedBy, setRecordedBy] = useState(currentUser ? currentUser.userName : '');
+  const [recordedBy, setRecordedBy] = useState(currentUser ? currentUser.username : '');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
@@ -21,7 +21,7 @@ const ExpenseCategory = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, description, recordedBy:currentUser ? currentUser.userName : '', }),
+        body: JSON.stringify({ name, description, recordedBy:currentUser ? currentUser.username : '', }),
       });
       const data = await response.json();
       if (response.ok) {

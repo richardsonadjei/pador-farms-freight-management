@@ -12,7 +12,7 @@ const PE = () => {
   const [quantity, setQuantity] = useState('');
   const [totalweightCarried, setTotalweightCarried] = useState('');
   const [destinationLocations, setDestinationLocations] = useState('');
-  const [recordedBy, setRecordedBy] = useState(currentUser ? currentUser.userName : '');
+  const [recordedBy, setRecordedBy] = useState(currentUser ? currentUser.username : '');
   const [incomeAmountPerBag, setIncomeAmountPerBag] = useState('');
   const [category, setCategory] = useState('');
   const [drivers, setDrivers] = useState([]);
@@ -54,7 +54,7 @@ const PE = () => {
           quantity,
           totalweightCarried,
           destinationLocations,
-          recordedBy: currentUser ? currentUser.userName : '',
+          recordedBy: currentUser ? currentUser.username : '',
           incomeAmountPerBag,
           category,
         }),

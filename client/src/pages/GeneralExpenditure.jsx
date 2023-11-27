@@ -13,7 +13,7 @@ const GeneralExpenditure = () => {
     category: '',
     description: '',
     amount: '', // New field for amount
-    recordedBy: currentUser ? currentUser.userName : '',
+    recordedBy: currentUser ? currentUser.username : '',
     status: 'pending payment', // Default status
   });
 
@@ -115,7 +115,7 @@ const GeneralExpenditure = () => {
           <Col md={6}>
             <FormGroup>
               <Label className="text-white">Recorded By</Label>
-              <Input type="text" name="recordedBy" value={currentUser ? currentUser.userName : ''} readOnly />
+              <Input type="text" name="recordedBy" value={currentUser ? currentUser.username : ''} readOnly />
             </FormGroup>
           </Col>
         </Row>
