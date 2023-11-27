@@ -53,7 +53,7 @@ const userSchema = new mongoose.Schema({
       type: String,
       required: true
     },
-  witnessName: {
+  witnessname: {
       type: String,
       required: true
     },
