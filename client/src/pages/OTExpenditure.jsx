@@ -17,7 +17,7 @@ const OTExpenditure = () => {
     tripNumber: '',
     amount: '', // Include the amount field
     description: '',
-    recordedBy: currentUser ? currentUser.username : '',
+    recordedBy: currentUser ? currentUser.userName : '',
     status: 'pending payment', // Set default status to 'pending payment'
   });
 
@@ -176,7 +176,7 @@ const OTExpenditure = () => {
           <Col md={6}>
             <FormGroup>
               <Label className="text-white">Recorded By</Label>
-              <Input type="text" name="recordedBy" value={currentUser ? currentUser.username : ''} readOnly />
+              <Input type="text" name="recordedBy" value={currentUser ? currentUser.userName : ''} readOnly />
             </FormGroup>
           </Col>
           <Col md={6}>

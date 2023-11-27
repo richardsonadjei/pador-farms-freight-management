@@ -18,7 +18,7 @@ const RegisterVehicle = () => {
   const [mileage, setMileage] = useState('');
   const [fuelType, setFuelType] = useState('');
   const [status, setStatus] = useState(''); // Default status can be set here
-  const [registeredBy, setRegisteredBy] = useState(currentUser.username);
+  const [registeredBy, setRegisteredBy] = useState(currentUser.userName);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,7 +38,7 @@ const RegisterVehicle = () => {
       mileage,
       fuelType,
       status,
-      registeredBy:currentUser ? currentUser.username : '',
+      registeredBy:currentUser ? currentUser.userName : '',
     };
 
     try {

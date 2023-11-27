@@ -12,7 +12,7 @@ const PE = () => {
   const [quantity, setQuantity] = useState('');
   const [totalweightCarried, setTotalweightCarried] = useState('');
   const [destinationLocations, setDestinationLocations] = useState('');
-  const [recordedBy, setRecordedBy] = useState(currentUser ? currentUser.username : '');
+  const [recordedBy, setRecordedBy] = useState(currentUser ? currentUser.userName : '');
   const [incomeAmountPerBag, setIncomeAmountPerBag] = useState('');
   const [category, setCategory] = useState('');
   const [drivers, setDrivers] = useState([]);
@@ -39,6 +39,12 @@ const PE = () => {
       .catch(error => console.error('Error fetching income categories:', error));
   }, []);
 
+  useEffect(() => {
+    // Set the initial value of recordedBy once currentUser is available
+    if (currentUser) {
+      setRecordedBy(currentUser.userName);
+    }
+  }, [currentUser]);
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -54,7 +60,7 @@ const PE = () => {
           quantity,
           totalweightCarried,
           destinationLocations,
-          recordedBy: currentUser ? currentUser.username : '',
+          recordedBy: currentUser ? currentUser.userName : '',
           incomeAmountPerBag,
           category,
         }),
