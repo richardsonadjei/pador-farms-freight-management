@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Form, FormGroup, Label, Input, Container, Row, Col, Table } from 'reactstrap';
 
-const OTExpenseReport = () => {
+const PEExpenseReport = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [reportData, setReportData] = useState(null);
@@ -18,7 +18,7 @@ const OTExpenseReport = () => {
     e.preventDefault();
 
     // Fetch data from the server based on the date range
-    fetch(`/api/all-ot-report?startDate=${startDate}&endDate=${endDate}`)
+    fetch(`/api/all-pe-expense?startDate=${startDate}&endDate=${endDate}`)
       .then((response) => response.json())
       .then((data) => {
         setReportData(data);
@@ -32,7 +32,7 @@ const OTExpenseReport = () => {
 
   return (
     <Container>
-      <h2 className="text-white mt-4">Other Trip Expenditure Report</h2>
+      <h2 className="text-white mt-4">PE Expenditure Report</h2>
       <Form onSubmit={handleSubmit}>
         <Row>
           <Col md={4}>
@@ -55,16 +55,16 @@ const OTExpenseReport = () => {
         </Row>
       </Form>
 
-      {/* Render the Other Trip Expenditure report table only if data is available */}
+      {/* Render the PE Expenditure report table only if data is available */}
       {reportData && (
         <>
-          <h3 className="text-white mt-4">Other Trip Expenditure Details</h3>
+          <h3 className="text-white mt-4">PE Expenditure Details</h3>
           <Table responsive className="table-shadow mt-2">
             <thead>
               <tr>
                 <th>Date</th>
                 <th>Category</th>
-                <th>Trip Number</th>
+                <th>PE Number</th>
                 <th>Registration Number</th>
                 <th>Amount</th>
                 <th>Description</th>
@@ -73,69 +73,25 @@ const OTExpenseReport = () => {
               </tr>
             </thead>
             <tbody>
-              {/* Map through reportData.otherTripExpenditures and render each row */}
-              {reportData.otherTripExpenditures.map((item) => (
+              {/* Map through reportData.peExpenditures and render each row */}
+              {reportData.peExpenditures.map((item) => (
                 <tr key={item._id}>
                   <td>{new Date(item.date).toLocaleDateString()}</td>
                   <td>{item.category}</td>
-                  <td>{item.tripNumber}</td>
-                  <td>{item.vehicleRegistrationNumber}</td>
-                  <td>{item.amount}</td>
-                  <td>{item.description}</td>
-                  <td>{item.recordedBy}</td>
-                  <td>{item.status}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-
-          {/* Summary Table for Other Trip Expenditure */}
-          <h3 className="text-white mt-4">Other Trip Expenditure Summary</h3>
-          <Table responsive className="table-shadow mt-2">
-            <thead>
-              <tr>
-                <th>Total Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{calculateTotalAmount(reportData.otherTripExpenditures, 'amount')}</td>
-              </tr>
-            </tbody>
-          </Table>
-
-          {/* Render the Driver's Commission report table only if data is available */}
-          <h3 className="text-white mt-4">Driver's Commission Details</h3>
-          <Table responsive className="table-shadow mt-2">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>PE Number</th>
-                <th>Driver Name</th>
-                <th>Amount</th>
-                <th>Description</th>
-                <th>Status</th>
-                <th>Recorded By</th>
-              </tr>
-            </thead>
-            <tbody>
-              {/* Map through reportData.driverCommissions and render each row */}
-              {reportData.driverCommissions.map((item) => (
-                <tr key={item._id}>
-                  <td>{new Date(item.date).toLocaleDateString()}</td>
                   <td>{item.peNumber}</td>
-                  <td>{item.driverName}</td>
-                  <td>{item.totalCommissionAmount}</td>
+                  <td>{item.vehicleRegistrationNumber}</td>
+                  <td>{item.
+expenditureAmount}</td>
                   <td>{item.description}</td>
-                  <td>{item.status}</td>
                   <td>{item.recordedBy}</td>
+                  <td>{item.status}</td>
                 </tr>
               ))}
             </tbody>
           </Table>
 
-          {/* Summary Table for Driver's Commission */}
-          <h3 className="text-white mt-4">Driver's Commission Summary</h3>
+          {/* Summary Table for PE Expenditure */}
+          <h3 className="text-white mt-4">PE Expenditure Summary</h3>
           <Table responsive className="table-shadow mt-2">
             <thead>
               <tr>
@@ -144,7 +100,7 @@ const OTExpenseReport = () => {
             </thead>
             <tbody>
               <tr>
-                <td>{calculateTotalAmount(reportData.driverCommissions, 'totalCommissionAmount')}</td>
+                <td>{calculateTotalAmount(reportData.peExpenditures, 'expenditureAmount')}</td>
               </tr>
             </tbody>
           </Table>
@@ -154,4 +110,4 @@ const OTExpenseReport = () => {
   );
 };
 
-export default OTExpenseReport;
+export default PEExpenseReport;

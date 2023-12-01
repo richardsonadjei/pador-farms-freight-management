@@ -46,6 +46,13 @@ const Dashboard = () => {
                 </Link>
               </li>
             )}
+            {isAdmin && (
+              <li className="nav-item">
+                <Link to="/human-resource" className="nav-link text-light">
+                  Human Resource Management
+                </Link>
+              </li>
+            )}
             <li className="nav-item">
               <Link to="/business-settings" className="nav-link text-light">
                 Business Settings
@@ -172,6 +179,18 @@ const Dashboard = () => {
                   </div>
                 </div>
               </div>
+              <div className="col-md-4">
+          <div className="card mb-4" id="hr-management">
+            <div className="card-body">
+              <h3 className="card-title">HR Management</h3>
+              <p className="card-text">Some description about HR management.</p>
+              <Link to="/human-resource">
+                <button className="btn btn-primary mb-2">HR Management</button>
+              </Link>
+              {/* Add more buttons or links related to HR management if needed */}
+            </div>
+          </div>
+        </div>
             </div>
           </div>
         </div>

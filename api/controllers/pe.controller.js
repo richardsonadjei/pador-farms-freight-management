@@ -1,6 +1,5 @@
 import CocoaHaulage from '../models/pe.model.js';
 import IncomeHauling from '../models/pe.income.model.js';
-import DriverCommission from '../models/driversCommission.model.js'; // Import the DriverCommission model
 
 const createCocoaHaulage = async (req, res) => {
   try {
@@ -60,25 +59,7 @@ const createCocoaHaulage = async (req, res) => {
     // Save new IncomeHauling instance
     await incomeHauling.save();
 
-    // Create new DriverCommission instance with default category
-    const commissionAmountPerBag = 1; // Set commissionAmountPerBag to 1
-    const totalCommissionAmount = commissionAmountPerBag * quantity;
-
-    const driverCommission = new DriverCommission({
-      date,
-      driverName,
-      commissionAmountPerBag,
-      totalCommissionAmount,
-      description: `Commission from hauling ${quantity} bags of cocoa.`,
-      recordedBy,
-      peNumber: cocoaHaulage.peNumber, // Use peNumber from CocoaHaulage
-      category: 'Primary Evacuations', // Set default category
-    });
-
-    // Save new DriverCommission instance
-    await driverCommission.save();
-
-    res.status(201).json({ cocoaHaulage, incomeHauling, driverCommission });
+    res.status(201).json({ cocoaHaulage, incomeHauling });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server Error' });
@@ -86,6 +67,7 @@ const createCocoaHaulage = async (req, res) => {
 };
 
 export { createCocoaHaulage };
+
 
 
 

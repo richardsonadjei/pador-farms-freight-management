@@ -8,24 +8,19 @@ const AllPEIncomeAndExpenditureReport = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     // Construct the URL with query parameters
     const url = `/api/all-pe-income-expenditure?startDate=${startDate}&endDate=${endDate}`;
-
     // Fetch the report data
     const response = await fetch(url);
     const data = await response.json();
-
     // Convert UTC dates to local dates
     const convertDatesToLocal = (records) =>
       records.map((record) => {
         record.date = new Date(record.date).toLocaleDateString();
         return record;
       });
-
     data.incomeData = convertDatesToLocal(data.incomeData);
     data.expenditureData = convertDatesToLocal(data.expenditureData);
-
     setReportData(data);
   };
 
@@ -68,50 +63,50 @@ const AllPEIncomeAndExpenditureReport = () => {
         </Button>
       </Form>
       {reportData && (
-  <div>
-    <h2 className="text-white">Income Data</h2>
+        <div>
+          <h2 className="text-white">Income Data</h2>
+          <Table responsive bordered striped>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>PE Number</th>
+                <th>Category</th>
+                <th>Truck Registration Number</th>
+                <th>Income Amount Per Bag</th>
+                <th>Total Income Amount</th>
+                <th>Tax Amount Per Bag</th>
+                <th>Total Tax Amount</th>
+                <th>Net Total Amount Per Bag</th>
+                <th>Net Total Amount</th>
+                <th>Description</th>
+                <th>Recorded By</th>
+              </tr>
+            </thead>
+            <tbody>
+              {reportData.incomeData.map((income) => (
+                <tr key={income._id}>
+                  <td>{income.date}</td>
+                  <td>{income.peNumber}</td>
+                  <td>{income.category}</td>
+                  <td>{income.truckRegistrationNumber}</td>
+                  <td>{income.incomeAmountPerBag}</td>
+                  <td>{income.totalIncomeAmount}</td>
+                  <td>{income.taxAmountPerBag}</td>
+                  <td>{income.totalTaxAmount}</td>
+                  <td>{income.netTotalAmountPerBag}</td>
+                  <td>{income.netTotalAmount}</td>
+                  <td>{income.description}</td>
+                  <td>{income.recordedBy}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+          <h2 className="text-white">Expenditure Data</h2>
     <Table responsive bordered striped>
       <thead>
         <tr>
           <th>Date</th>
           <th>PE Number</th>
-          <th>Category</th>
-          <th>Truck Registration Number</th>
-          <th>Income Amount Per Bag</th>
-          <th>Total Income Amount</th>
-          <th>Tax Amount Per Bag</th>
-          <th>Total Tax Amount</th>
-          <th>Net Total Amount Per Bag</th>
-          <th>Net Total Amount</th>
-          <th>Description</th>
-          <th>Recorded By</th>
-        </tr>
-      </thead>
-      <tbody>
-        {reportData.incomeData.map((income) => (
-          <tr key={income._id}>
-            <td>{income.date}</td>
-            <td>{income.peNumber}</td> {/* Include PE Number here */}
-            <td>{income.category}</td>
-            <td>{income.truckRegistrationNumber}</td>
-            <td>{income.incomeAmountPerBag}</td>
-            <td>{income.totalIncomeAmount}</td>
-            <td>{income.taxAmountPerBag}</td>
-            <td>{income.totalTaxAmount}</td>
-            <td>{income.netTotalAmountPerbag}</td> 
-            <td>{income.netTotalAmount}</td>
-            <td>{income.description}</td>
-            <td>{income.recordedBy}</td>
-          </tr>
-        ))}
-      </tbody>
-    </Table>
-    <h2 className="text-white">Expenditure Data</h2>
-    <Table responsive bordered striped>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>PE Number</th> {/* Include PE Number here */}
           <th>Category</th>
           <th>Truck Registration Number</th>
           <th>Expenditure Amount</th>
@@ -121,10 +116,11 @@ const AllPEIncomeAndExpenditureReport = () => {
         </tr>
       </thead>
       <tbody>
+        {/* Render regular expenditure data */}
         {reportData.expenditureData.map((expenditure) => (
           <tr key={expenditure._id}>
             <td>{expenditure.date}</td>
-            <td>{expenditure.peNumber}</td> {/* Include PE Number here */}
+            <td>{expenditure.peNumber}</td>
             <td>{expenditure.category}</td>
             <td>{expenditure.truckRegistrationNumber}</td>
             <td>{expenditure.expenditureAmount}</td>
@@ -133,29 +129,44 @@ const AllPEIncomeAndExpenditureReport = () => {
             <td>{expenditure.status}</td>
           </tr>
         ))}
+        {/* Check if driverCommissionData exists before mapping */}
+        {reportData.driverCommissionData && reportData.driverCommissionData.map((commission) => (
+          <tr key={commission._id}>
+            <td>{commission.date}</td>
+            <td>{commission.peNumber}</td>
+            <td>{commission.category}</td>
+            <td></td> {/* Adjust based on your data structure */}
+            <td>{commission.totalCommissionAmount}</td>
+            <td>{commission.description}</td>
+            <td>{commission.recordedBy}</td>
+            <td>{commission.status}</td>
+          </tr>
+        ))}
       </tbody>
     </Table>
-    <h2 className="text-white">Summary Report</h2>
-    <Table responsive bordered striped>
-      <thead>
-        <tr>
-          <th>Total Income</th>
-          <th>Total Expenditure</th>
-          <th>Profit/Loss</th>
-          <th>Driver's Commission</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>{reportData.totalIncome}</td>
-          <td>{reportData.totalExpenditure}</td>
-          <td>{reportData.profitLoss}</td>
-          <td>{reportData.driversCommission}</td>
-        </tr>
-      </tbody>
-    </Table>
-  </div>
-)}
+          <h2 className="text-white">Summary Report</h2>
+          <Table responsive bordered striped>
+            <thead>
+              <tr>
+                <th>Total Income</th>
+                <th>Total Expenditure + Drivers's Commission</th>
+                <th>Driver's Commission</th>
+                <th>Profit/Loss</th>
+                
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{reportData.totalIncome}</td>
+                <td>{reportData.totalExpenditure}</td>
+                <td>{reportData.totalDriverCommission}</td>
+                <td>{reportData.profitLoss}</td>
+              
+              </tr>
+            </tbody>
+          </Table>
+        </div>
+      )}
     </Container>
   );
 };

@@ -32,6 +32,11 @@ const Reports = () => {
                 Expenditure Reports
               </Link>
             </li>
+            <li className="nav-item">
+              <Link to="/partner-shares" className="nav-link text-light">
+                View Shares To Partners
+              </Link>
+            </li>
             
           </ul>
         </div>
@@ -79,6 +84,7 @@ const Reports = () => {
                     <Link to="/ot-income-reports">
                       <button className="btn btn-primary mb-2">View OT Income Reports</button>
                     </Link>
+                    
                   </div>
                 </div>
               </div>
@@ -109,7 +115,7 @@ const Reports = () => {
               <div className="col-md-4">
                 <div className="card mb-4" id="income-expenditure-section">
                   <div className="card-body">
-                    <h3 className="card-title">Income and Expenditure Reports</h3>
+                    <h3 className="card-title">Profit Loss Reports</h3>
                     <p className="card-text">Income And Expenses For PEs And Other Trips Including Driver's Commission And Net Balances</p>
                     <Link to="/pe-income-expenditure" className="me-2">
                       <button className="btn btn-primary mb-2">Each PE </button>

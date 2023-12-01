@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Form, FormGroup, Label, Input, Container, Table, Col, Row } from 'reactstrap';
+import { Link } from 'react-router-dom';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 const PEIncomeAndExpenditureReport = () => {
   const [peNumbers, setPENumbers] = useState([]);
@@ -179,7 +182,14 @@ const PEIncomeAndExpenditureReport = () => {
                 <td>{reportData.totalIncome}</td>
                 <td>{reportData.totalExpenditure}</td>
                 <td>{reportData.profitLoss}</td>
-                <td>{reportData.driversCommission}</td>
+                <td>
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={<Tooltip id="commission-tooltip">Proceed to Commission Payment</Tooltip>}
+                  >
+                    <Link to="/pe-drivers-commission">{reportData.driversCommission}</Link>
+                  </OverlayTrigger>
+                </td>
               </tr>
             </tbody>
           </Table>

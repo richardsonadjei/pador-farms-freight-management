@@ -13,7 +13,7 @@ const ExpenseReportDashboard = () => {
             <div className="card-body">
               <h3 className="card-title">Fuel Expense</h3>
               <p className="card-text">Some description about fuel expense reports.</p>
-              <Link to="/fuel-expense-reports">
+              <Link to="/all-fuel-reports">
                 <button className="btn btn-primary mb-2">View Fuel Expense Reports</button>
               </Link>
             </div>
@@ -37,9 +37,21 @@ const ExpenseReportDashboard = () => {
         <div className="col-md-4">
           <div className="card mb-4">
             <div className="card-body">
-              <h3 className="card-title">Driver's Commission PE</h3>
+              <h3 className="card-title">Paid Driver's Commission </h3>
               <p className="card-text">Some description about driver's commission PE reports.</p>
-              <Link to="/drivers-commission-pe-reports">
+              <Link to="/paid-drivers-commission">
+                <button className="btn btn-primary mb-2">View Driver's Commission PE Reports</button>
+              </Link>
+            </div>
+          </div>
+        </div>
+        {/* Driver's Commission PE Subsection */}
+        <div className="col-md-4">
+          <div className="card mb-4">
+            <div className="card-body">
+              <h3 className="card-title">Driver's Commission Pending Payment</h3>
+              <p className="card-text">Some description about driver's commission PE reports.</p>
+              <Link to="/pending-payment-drivers-commission">
                 <button className="btn btn-primary mb-2">View Driver's Commission PE Reports</button>
               </Link>
             </div>

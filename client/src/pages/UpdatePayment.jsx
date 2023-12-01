@@ -60,6 +60,7 @@ const UpdatePaymentStatus = () => {
                 <option value="GeneralExpenditure">General Expenditure</option>
                 <option value="OtherTripExpenditure">Other Trip Expenditure</option>
                 <option value="PEExpenditure">PE Expenditure</option>
+                <option value="DriverCommission">Driver Commission</option>
               </Input>
             </FormGroup>
             <FormGroup>

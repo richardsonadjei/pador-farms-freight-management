@@ -29,7 +29,6 @@ import PEIncomeReport from './pages/PEincomeReport';
 import OTincomeReport from './pages/OTincomeReport';
 import Expenditure from './pages/Expenditure';
 import ExpenditureReports from './pages/ExpenditureReports';
-import FuelPEReport from './pages/FuelPEReport';
 import MaintenanceReport from './pages/MaintenanceReport';
 import AllExpenseReport from './pages/AllExpenseReport';
 import OTExpenseReport from './pages/OTExpenseReport';
@@ -43,6 +42,14 @@ import GeneralExpenditureReport from './pages/GeneralExpenditureReport';
 import ExpenseReportDashboard from './pages/ExpenseReportDashboard';
 import IncomeReportDashboard from './pages/IncomeReportsDashboard';
 import AllUsers from './pages/AllUsers';
+import HumanResourceDashboard from './pages/HumanResourceDashboard';
+import AllDrivers from './pages/ViewAllDrivers';
+import PEDriversCommission from './pages/PEDriversCommission';
+import OTDriversCommission from './pages/OTDriversCommission';
+import FuelReport from './pages/FuelReport';
+import PaidDriverCommissionReport from './pages/PaidDriverCommission';
+import PendingPaymentDriverCommission from './pages/PendingPaymentDriverCommission';
+import PEExpenseReport from './pages/PEExpenseReport';
 
 
 
@@ -81,10 +88,11 @@ export default function App() {
         <Route path='/pe-income-reports' element={<PEIncomeReport/>} />
         <Route path='/expenditure' element={<Expenditure/>} />
         <Route path='/expenditure-reports' element={<ExpenditureReports/>} />
-        <Route path='/pe-fuel-reports' element={<FuelPEReport/>} />
+        <Route path='/all-fuel-reports' element={<FuelReport/>} />
         <Route path='/maintenance-reports' element={<MaintenanceReport/>} />
         <Route path='/all-expense-reports' element={<AllExpenseReport/>} />
         <Route path='/ot-expense-reports' element={<OTExpenseReport/>} />
+        <Route path='/pe-expense-reports' element={<PEExpenseReport/>} />
         <Route path='/update-payment-status' element={<UpdatePaymentStatus/>} />
         <Route path='/pe-income-expenditure' element={<PEIncomeAndExpenditureReport/>} />
         <Route path='/all-pe-income-expenditure' element={<AllPEIncomeAndExpenditureReport/>} />
@@ -94,6 +102,12 @@ export default function App() {
         <Route path='/all-expenditure-dashboard' element={<ExpenseReportDashboard/>} />
         <Route path='/all-income-dashboard' element={<IncomeReportDashboard/>} />
         <Route path='/all-users' element={<AllUsers/>} />
+        <Route path='/human-resource' element={<HumanResourceDashboard/>} />
+        <Route path='/all-drivers' element={<AllDrivers/>} />
+        <Route path='/pe-drivers-commission' element={<PEDriversCommission/>} />
+        <Route path='/ot-drivers-commission' element={<OTDriversCommission/>} />
+        <Route path='/paid-drivers-commission' element={<PaidDriverCommissionReport/>} />
+        <Route path='/pending-payment-drivers-commission' element={<PendingPaymentDriverCommission/>} />
         
         
        

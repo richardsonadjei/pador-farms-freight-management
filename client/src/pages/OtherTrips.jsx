@@ -62,7 +62,7 @@ const OtherTrips = () => {
   
   const fetchDrivers = async () => {
     try {
-      const response = await fetch('/api/drivers');
+      const response = await fetch('/api/all-drivers');
       const data = await response.json();
       if (response.ok) {
         setDrivers(data.drivers);

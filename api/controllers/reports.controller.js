@@ -3,6 +3,7 @@ import IncomeHauling from '../models/pe.income.model.js';
 import PEExpenditure from '../models/pe.expenditure.model.js';
 import GeneralExpenditure from '../models/generalExpenditure.model.js';
 import OtherTripExpenditure from '../models/ot.expenditure.model.js';
+import DriverCommission from '../models/driversCommission.model.js';
 
 
 const getIncomeReport = async (req, res) => {
@@ -85,28 +86,38 @@ export { getAllOtherTripIncome };
 
 
 
-const viewFuelPEExpenditures = async (req, res) => {
+const viewFuelExpenditures = async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
 
     // Parse startDate and endDate strings into Date objects in UTC format
-    const parsedStartDate = new Date(startDate + 'T00:00:00Z'); // Assuming startDate is in YYYY-MM-DD format
-    const parsedEndDate = new Date(endDate + 'T23:59:59.999Z'); // Assuming endDate is in YYYY-MM-DD format
+    const parsedStartDate = new Date(startDate + 'T00:00:00Z');
+    const parsedEndDate = new Date(endDate + 'T23:59:59.999Z');
 
-    // Query the database for Fuel expenditures within the specified period
-    const fuelExpenditures = await PEExpenditure.find({
+    // Query the PEExpenditure collection for Fuel expenditures
+    const peFuelExpenditures = await PEExpenditure.find({
       category: 'Fuel',
       date: { $gte: parsedStartDate, $lte: parsedEndDate },
     });
 
-    res.status(200).json(fuelExpenditures);
+    // Query the OtherTripExpenditure collection for Fuel expenditures
+    const otherTripFuelExpenditures = await OtherTripExpenditure.find({
+      category: 'Fuel',
+      date: { $gte: parsedStartDate, $lte: parsedEndDate },
+    });
+
+    // Combine the results from both collections
+    const allFuelExpenditures = peFuelExpenditures.concat(otherTripFuelExpenditures);
+
+    res.status(200).json(allFuelExpenditures);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server Error' });
   }
 };
 
-export { viewFuelPEExpenditures };
+export { viewFuelExpenditures };
+
 
 
 
@@ -164,7 +175,12 @@ const getAllExpendituresByDateRange = async (req, res) => {
       date: { $gte: parsedStartDate, $lte: parsedEndDate },
     });
 
-    res.status(200).json({ peExpenditures, otherTripExpenditures, generalExpenditures });
+    // Find DriverCommissions within the date range
+    const driverCommissions = await DriverCommission.find({
+      date: { $gte: parsedStartDate, $lte: parsedEndDate },
+    });
+
+    res.status(200).json({ peExpenditures, otherTripExpenditures, generalExpenditures, driverCommissions });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server Error' });
@@ -172,6 +188,7 @@ const getAllExpendituresByDateRange = async (req, res) => {
 };
 
 export { getAllExpendituresByDateRange };
+
 
 
 
@@ -189,7 +206,14 @@ const getAllOtherTripExpendituresByDateRange = async (req, res) => {
       date: { $gte: parsedStartDate, $lte: parsedEndDate },
     });
 
-    res.status(200).json({ otherTripExpenditures });
+    // Find DriverCommissions within the date range and with the specified category
+    const driverCommissions = await DriverCommission.find({
+      date: { $gte: parsedStartDate, $lte: parsedEndDate },
+      category: "Driver's Commission (OT)",
+    });
+
+    // Combine the results and send the response
+    res.status(200).json({ otherTripExpenditures, driverCommissions });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server Error' });
@@ -199,6 +223,34 @@ const getAllOtherTripExpendituresByDateRange = async (req, res) => {
 export { getAllOtherTripExpendituresByDateRange };
 
 
+const getAllPEExpendituresByDateRange = async (req, res) => {
+  try {
+    const { startDate, endDate } = req.query;
+
+    // Parse startDate and endDate strings into Date objects in UTC format
+    const parsedStartDate = new Date(startDate + 'T00:00:00Z');
+    const parsedEndDate = new Date(endDate + 'T23:59:59.999Z');
+
+    // Find PEExpenditures within the date range
+    const peExpenditures = await PEExpenditure.find({
+      date: { $gte: parsedStartDate, $lte: parsedEndDate },
+    });
+
+    // Find DriverCommissions (PE) within the date range and with the specified category
+    const driverCommissionsPE = await DriverCommission.find({
+      date: { $gte: parsedStartDate, $lte: parsedEndDate },
+      category: "Driver's Commission (PE)",
+    });
+
+    // Combine the results and send the response
+    res.status(200).json({ peExpenditures, driverCommissionsPE });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+export { getAllPEExpendituresByDateRange };
 
 
 
@@ -206,34 +258,40 @@ const updateExpenditureStatus = async (req, res) => {
   const { model, id, status } = req.body;
 
   try {
-    let expenditure;
+    let item;
 
     switch (model) {
       case 'GeneralExpenditure':
-        expenditure = await GeneralExpenditure.findByIdAndUpdate(id, { status }, { new: true });
+        item = await GeneralExpenditure.findByIdAndUpdate(id, { status }, { new: true });
         break;
       case 'OtherTripExpenditure':
-        expenditure = await OtherTripExpenditure.findByIdAndUpdate(id, { status }, { new: true });
+        item = await OtherTripExpenditure.findByIdAndUpdate(id, { status }, { new: true });
         break;
       case 'PEExpenditure':
-        expenditure = await PEExpenditure.findByIdAndUpdate(id, { status }, { new: true });
+        item = await PEExpenditure.findByIdAndUpdate(id, { status }, { new: true });
+        break;
+      case 'DriverCommission':
+        item = await DriverCommission.findByIdAndUpdate(id, { status }, { new: true });
         break;
       default:
         return res.status(400).json({ message: 'Invalid model' });
     }
 
-    if (!expenditure) {
-      return res.status(404).json({ message: 'Expenditure not found' });
+    if (!item) {
+      return res.status(404).json({ message: `${model} not found` });
     }
 
-    return res.json({ message: 'Expenditure status updated successfully', expenditure });
+    return res.json({ message: `${model} status updated successfully`, item });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Server error' });
   }
 };
 
+
 export default updateExpenditureStatus;
+
+
 
 
 
@@ -292,16 +350,13 @@ export const calculateProfitLoss = async (req, res) => {
   }
 };
 
-export const calculateAllProfitLoss = async (req, res) => {
+export const calculateAllPEProfitLoss = async (req, res) => {
   try {
-    // Destructuring the query parameters from the request object
     const { startDate, endDate } = req.query;
-
-    // Parsing the startDate and endDate strings into Date objects in UTC format
     const parsedStartDate = new Date(`${startDate}T00:00:00Z`);
     const parsedEndDate = new Date(`${endDate}T23:59:59.999Z`);
 
-    // Finding all income data within the date range
+    // Fetching income data
     const incomeData = await IncomeHauling.find({
       date: {
         $gte: parsedStartDate,
@@ -309,10 +364,10 @@ export const calculateAllProfitLoss = async (req, res) => {
       },
     });
 
-    // Calculating total income by summing up netTotalAmount for each record
+    // Calculating total income
     const totalIncome = incomeData.reduce((sum, record) => sum + record.netTotalAmount, 0);
 
-    // Finding all expenditure data with status 'paid' within the date range
+    // Fetching expenditure data (PEExpenditure with status 'paid')
     const expenditureData = await PEExpenditure.find({
       status: 'paid',
       date: {
@@ -321,56 +376,12 @@ export const calculateAllProfitLoss = async (req, res) => {
       },
     });
 
-    // Calculating total expenditure by summing up the expenditureAmount for each record
+    // Calculating total expenditure (excluding driver's commission for now)
     const totalExpenditure = expenditureData.reduce((sum, record) => sum + record.expenditureAmount, 0);
 
-    // Calculating profit or loss
-    const profitLoss = totalIncome - totalExpenditure;
-
-    // Calculating driver's commission (10% of profit or loss)
-    const driversCommission = 0.1 * profitLoss;
-
-    // Sending a JSON response with calculated data
-    res.status(200).json({
-      incomeData,
-      totalIncome,
-      expenditureData,
-      totalExpenditure,
-      profitLoss,
-      driversCommission,
-    });
-  } catch (error) {
-    // Handling errors and sending a 500 Internal Server Error response
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-};
-
-
-
-export const calculateOtherTripsProfitLoss = async (req, res) => {
-  try {
-    const { tripNumber, startDate, endDate } = req.query;
-
-    // Parse startDate and endDate strings into Date objects
-    const parsedStartDate = new Date(startDate);
-    const parsedEndDate = new Date(endDate);
-
-    // Find all income data for the specified tripNumber within the date range
-    const incomeData = await OtherTripIncome.find({
-      tripNumber,
-      date: {
-        $gte: parsedStartDate,
-        $lte: parsedEndDate,
-      },
-    });
-
-    // Calculate total income by summing up the amount for each income record
-    const totalIncome = incomeData.reduce((sum, record) => sum + record.amount, 0);
-
-    // Find all expenditure data for the specified tripNumber with status 'paid' within the date range
-    const expenditureData = await OtherTripExpenditure.find({
-      tripNumber,
+    // Fetching driver's commission data (Driver's Commission (PE) with status 'paid')
+    const driverCommissionData = await DriverCommission.find({
+      category: "Driver's Commission (PE)",
       status: 'paid',
       date: {
         $gte: parsedStartDate,
@@ -378,30 +389,35 @@ export const calculateOtherTripsProfitLoss = async (req, res) => {
       },
     });
 
-    // Calculate total expenditure by summing up the amount for each expenditure record
-    const totalExpenditure = expenditureData.reduce((sum, record) => sum + record.amount, 0);
+    // Calculating total driver's commission
+    const totalDriverCommission = driverCommissionData.reduce(
+      (sum, record) => sum + record.totalCommissionAmount,
+      0
+    );
 
-    // Calculate profit or loss
-    const profitLoss = totalIncome - totalExpenditure;
+    // Adding driver's commission to total expenditure
+    const totalExpenditureIncludingDriversCommission = totalExpenditure + totalDriverCommission;
 
-    // Calculate driver's commission (10% of profit or loss)
-    const driversCommission = 0.2 * profitLoss;
+    // Calculating profit or loss
+    const profitLoss = totalIncome - totalExpenditureIncludingDriversCommission;
 
-    
-
+    // Sending a JSON response with calculated data
     res.status(200).json({
       incomeData,
       totalIncome,
       expenditureData,
-      totalExpenditure,
+      totalExpenditure: totalExpenditureIncludingDriversCommission,
       profitLoss,
-      driversCommission,
+      totalDriverCommission,
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+
+
 
 export const calculateAllOtherTripsProfitLoss = async (req, res) => {
   try {
@@ -434,19 +450,36 @@ export const calculateAllOtherTripsProfitLoss = async (req, res) => {
     // Calculate total expenditure by summing up the amount for each expenditure record
     const totalExpenditure = expenditureData.reduce((sum, record) => sum + record.amount, 0);
 
-    // Calculate profit or loss
-    const profitLoss = totalIncome - totalExpenditure;
+    // Fetching driver's commission data (Driver's Commission (OT) with status 'paid')
+    const driverCommissionData = await DriverCommission.find({
+      category: "Driver's Commission (OT)",
+      status: 'paid',
+      date: {
+        $gte: parsedStartDate,
+        $lte: parsedEndDate,
+      },
+    });
 
-    // Calculate driver's commission (10% of profit or loss)
-    const driversCommission = 0.2 * profitLoss;
+    // Calculate total driver's commission
+    const totalDriverCommission = driverCommissionData.reduce(
+      (sum, record) => sum + record.totalCommissionAmount,
+      0
+    );
+
+    
+
+    // Adding driver's commission to total expenditure
+    const totalExpenditureIncludingDriversCommission = totalExpenditure + totalDriverCommission;
+    // Calculate profit or loss
+    const profitLoss = totalIncome - totalExpenditureIncludingDriversCommission;
 
     res.status(200).json({
       incomeData,
       totalIncome,
       expenditureData,
-      totalExpenditure,
+      totalExpenditure: totalExpenditureIncludingDriversCommission,
       profitLoss,
-      driversCommission,
+      totalDriverCommission,
     });
   } catch (error) {
     console.error(error);
@@ -481,3 +514,48 @@ const viewPaidGeneralExpendituresByDateRange = async (req, res) => {
 };
 
 export { viewPaidGeneralExpendituresByDateRange };
+
+
+// Controller to view all drivers' commissions with status 'paid'
+const viewPaidDriversCommissions = async (req, res) => {
+  try {
+    // Parse startDate and endDate strings into Date objects in UTC format
+    const { startDate, endDate } = req.query;
+    const parsedStartDate = new Date(startDate + 'T00:00:00Z');
+    const parsedEndDate = new Date(endDate + 'T23:59:59.999Z');
+
+    // Query the database for DriverCommissions with status 'paid' within the specified period
+    const paidCommissions = await DriverCommission.find({
+      status: 'paid',
+      date: { $gte: parsedStartDate, $lte: parsedEndDate },
+    });
+
+    res.status(200).json(paidCommissions);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+// Controller to view all drivers' commissions with status 'pending payment'
+const viewPendingPaymentDriversCommissions = async (req, res) => {
+  try {
+    // Parse startDate and endDate strings into Date objects in UTC format
+    const { startDate, endDate } = req.query;
+    const parsedStartDate = new Date(startDate + 'T00:00:00Z');
+    const parsedEndDate = new Date(endDate + 'T23:59:59.999Z');
+
+    // Query the database for DriverCommissions with status 'pending payment' within the specified period
+    const pendingPaymentCommissions = await DriverCommission.find({
+      status: 'pending payment',
+      date: { $gte: parsedStartDate, $lte: parsedEndDate },
+    });
+
+    res.status(200).json(pendingPaymentCommissions);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+export { viewPaidDriversCommissions, viewPendingPaymentDriversCommissions };

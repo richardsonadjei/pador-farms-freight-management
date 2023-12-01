@@ -13,7 +13,7 @@ const driverRouter = express.Router();
 driverRouter.post('/register-driver', createDriver);
 
 // Get all drivers
-driverRouter.get('/drivers', getAllDrivers);
+driverRouter.get('/all-drivers', getAllDrivers);
 
 // Get a single driver by ID
 driverRouter.get('/drivers/:id', getDriverById);

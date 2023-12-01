@@ -1,5 +1,5 @@
-// OTIncomeAndExpenditureReport.jsx
 
+// OTIncomeAndExpenditureReport.jsx
 import React, { useState, useEffect } from 'react';
 import { Button, Form, FormGroup, Label, Input, Container, Table, Col, Row } from 'reactstrap';
 
@@ -69,6 +69,7 @@ const AllOTIncomeAndExpenditureReport = () => {
           Generate Report
         </Button>
       </Form>
+
       {reportData && (
         <div>
           <h2 className="text-white">Income Data</h2>
@@ -96,6 +97,7 @@ const AllOTIncomeAndExpenditureReport = () => {
               ))}
             </tbody>
           </Table>
+
           <h2 className="text-white">Expenditure Data</h2>
           <Table responsive bordered striped>
             <thead>
@@ -123,22 +125,25 @@ const AllOTIncomeAndExpenditureReport = () => {
               ))}
             </tbody>
           </Table>
+
           <h2 className="text-white">Summary Report</h2>
           <Table responsive bordered striped>
             <thead>
               <tr>
                 <th>Total Income</th>
-                <th>Total Expenditure</th>
-                <th>Profit/Loss</th>
+                <th>Total Expenditure + Drivers Commission</th>
                 <th>Driver's Commission</th>
+                <th>Profit/Loss</th>
+                
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>{reportData.totalIncome}</td>
                 <td>{reportData.totalExpenditure}</td>
+                <td>{reportData.totalDriverCommission}</td>
                 <td>{reportData.profitLoss}</td>
-                <td>{reportData.driversCommission}</td>
+                
               </tr>
             </tbody>
           </Table>

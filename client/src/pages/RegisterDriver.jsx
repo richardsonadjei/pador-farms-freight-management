@@ -39,7 +39,7 @@ const RegisterDriver = () => {
       ghanaCardId,
       witnessName,
       witnessContact,
-      recordedBy: currentUser ? currentUser.userName : '',
+      registeredBy: currentUser ? currentUser.userName : '',
     };
 
     try {

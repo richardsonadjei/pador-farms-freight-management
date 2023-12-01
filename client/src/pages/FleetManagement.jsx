@@ -22,7 +22,7 @@ const FleetManagement = () => {
             <div className="card-body">
               <h5 className="card-title">Maintenance</h5>
               <p className="card-text">Record and manage vehicle maintenance.</p>
-              <Link to="/maintenance" className="btn btn-primary">
+              <Link to="/general-expense" className="btn btn-primary">
                 Maintenance
               </Link>
             </div>

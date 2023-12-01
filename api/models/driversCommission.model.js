@@ -15,7 +15,6 @@ const driverCommissionSchema = new Schema(
     tripNumber: {
       type: String, // Change to String type
     },
-    
     driverName: {
       type: String,
       required: true,
@@ -24,10 +23,6 @@ const driverCommissionSchema = new Schema(
       type: String,
       required: true,
     },
-    commissionAmountPerBag: {
-        type: Number,
-        default: 1, // Set default value to 1
-      },
     totalCommissionAmount: {
         type: Number,
         required: true,
@@ -36,6 +31,13 @@ const driverCommissionSchema = new Schema(
       type: String,
       required: true,
     },
+    status: {
+      type: String,
+      enum: ['paid', 'pending payment'],
+      default: 'pending payment', // Default status is set to 'pending payment'
+      required: true,
+    },
+
     recordedBy: {
       type: String,
       required: true,

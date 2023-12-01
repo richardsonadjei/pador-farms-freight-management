@@ -27,7 +27,7 @@ const GeneralExpenditureReport = () => {
 
   const renderReportTable = () => {
     if (!reportData || reportData.length === 0) {
-      return <p>No data to display</p>;
+      return <p className="text-white">No data to display</p>;
     }
 
     return (

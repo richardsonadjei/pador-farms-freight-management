@@ -21,7 +21,7 @@ const PE = () => {
 
   useEffect(() => {
     // Fetch drivers
-    fetch('/api/drivers')
+    fetch('/api/all-drivers')
       .then(response => response.json())
       .then(data => setDrivers(data.drivers))
       .catch(error => console.error('Error fetching drivers:', error));

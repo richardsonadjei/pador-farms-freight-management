@@ -28,7 +28,11 @@ const AllExpenseReport = () => {
 
   // Helper function to calculate total amount for a specific model
   const calculateTotalAmount = (expenditures) => {
-    return expenditures.reduce((total, item) => total + (item.expenditureAmount || item.amount), 0);
+    return expenditures.reduce((total, item) => {
+      // Use optional chaining to safely access the property
+      const amount = item.totalCommissionAmount || item.expenditureAmount || item.amount;
+      return total + (amount || 0);
+    }, 0);
   };
 
   return (
@@ -75,7 +79,7 @@ const AllExpenseReport = () => {
               </tr>
             </thead>
             <tbody>
-              {/* Map through reportData and render each row */}
+              {/* Map through PEExpenditures and render each row */}
               {reportData.peExpenditures.map((item) => (
                 <tr key={item._id}>
                   <td>{new Date(item.date).toLocaleDateString()}</td>
@@ -87,18 +91,20 @@ const AllExpenseReport = () => {
                   <td>{item.description}</td>
                   <td>{item.recordedBy}</td>
                   <td>
-                  <a
-  href={`/update-payment-status?id=${item._id}&model=${item.model}`}
-  onClick={(e) => {
-    e.preventDefault();
-    window.location.href = `/update-payment-status?id=${item._id}&model=${item.model}`;
-  }}
->
-  {item.status}
-</a>
+                    <a
+                      href={`/update-payment-status?id=${item._id}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        window.location.href = `/update-payment-status?id=${item._id}`;
+                      }}
+                      style={{ textDecoration: 'none', color: 'green', fontWeight: 'bold' }}
+                    >
+                      {item.status}
+                    </a>
                   </td>
                 </tr>
               ))}
+              {/* Map through OtherTripExpenditures and render each row */}
               {reportData.otherTripExpenditures.map((item) => (
                 <tr key={item._id}>
                   <td>{new Date(item.date).toLocaleDateString()}</td>
@@ -116,12 +122,14 @@ const AllExpenseReport = () => {
                         e.preventDefault();
                         window.location.href = `/update-payment-status?id=${item._id}`;
                       }}
+                      style={{ textDecoration: 'none', color: 'green', fontWeight: 'bold' }}
                     >
                       {item.status}
                     </a>
                   </td>
                 </tr>
               ))}
+              {/* Map through GeneralExpenditures and render each row */}
               {reportData.generalExpenditures.map((item) => (
                 <tr key={item._id}>
                   <td>{new Date(item.date).toLocaleDateString()}</td>
@@ -139,6 +147,32 @@ const AllExpenseReport = () => {
                         e.preventDefault();
                         window.location.href = `/update-payment-status?id=${item._id}`;
                       }}
+                      style={{ textDecoration: 'none', color: 'green', fontWeight: 'bold' }}
+                    >
+                      {item.status}
+                    </a>
+                  </td>
+                </tr>
+              ))}
+              {/* Map through DriverCommissions and render each row */}
+              {reportData.driverCommissions.map((item) => (
+                <tr key={item._id}>
+                  <td>{new Date(item.date).toLocaleDateString()}</td>
+                  <td>Driver's Commission</td>
+                  <td></td>
+                  <td>{item.peNumber}</td>
+                  <td></td>
+                  <td>{item.totalCommissionAmount}</td>
+                  <td>{item.description}</td>
+                  <td>{item.recordedBy}</td>
+                  <td>
+                    <a
+                      href={`/update-payment-status?id=${item._id}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        window.location.href = `/update-payment-status?id=${item._id}`;
+                      }}
+                      style={{ textDecoration: 'none', color: 'green', fontWeight: 'bold' }}
                     >
                       {item.status}
                     </a>
@@ -169,6 +203,10 @@ const AllExpenseReport = () => {
               <tr>
                 <td>General Expenditure</td>
                 <td>{calculateTotalAmount(reportData.generalExpenditures)}</td>
+              </tr>
+              <tr>
+                <td>Driver's Commission</td>
+                <td>{calculateTotalAmount(reportData.driverCommissions)}</td>
               </tr>
             </tbody>
           </Table>
