@@ -1,31 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Form, FormGroup, Label, Input, Container, Table, Col, Row } from 'reactstrap';
-import { Link } from 'react-router-dom';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Tooltip from 'react-bootstrap/Tooltip';
 
-const PEIncomeAndExpenditureReport = () => {
-  const [peNumbers, setPENumbers] = useState([]);
-  const [peNumber, setPENumber] = useState('');
+const PEIncomeAndExpenditure = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [reportData, setReportData] = useState(null);
-
-  useEffect(() => {
-    // Fetch all available peNumbers
-    fetch('/api/all-pe')
-      .then((response) => response.json())
-      .then((data) => {
-        setPENumbers(data.map((pe) => pe.peNumber));
-      })
-      .catch((error) => console.error(error));
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Construct the URL with query parameters
-    const url = `/api/pe-income-expenditure?peNumber=${peNumber}&startDate=${startDate}&endDate=${endDate}`;
+    const url = `/api/all-pe-income-expenditure?startDate=${startDate}&endDate=${endDate}`;
 
     // Fetch the report data
     const response = await fetch(url);
@@ -46,31 +31,10 @@ const PEIncomeAndExpenditureReport = () => {
 
   return (
     <Container>
-      <h1 className="text-white">PE Report</h1>
+      <h1 className="text-white">PE Income and Expenditure Report</h1>
       <Form onSubmit={handleSubmit}>
         <Row>
           <Col sm={12} md={6}>
-            <FormGroup>
-              <Label for="peNumber" className="text-white">
-                PE Number
-              </Label>
-              <Input
-                type="select"
-                name="peNumber"
-                id="peNumber"
-                value={peNumber}
-                onChange={(e) => setPENumber(e.target.value)}
-              >
-                <option value="">Select PE Number</option>
-                {peNumbers.map((number) => (
-                  <option key={number} value={number}>
-                    {number}
-                  </option>
-                ))}
-              </Input>
-            </FormGroup>
-          </Col>
-          <Col sm={12} md={3}>
             <FormGroup>
               <Label for="startDate" className="text-white">
                 Start Date
@@ -84,7 +48,7 @@ const PEIncomeAndExpenditureReport = () => {
               />
             </FormGroup>
           </Col>
-          <Col sm={12} md={3}>
+          <Col sm={12} md={6}>
             <FormGroup>
               <Label for="endDate" className="text-white">
                 End Date
@@ -99,7 +63,7 @@ const PEIncomeAndExpenditureReport = () => {
             </FormGroup>
           </Col>
         </Row>
-        <Button color="primary" type="submit" style={{ color: 'white' }}>
+        <Button color="primary" type="submit" style={{ color: 'white', marginTop: '15px' }}>
           Generate Report
         </Button>
       </Form>
@@ -111,15 +75,9 @@ const PEIncomeAndExpenditureReport = () => {
               <tr>
                 <th>Date</th>
                 <th>Category</th>
-                <th>Truck Registration Number</th>
-                <th>Income Amount Per Bag</th>
-                <th>Total Income Amount</th>
-                <th>Tax Amount Per Bag</th>
-                <th>Total Tax Amount</th>
-                <th>Net Total Amount Per Bag</th>
-                <th>Net Total Amount</th>
-                <th>Description</th>
+                <th>Amount</th>
                 <th>Recorded By</th>
+                <th>Description</th>
               </tr>
             </thead>
             <tbody>
@@ -127,15 +85,9 @@ const PEIncomeAndExpenditureReport = () => {
                 <tr key={income._id}>
                   <td>{income.date}</td>
                   <td>{income.category}</td>
-                  <td>{income.truckRegistrationNumber}</td>
-                  <td>{income.incomeAmountPerBag}</td>
-                  <td>{income.totalIncomeAmount}</td>
-                  <td>{income.taxAmountPerBag}</td>
-                  <td>{income.totalTaxAmount}</td>
-                  <td>{income.netTotalAmountPerbag}</td>
-                  <td>{income.netTotalAmount}</td>
-                  <td>{income.description}</td>
+                  <td>{income.amount}</td>
                   <td>{income.recordedBy}</td>
+                  <td>{income.description}</td>
                 </tr>
               ))}
             </tbody>
@@ -146,8 +98,7 @@ const PEIncomeAndExpenditureReport = () => {
               <tr>
                 <th>Date</th>
                 <th>Category</th>
-                <th>Truck Registration Number</th>
-                <th>Expenditure Amount</th>
+                <th>Amount</th>
                 <th>Description</th>
                 <th>Recorded By</th>
                 <th>Status</th>
@@ -158,8 +109,7 @@ const PEIncomeAndExpenditureReport = () => {
                 <tr key={expenditure._id}>
                   <td>{expenditure.date}</td>
                   <td>{expenditure.category}</td>
-                  <td>{expenditure.truckRegistrationNumber}</td>
-                  <td>{expenditure.expenditureAmount}</td>
+                  <td>{expenditure.amount}</td>
                   <td>{expenditure.description}</td>
                   <td>{expenditure.recordedBy}</td>
                   <td>{expenditure.status}</td>
@@ -173,23 +123,16 @@ const PEIncomeAndExpenditureReport = () => {
               <tr>
                 <th>Total Income</th>
                 <th>Total Expenditure</th>
-                <th>Profit/Loss</th>
                 <th>Driver's Commission</th>
+                <th>Profit/Loss</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>{reportData.totalIncome}</td>
                 <td>{reportData.totalExpenditure}</td>
+                <td>{reportData.totalDriverCommission}</td>
                 <td>{reportData.profitLoss}</td>
-                <td>
-                  <OverlayTrigger
-                    placement="top"
-                    overlay={<Tooltip id="commission-tooltip">Proceed to Commission Payment</Tooltip>}
-                  >
-                    <Link to="/pe-drivers-commission">{reportData.driversCommission}</Link>
-                  </OverlayTrigger>
-                </td>
               </tr>
             </tbody>
           </Table>
@@ -199,4 +142,4 @@ const PEIncomeAndExpenditureReport = () => {
   );
 };
 
-export default PEIncomeAndExpenditureReport;
+export default PEIncomeAndExpenditure;

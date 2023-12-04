@@ -50,6 +50,11 @@ import FuelReport from './pages/FuelReport';
 import PaidDriverCommissionReport from './pages/PaidDriverCommission';
 import PendingPaymentDriverCommission from './pages/PendingPaymentDriverCommission';
 import PEExpenseReport from './pages/PEExpenseReport';
+import AllVehiclesReport from './pages/AllVehicles';
+import DriversCommission from './pages/DriversCommission';
+import CreatePartnerShares from './pages/CreatePartnerShares';
+import PartnerShares from './pages/PartnerShares';
+import SharesPaymentReportWithinAPeriod from './pages/SharesPaymentReportWithinAPeriod';
 
 
 
@@ -108,6 +113,12 @@ export default function App() {
         <Route path='/ot-drivers-commission' element={<OTDriversCommission/>} />
         <Route path='/paid-drivers-commission' element={<PaidDriverCommissionReport/>} />
         <Route path='/pending-payment-drivers-commission' element={<PendingPaymentDriverCommission/>} />
+        <Route path='/all-vehicles' element={<AllVehiclesReport/>} />
+        <Route path='/drivers-commission' element={<DriversCommission/>} />
+        <Route path='/partner-shares' element={<PartnerShares/>} />
+        <Route path='/create-partner-shares' element={<CreatePartnerShares/>} />
+        <Route path='/shares-payment-report-within-a-period' element={<SharesPaymentReportWithinAPeriod/>} />
+        
         
         
        

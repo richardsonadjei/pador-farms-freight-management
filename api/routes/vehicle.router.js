@@ -13,7 +13,7 @@ const vehicleRouter = express.Router();
 vehicleRouter.post('/register-vehicle', createVehicle);
 
 // Route to get all vehicles
-vehicleRouter.get('/vehicles', getAllVehicles);
+vehicleRouter.get('/all-vehicles', getAllVehicles);
 
 // Route to get a specific vehicle by registration number
 vehicleRouter.get('/vehicles/:registrationNumber', getVehicleByRegistrationNumber);

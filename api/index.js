@@ -16,6 +16,7 @@ import reportsRouter from './routes/reports.router.js';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import dcommissionRouter from './routes/drivers.commission.router.js';
+import partnerRouter from './routes/partnerShares.router.js';
 
 dotenv.config()
 const app = express();
@@ -50,6 +51,7 @@ app.use('/api', otExpenseRouter);
 app.use('/api', generalExpenseRouter);
 app.use('/api', reportsRouter);
 app.use('/api', dcommissionRouter);
+app.use('/api', partnerRouter);
 
 
 app.use(express.static(path.join(__dirname, '/client/dist')));

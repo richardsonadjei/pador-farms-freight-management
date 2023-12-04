@@ -10,6 +10,7 @@ import {
   Col,
   Table,
 } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
 const PendingPaymentDriverCommission = () => {
   const [startDate, setStartDate] = useState('');
@@ -104,7 +105,14 @@ const PendingPaymentDriverCommission = () => {
                       <td>{commission.category}</td>
                       <td>{commission.peNumber || commission.tripNumber}</td>
                       <td>{commission.totalCommissionAmount}</td>
-                      <td>{commission.status}</td>
+                      <td>
+                    <Link
+                      to={`/update-payment-status?id=${commission._id}`}
+                      style={{ color: 'blue', textDecoration: 'none', fontWeight: 'bold' }}
+                    >
+                      {commission.status}
+                    </Link>
+                  </td>
                       
                     </tr>
                   ))}

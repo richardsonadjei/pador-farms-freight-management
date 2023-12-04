@@ -20,6 +20,17 @@ const FleetManagement = () => {
         <div className="col-md-4 mb-4">
           <div className="card">
             <div className="card-body">
+              <h5 className="card-title">View All Vehicle</h5>
+              <p className="card-text">View All Vehicles</p>
+              <Link to="/all-vehicles" className="btn btn-primary">
+                All Vehicles
+              </Link>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-4 mb-4">
+          <div className="card">
+            <div className="card-body">
               <h5 className="card-title">Maintenance</h5>
               <p className="card-text">Record and manage vehicle maintenance.</p>
               <Link to="/general-expense" className="btn btn-primary">

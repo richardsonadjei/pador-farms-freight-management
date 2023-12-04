@@ -33,8 +33,13 @@ const Reports = () => {
               </Link>
             </li>
             <li className="nav-item">
+              <Link to="/drivers-commission" className="nav-link text-light">
+                Driver's Commission
+              </Link>
+            </li>
+            <li className="nav-item">
               <Link to="/partner-shares" className="nav-link text-light">
-                View Shares To Partners
+                Partner Shares And Payments
               </Link>
             </li>
             
