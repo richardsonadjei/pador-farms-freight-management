@@ -44,7 +44,7 @@ const OtherTrips = () => {
 
   const fetchVehicleRegistrationNumbers = async () => {
     try {
-      const response = await fetch('/api/vehicles');
+      const response = await fetch('/api/all-vehicles');
       const data = await response.json();
       console.log('API Response:', data);  // Log the entire response
       if (response.ok) {

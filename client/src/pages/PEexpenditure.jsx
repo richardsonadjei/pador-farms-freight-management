@@ -40,7 +40,7 @@ const RecordPEexpenditure = () => {
         alert('An error occurred while fetching PE numbers');
       });
 
-    fetch('/api/vehicles')
+    fetch('/api/all-vehicles')
       .then((response) => response.json())
       .then((data) => {
         if (data.vehicles && Array.isArray(data.vehicles)) {

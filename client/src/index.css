@@ -2,3 +2,14 @@ body{
     background: rgb(2,0,36);
 
 }
+
+
+/* Add this style to your CSS or style file */
+.btn-green {
+    background-color: #00cc00; /* Your preferred shade of green */
+    color: #fff; /* Your preferred contrasting text color */
+    font-weight: bold; /* Make the text bold */
+    /* Add any additional styles you want */
+  }
+  
+  

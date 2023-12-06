@@ -27,7 +27,7 @@ const PE = () => {
       .catch(error => console.error('Error fetching drivers:', error));
 
     // Fetch vehicles
-    fetch('/api/vehicles')
+    fetch('/api/all-vehicles')
       .then(response => response.json())
       .then(data => setVehicles(data.vehicles))
       .catch(error => console.error('Error fetching vehicles:', error));

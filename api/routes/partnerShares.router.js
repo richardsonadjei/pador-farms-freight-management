@@ -3,7 +3,7 @@ import express from 'express';
 import {
   createPartnerPayment,
   getPartnerPayments,
-  getPaymentById,
+  getPaymentsByNameAndPeriod ,
   
 } from '../controllers/partnerShares.js'; // Update the path
 
@@ -16,7 +16,7 @@ partnerRouter.post('/shares-payments', createPartnerPayment);
 partnerRouter.get('/all-payments', getPartnerPayments);
 
 // Get a single payment by ID
-partnerRouter.get('/payments/:id', getPaymentById);
+partnerRouter.get('/partner-payments', getPaymentsByNameAndPeriod );
 
 
 

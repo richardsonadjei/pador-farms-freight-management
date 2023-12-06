@@ -32,7 +32,7 @@ const OTExpenditure = () => {
       .catch((error) => console.error(error));
 
     // Fetch vehicle registration numbers
-    fetch('/api/vehicles')
+    fetch('/api/all-vehicles')
       .then((response) => response.json())
       .then((data) => {
         if (data.vehicles && Array.isArray(data.vehicles)) {

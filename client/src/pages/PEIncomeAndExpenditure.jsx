@@ -85,7 +85,7 @@ const PEIncomeAndExpenditure = () => {
                 <tr key={income._id}>
                   <td>{income.date}</td>
                   <td>{income.category}</td>
-                  <td>{income.amount}</td>
+                  <td>{income.netTotalAmount}</td>
                   <td>{income.recordedBy}</td>
                   <td>{income.description}</td>
                 </tr>
@@ -109,7 +109,7 @@ const PEIncomeAndExpenditure = () => {
                 <tr key={expenditure._id}>
                   <td>{expenditure.date}</td>
                   <td>{expenditure.category}</td>
-                  <td>{expenditure.amount}</td>
+                  <td>{expenditure.expenditureAmount}</td>
                   <td>{expenditure.description}</td>
                   <td>{expenditure.recordedBy}</td>
                   <td>{expenditure.status}</td>

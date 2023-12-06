@@ -20,7 +20,7 @@ const PartnerShares = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/view-payments-to-partners" className="nav-link text-light">
+              <Link to="/partner-payments" className="nav-link text-light">
                 View Payments Made to Each Partner
               </Link>
             </li>
@@ -49,7 +49,7 @@ const PartnerShares = () => {
                     <h3 className="card-title">View All Shares Within A Period</h3>
                     <p className="card-text">View partner shares paid within a specific period.</p>
                     <Link to="/shares-payment-report-within-a-period">
-                      <button className="btn btn-primary mb-2">View Shares</button>
+                      <button className="btn btn-primary mb-2">View Payments</button>
                     </Link>
                   </div>
                 </div>
@@ -61,7 +61,7 @@ const PartnerShares = () => {
                   <div className="card-body">
                     <h3 className="card-title">View Payments to Each Partner</h3>
                     <p className="card-text">View detailed information about payments made to each partner.</p>
-                    <Link to="/view-payments-to-partners">
+                    <Link to="/partner-payments">
                       <button className="btn btn-primary mb-2">View Payments</button>
                     </Link>
                   </div>

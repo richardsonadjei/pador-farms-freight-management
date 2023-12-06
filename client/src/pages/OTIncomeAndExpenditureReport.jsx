@@ -177,8 +177,8 @@ const OTIncomeAndExpenditureReport = () => {
               <tr>
                 <td>{reportData.totalIncome}</td>
                 <td>{reportData.totalExpenditure}</td>
-                <td>{reportData.profitLoss}</td>
                 <td>{reportData.totalDriverCommission}</td>
+                <td>{reportData.profitLoss}</td>
               </tr>
             </tbody>
           </Table>

@@ -1,5 +1,5 @@
 import express from 'express';
-import updateExpenditureStatus, { calculateAllOtherTripsProfitLoss, calculateAllPEProfitLoss,   calculateProfitLoss, getAllExpendituresByDateRange, getAllOtherTripExpendituresByDateRange, getAllOtherTripIncome,  getAllPEExpendituresByDateRange,  getIncomeReport,    viewFuelExpenditures,  viewPEincomeByDateRange, viewPaidDriversCommissions, viewPaidGeneralExpendituresByDateRange, viewPendingPaymentDriversCommissions, viewRepairsAndMaintenanceExpenditures } from '../controllers/reports.controller.js';
+import updateExpenditureStatus, { calculateAllOtherTripsProfitLoss, calculateAllPEProfitLoss,   calculateProfitLoss, generateProfitLossReport, getAllExpendituresByDateRange, getAllOtherTripExpendituresByDateRange, getAllOtherTripIncome,  getAllPEExpendituresByDateRange,  getIncomeReport,    viewFuelExpenditures,  viewPEincomeByDateRange, viewPaidDriversCommissions, viewPaidGeneralExpendituresByDateRange, viewPendingPaymentDriversCommissions, viewRepairsAndMaintenanceExpenditures } from '../controllers/reports.controller.js';
 
 const reportsRouter = express.Router();
 
@@ -23,6 +23,7 @@ reportsRouter.get('/paid-commissions', viewPaidDriversCommissions);
 
 // Route to view all drivers' commissions with status 'pending payment'
 reportsRouter.get('/pending-payment-commissions', viewPendingPaymentDriversCommissions);
+reportsRouter.get('/all-profit-loss', generateProfitLossReport);
 
 
 export default reportsRouter;

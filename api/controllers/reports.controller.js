@@ -4,6 +4,7 @@ import PEExpenditure from '../models/pe.expenditure.model.js';
 import GeneralExpenditure from '../models/generalExpenditure.model.js';
 import OtherTripExpenditure from '../models/ot.expenditure.model.js';
 import DriverCommission from '../models/driversCommission.model.js';
+import Payment from '../models/partnerShares.model.js';
 
 
 const getIncomeReport = async (req, res) => {
@@ -559,3 +560,125 @@ const viewPendingPaymentDriversCommissions = async (req, res) => {
 };
 
 export { viewPaidDriversCommissions, viewPendingPaymentDriversCommissions };
+
+
+
+
+
+export const generateProfitLossReport = async (req, res) => {
+  try {
+    const { startDate, endDate } = req.query;
+    const parsedStartDate = new Date(`${startDate}T00:00:00Z`);
+    const parsedEndDate = new Date(`${endDate}T23:59:59.999Z`);
+
+    // Fetching income data from IncomeHauling
+    const incomeHaulingData = await IncomeHauling.find({
+      date: {
+        $gte: parsedStartDate,
+        $lte: parsedEndDate,
+      },
+    });
+
+    // Fetching income data from OtherTripIncome
+    const otherTripIncomeData = await OtherTripIncome.find({
+      date: {
+        $gte: parsedStartDate,
+        $lte: parsedEndDate,
+      },
+    });
+
+    // Calculating total income
+    const totalIncomeHauling = incomeHaulingData.reduce((sum, record) => sum + record.netTotalAmount, 0);
+    const totalOtherTripIncome = otherTripIncomeData.reduce((sum, record) => sum + record.amount, 0);
+    const totalIncome = totalIncomeHauling + totalOtherTripIncome;
+
+    // Fetching PEExpenditure data
+    const peExpenditureData = await PEExpenditure.find({
+      status: 'paid',
+      date: {
+        $gte: parsedStartDate,
+        $lte: parsedEndDate,
+      },
+    });
+
+    // Fetching GeneralExpenditure data
+    const generalExpenditureData = await GeneralExpenditure.find({
+      status: 'paid',
+      date: {
+        $gte: parsedStartDate,
+        $lte: parsedEndDate,
+      },
+    });
+
+    // Fetching OtherTripExpenditure data
+    const otherTripExpenditureData = await OtherTripExpenditure.find({
+      status: 'paid',
+      date: {
+        $gte: parsedStartDate,
+        $lte: parsedEndDate,
+      },
+    });
+
+    // Fetching Payment data
+    const paymentData = await Payment.find({
+      date: {
+        $gte: parsedStartDate,
+        $lte: parsedEndDate,
+      },
+    });
+
+    // Calculating total expenditure for each type
+    const totalPEExpenditure = peExpenditureData.reduce((sum, record) => sum + record.expenditureAmount, 0);
+    const totalGeneralExpenditure = generalExpenditureData.reduce((sum, record) => sum + record.amount, 0);
+    const totalOtherTripExpenditure = otherTripExpenditureData.reduce((sum, record) => sum + record.amount, 0);
+    const totalPaymentExpenditure = paymentData.reduce((sum, record) => sum + record.amount, 0);
+
+    // Calculating overall total expenditure
+    const totalExpenditure = totalPEExpenditure + totalGeneralExpenditure + totalOtherTripExpenditure + totalPaymentExpenditure;
+
+    // Fetching driver's commission data
+    const driverCommissionData = await DriverCommission.find({
+      category: "Driver's Commission (PE)",
+      status: 'paid',
+      date: {
+        $gte: parsedStartDate,
+        $lte: parsedEndDate,
+      },
+    });
+
+    // Calculating total driver's commission
+    const totalDriverCommission = driverCommissionData.reduce(
+      (sum, record) => sum + record.totalCommissionAmount,
+      0
+    );
+
+    // Adding driver's commission to total expenditure
+    const totalExpenditureIncludingDriversCommission = totalExpenditure + totalDriverCommission;
+
+    // Calculating profit or loss
+    const profitLoss = totalIncome - totalExpenditureIncludingDriversCommission;
+
+    // Sending a JSON response with calculated data
+    res.status(200).json({
+      incomeHaulingData,
+      totalIncomeHauling,
+      otherTripIncomeData,
+      totalOtherTripIncome,
+      totalIncome,
+      peExpenditureData,
+      totalPEExpenditure,
+      generalExpenditureData,
+      totalGeneralExpenditure,
+      otherTripExpenditureData,
+      totalOtherTripExpenditure,
+      paymentData,
+      totalPaymentExpenditure,
+      totalExpenditure: totalExpenditureIncludingDriversCommission,
+      profitLoss,
+      totalDriverCommission,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};

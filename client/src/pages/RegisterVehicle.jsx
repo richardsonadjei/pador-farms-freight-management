@@ -22,6 +22,11 @@ const RegisterVehicle = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Check if status is empty
+  if (!status) {
+    console.log('Please select a status');
+    return;
+  }
 
     // Prepare data for the POST request
     const formData = {
@@ -41,6 +46,8 @@ const RegisterVehicle = () => {
       registeredBy:currentUser ? currentUser.userName : '',
     };
 
+  // Log the formData to check the values
+  console.log('Form Data:', formData);
     try {
       // Replace 'your-api-endpoint' with the actual API endpoint for registering a vehicle
       const response = await fetch('/api/register-vehicle', {
@@ -229,18 +236,24 @@ const RegisterVehicle = () => {
         <Row>
           <Col md={6}>
           <FormGroup>
-              <Label for="status" style={{ color: 'white' }}>Status</Label>
-              <Input
-                type="select"
-                name="status"
-                id="status"
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-              >
-                <option value="Serviceable">Serviceable</option>
-                <option value="Unserviceable">Unserviceable</option>
-              </Input>
-            </FormGroup>
+  <Label for="status" style={{ color: 'white' }}>Status</Label>
+  <Input
+    type="select"
+    name="status"
+    id="status"
+    value={status}
+    onChange={(e) => {
+      console.log('Selected status:', e.target.value);
+      setStatus(e.target.value);
+    }}
+    
+  >
+    <option value="Serviceable">Serviceable</option>
+    <option value="Unserviceable">Unserviceable</option>
+  </Input>
+</FormGroup>
+
+
           </Col>
           <Col md={6}>
             <FormGroup>

@@ -55,6 +55,8 @@ import DriversCommission from './pages/DriversCommission';
 import CreatePartnerShares from './pages/CreatePartnerShares';
 import PartnerShares from './pages/PartnerShares';
 import SharesPaymentReportWithinAPeriod from './pages/SharesPaymentReportWithinAPeriod';
+import PartnerPaymentReport from './pages/PartnerPayment';
+import AllProfitReport from './pages/AllProfitReport';
 
 
 
@@ -118,6 +120,8 @@ export default function App() {
         <Route path='/partner-shares' element={<PartnerShares/>} />
         <Route path='/create-partner-shares' element={<CreatePartnerShares/>} />
         <Route path='/shares-payment-report-within-a-period' element={<SharesPaymentReportWithinAPeriod/>} />
+        <Route path='/partner-payments' element={<PartnerPaymentReport/>} />
+        <Route path='/all-profit' element={<AllProfitReport/>} />
         
         
         

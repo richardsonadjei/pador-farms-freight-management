@@ -134,6 +134,10 @@ const Reports = () => {
                     <Link to="/all-ot-income-expenditure" className="me-2">
                       <button className="btn btn-primary mb-2" >All OT Within A Period</button>
                     </Link>
+                    <Link to="/all-profit" className="me-2">
+  <button className="btn btn-primary mb-2 btn-green">All Profits Loss</button>
+</Link>
+
                   </div>
                 </div>
               </div>
