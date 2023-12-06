@@ -33,42 +33,42 @@ const AllVehiclesReport = () => {
       <Row>
         <Col>
           <h1 style={{ color: 'white' }}>All Vehicles Report</h1>
-          <table className="table">
-            <thead>
-              <tr>
-              <th>Date Registered</th>
-                <th>Registration Number</th>
-                <th>Make</th>
-                <th>Model</th>
-                <th>Year</th>
-                <th>Chasis Number</th>
-                <th>Capacity</th>
-                <th>Year Purchased</th>
-                <th>Price</th>
-                <th>Fuel Type</th>
-               
-                {/* Add more columns based on your data */}
-              </tr>
-            </thead>
-            <tbody>
-              {vehicles.map((vehicle) => (
-                <tr key={vehicle.id}>
-                  <td>{convertToLocalDate(vehicle.createdAt)}</td>
-                  <td>{vehicle.registrationNumber}</td>
-                  <td>{vehicle.make}</td>
-                  <td>{vehicle.model}</td>
-                  <td>{vehicle.year}</td>
-                  <td>{vehicle.chasisNumber}</td>
-                  <td>{vehicle.capacity}</td>
-                  <td>{vehicle.yearPurchased}</td>
-                  <td>{vehicle.price}</td>
-                  <td>{vehicle.fuelType}</td>
-                  
-                  {/* Add more cells based on your data */}
+          <div className="table-responsive">
+            <table className="table table-striped">
+              <thead>
+                <tr>
+                  <th>Date Registered</th>
+                  <th>Registration Number</th>
+                  <th>Make</th>
+                  <th>Model</th>
+                  <th>Year</th>
+                  <th>Chassis Number</th>
+                  <th>Capacity</th>
+                  <th>Year Purchased</th>
+                  <th>Price</th>
+                  <th>Fuel Type</th>
+                  {/* Add more columns based on your data */}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {vehicles.map((vehicle) => (
+                  <tr key={vehicle.id}>
+                    <td>{convertToLocalDate(vehicle.createdAt)}</td>
+                    <td>{vehicle.registrationNumber}</td>
+                    <td>{vehicle.make}</td>
+                    <td>{vehicle.model}</td>
+                    <td>{vehicle.year}</td>
+                    <td>{vehicle.chassisNumber}</td>
+                    <td>{vehicle.capacity}</td>
+                    <td>{vehicle.yearPurchased}</td>
+                    <td>{vehicle.price}</td>
+                    <td>{vehicle.fuelType}</td>
+                    {/* Add more cells based on your data */}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </Col>
       </Row>
     </Container>

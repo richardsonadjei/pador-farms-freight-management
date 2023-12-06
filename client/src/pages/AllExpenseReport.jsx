@@ -35,6 +35,17 @@ const AllExpenseReport = () => {
     }, 0);
   };
 
+  // Helper function to calculate overall total amount across all categories
+  const calculateOverallTotalAmount = () => {
+    const allExpenditures = [
+      ...reportData.peExpenditures,
+      ...reportData.otherTripExpenditures,
+      ...reportData.generalExpenditures,
+      ...reportData.driverCommissions,
+    ];
+
+    return calculateTotalAmount(allExpenditures);
+  };
   return (
     <Container>
       <h2 className="text-white">All Expenditure Report</h2>
@@ -208,6 +219,13 @@ const AllExpenseReport = () => {
                 <td>Driver's Commission</td>
                 <td>{calculateTotalAmount(reportData.driverCommissions)}</td>
               </tr>
+              <tr>
+  <td style={{ fontWeight: 'bold', fontSize: '1.2em' }}>Overall Total</td>
+  <td style={{ color: 'red', fontWeight: 'bold', fontSize: '1.2em' }}>
+    {calculateOverallTotalAmount()}
+  </td>
+</tr>
+
             </tbody>
           </Table>
         </>
