@@ -34,8 +34,7 @@ const AllProfitReport = () => {
           const value = item[key];
           const formattedValue = key.includes('Date') && value && !isNaN(new Date(value))
             ? new Date(value).toLocaleDateString() : value;
-  
-          console.log(`Key: ${key}, Value: ${value}, Formatted: ${formattedValue}`);
+
   
           return (
             <td key={key}>
