@@ -627,17 +627,8 @@ export const generateProfitLossReport = async (req, res) => {
       },
     });
 
-    // Calculating total expenditure for each type
-    const totalPEExpenditure = peExpenditureData.reduce((sum, record) => sum + record.expenditureAmount, 0);
-    const totalGeneralExpenditure = generalExpenditureData.reduce((sum, record) => sum + record.amount, 0);
-    const totalOtherTripExpenditure = otherTripExpenditureData.reduce((sum, record) => sum + record.amount, 0);
-    const totalPaymentExpenditure = paymentData.reduce((sum, record) => sum + record.amount, 0);
-
-    // Calculating overall total expenditure
-    const totalExpenditure = totalPEExpenditure + totalGeneralExpenditure + totalOtherTripExpenditure + totalPaymentExpenditure;
-
-    // Fetching driver's commission data
-    const driverCommissionData = await DriverCommission.find({
+    // Fetching driver's commission data for PE
+    const driverCommissionPEData = await DriverCommission.find({
       category: "Driver's Commission (PE)",
       status: 'paid',
       date: {
@@ -646,14 +637,40 @@ export const generateProfitLossReport = async (req, res) => {
       },
     });
 
-    // Calculating total driver's commission
-    const totalDriverCommission = driverCommissionData.reduce(
+    // Fetching driver's commission data for other trips
+    const driverCommissionOTData = await DriverCommission.find({
+      category: "Driver's Commission (OT)",
+      status: 'paid',
+      date: {
+        $gte: parsedStartDate,
+        $lte: parsedEndDate,
+      },
+    });
+
+    // Calculating total expenditure for each type
+    const totalPEExpenditure = peExpenditureData.reduce((sum, record) => sum + record.expenditureAmount, 0);
+    const totalGeneralExpenditure = generalExpenditureData.reduce((sum, record) => sum + record.amount, 0);
+    const totalOtherTripExpenditure = otherTripExpenditureData.reduce((sum, record) => sum + record.amount, 0);
+    const totalPaymentExpenditure = paymentData.reduce((sum, record) => sum + record.amount, 0);
+
+    // Calculating total driver's commission for PE
+    const totalDriverCommissionPE = driverCommissionPEData.reduce(
       (sum, record) => sum + record.totalCommissionAmount,
       0
     );
 
+    // Calculating total driver's commission for other trips
+    const totalDriverCommissionOT = driverCommissionOTData.reduce(
+      (sum, record) => sum + record.totalCommissionAmount,
+      0
+    );
+
+    // Calculating total driver's commission
+    const totalDriverCommission = totalDriverCommissionPE + totalDriverCommissionOT;
+
     // Adding driver's commission to total expenditure
-    const totalExpenditureIncludingDriversCommission = totalExpenditure + totalDriverCommission;
+    const totalExpenditureIncludingDriversCommission =
+      totalPEExpenditure + totalGeneralExpenditure + totalOtherTripExpenditure + totalPaymentExpenditure + totalDriverCommission;
 
     // Calculating profit or loss
     const profitLoss = totalIncome - totalExpenditureIncludingDriversCommission;
@@ -673,12 +690,17 @@ export const generateProfitLossReport = async (req, res) => {
       totalOtherTripExpenditure,
       paymentData,
       totalPaymentExpenditure,
+      driverCommissionPEData,
+      totalDriverCommissionPE,
+      driverCommissionOTData,
+      totalDriverCommissionOT,
+      totalDriverCommission,
       totalExpenditure: totalExpenditureIncludingDriversCommission,
       profitLoss,
-      totalDriverCommission,
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+

@@ -26,15 +26,19 @@ const AllProfitReport = () => {
       console.error('Error fetching data:', error);
     }
   };
-
   const renderTableRows = (data, keys) => {
     return data.map((item, index) => (
       <tr key={index}>
         {keys.map((key) => {
           const value = item[key];
-          const formattedValue = key.includes('Date') && value && !isNaN(new Date(value))
-            ? new Date(value).toLocaleDateString() : value;
-
+          const formattedValue = (() => {
+            if (typeof value === 'string' && value.includes('T')) {
+              // Check if the value is a string and contains 'T' (ISO format)
+              const dateOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
+              return new Date(value).toLocaleDateString(undefined, dateOptions);
+            }
+            return value;
+          })();
   
           return (
             <td key={key}>
@@ -45,6 +49,9 @@ const AllProfitReport = () => {
       </tr>
     ));
   };
+  
+  
+  
   
   
 
@@ -239,7 +246,7 @@ const AllProfitReport = () => {
           </Table>
 
           {/* Payment Expenditure Table */}
-          <h2 style={{ color: 'white', marginTop: '20px' }}>Payment Expenditure</h2>
+          <h2 style={{ color: 'white', marginTop: '20px' }}>Payments To Partners</h2>
           <Table striped responsive>
             {/* Table Headers */}
             <thead>
@@ -267,28 +274,92 @@ const AllProfitReport = () => {
             </tbody>
           </Table>
 
-          {/* Summary Report Table */}
-          <h2 style={{ color: 'white', marginTop: '20px' }}>Summary Report</h2>
+          {/* Driver's Commission Table for PE */}
+          <h2 style={{ color: 'white', marginTop: '20px' }}>Driver's Commission (PE)</h2>
           <Table striped responsive>
             {/* Table Headers */}
             <thead>
               <tr>
-                <th>Total Income</th>
-                <th>Total Expenditure</th>
-                <th>Profit/Loss</th>
-                <th>Total Driver Commission</th>
+                <th>Date</th>
+                <th>PE Number</th>
+                <th>Driver Name</th>
+                <th>Total Commission Amount</th>
+                <th>Description</th>
+                <th>Status</th>
               </tr>
             </thead>
             {/* Table Body */}
             <tbody>
-              <tr>
-                <td>{reportData.totalIncome}</td>
-                <td>{reportData.totalExpenditure}</td>
-                <td>{reportData.profitLoss}</td>
-                <td>{reportData.totalDriverCommission}</td>
-              </tr>
+              {renderTableRows(reportData.driverCommissionPEData, [
+                'date',
+                'peNumber',
+                'driverName',
+                'totalCommissionAmount',
+                'description',
+                'status',
+              ])}
             </tbody>
           </Table>
+
+          {/* Driver's Commission Table for Other Trips */}
+          <h2 style={{ color: 'white', marginTop: '20px' }}>Driver's Commission (OT)</h2>
+          <Table striped responsive>
+            {/* Table Headers */}
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Trip Number</th>
+                <th>Driver Name</th>
+                <th>Total Commission Amount</th>
+                <th>Description</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            {/* Table Body */}
+            <tbody>
+              {renderTableRows(reportData.driverCommissionOTData, [
+                'date',
+                'tripNumber',
+                'driverName',
+                'totalCommissionAmount',
+                'description',
+                'status',
+              ])}
+            </tbody>
+          </Table>
+
+{/* Summary Report Table */}
+<h2 style={{ color: 'white', marginTop: '20px' }}>Summary Report</h2>
+<Table striped responsive>
+  {/* Table Headers */}
+  <thead>
+    <tr>
+      <th>Total Income</th>
+      <th>Total Expenditure</th>
+      <th>Total Driver Commission</th>
+      <th>Profit/Loss</th>
+    </tr>
+  </thead>
+  {/* Table Body */}
+  <tbody>
+    <tr>
+      <td style={{ color: '#3333FF', fontWeight: 'bold' }}>
+        {reportData.totalIncome}
+      </td>
+      <td style={{ color: '#FF0000', fontWeight: 'bold' }}>
+        {reportData.totalExpenditure}
+      </td>
+      <td style={{ color: '#FF0033', fontWeight: 'bold' }}>
+        {reportData.totalDriverCommission}
+      </td>
+      <td style={{ color: reportData.profitLoss >= 0 ? 'green' : 'red', fontWeight: 'bold' }}>
+        {reportData.profitLoss}
+      </td>
+    </tr>
+  </tbody>
+</Table>
+
+
         </div>
       )}
     </Container>
