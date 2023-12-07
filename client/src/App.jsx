@@ -57,6 +57,14 @@ import PartnerShares from './pages/PartnerShares';
 import SharesPaymentReportWithinAPeriod from './pages/SharesPaymentReportWithinAPeriod';
 import PartnerPaymentReport from './pages/PartnerPayment';
 import AllProfitReport from './pages/AllProfitReport';
+import PrimaryEvacuation from './pages/PrimaryEvacuation';
+import ExpectedPECommissionReport from './pages/ExpectedPECommission';
+import MonthlyPECommission from './pages/MonthlyPECommission';
+import ViewAllPEReport from './pages/ViewAllPEReport';
+import OtherTripMain from './pages/OtherTripsMain';
+import ExpectedOTCommissionReport from './pages/ExpectedOTCommission';
+import AllOtherTripsWithinPeriodReport from './pages/AllOTWithinAPeriod';
+import EachOTIncomeExpenseReport from './pages/EachOtherTripIncomeExpense';
 
 
 
@@ -122,6 +130,14 @@ export default function App() {
         <Route path='/shares-payment-report-within-a-period' element={<SharesPaymentReportWithinAPeriod/>} />
         <Route path='/partner-payments' element={<PartnerPaymentReport/>} />
         <Route path='/all-profit' element={<AllProfitReport/>} />
+        <Route path='/primary-evacuations' element={<PrimaryEvacuation/>} />
+        <Route path='/expected-pe-commission' element={<ExpectedPECommissionReport/>} />
+        <Route path='/monthly-pe-commission' element={<MonthlyPECommission/>} />
+        <Route path='/all-pe-report' element={<ViewAllPEReport/>} />
+        <Route path='/other-trip-main' element={<OtherTripMain/>} />
+        <Route path='/expected other-trip-commission' element={<ExpectedOTCommissionReport/>} />
+        <Route path='/all-other-trips' element={<AllOtherTripsWithinPeriodReport/>} />
+        <Route path='/each-other-trips-income-expense' element={<EachOTIncomeExpenseReport/>} />
         
         
         

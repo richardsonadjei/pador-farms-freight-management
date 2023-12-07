@@ -11,9 +11,11 @@ const driverCommissionSchema = new Schema(
     },
     peNumber: {
         type: String,
+        
     },
     tripNumber: {
       type: String, // Change to String type
+      
     },
     driverName: {
       type: String,

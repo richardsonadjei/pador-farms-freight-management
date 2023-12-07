@@ -1,4 +1,7 @@
 import DriverCommission from '../models/driversCommission.model.js';
+import CocoaHaulage from '../models/pe.model.js'; // Import your CocoaHaulage model
+import OtherTripIncome from '../models/ot.income.model.js';
+import OtherTripExpenditure from '../models/ot.expenditure.model.js';
 
 export const createPEDriverCommission = async (req, res) => {
   try {
@@ -113,42 +116,119 @@ export const getDriverCommissionById = async (req, res) => {
   }
 };
 
-// Controller to update a specific driver's commission by ID
-export const updateDriverCommissionById = async (req, res) => {
-  const { id } = req.params;
 
+export const calculateDriverCommissionForCocoaHaulages = async (req, res) => {
   try {
-    const updatedDriverCommission = await DriverCommission.findByIdAndUpdate(
-      id,
-      { $set: req.body },
-      { new: true }
-    );
+    const { startDate, endDate } = req.query;
 
-    if (!updatedDriverCommission) {
-      return res.status(404).json({ message: 'Driver commission not found' });
-    }
+    // Parse startDate and endDate strings into Date objects in UTC format
+    const parsedStartDate = new Date(startDate + 'T00:00:00Z'); // Assuming startDate is in YYYY-MM-DD format
+    const parsedEndDate = new Date(endDate + 'T23:59:59.999Z'); // Assuming endDate is in YYYY-MM-DD format
 
-    res.status(200).json({ driverCommission: updatedDriverCommission });
+    // Retrieve cocoa haulages within the specified period
+    const cocoaHaulages = await CocoaHaulage.find({
+      date: { $gte: parsedStartDate, $lte: parsedEndDate },
+    });
+
+    // Calculate driver's commission and gather additional information for each cocoa haulage
+    const driverCommissions = cocoaHaulages.map((haulage) => {
+      const commission = 1 * haulage.quantity; // Assuming the driver's commission is 1 multiplied by the quantity of bags
+      return {
+        haulageId: haulage._id,
+        driverName: haulage.driverName,
+        commission,
+      };
+    });
+
+    // Calculate total quantity of bags
+    const totalQuantityOfBags = cocoaHaulages.reduce((total, haulage) => total + haulage.quantity, 0);
+
+    // Get a list of all PE numbers
+    const peNumbers = cocoaHaulages.map((haulage) => haulage.peNumber);
+
+    res.status(200).json({
+      totalQuantityOfBags,
+      peNumbers,
+      driverCommissions,
+    });
   } catch (error) {
-    console.error('Error updating driver commission by ID:', error);
+    console.error('Error calculating driver commissions for cocoa haulages:', error);
     res.status(500).json({ error: 'Internal Server Error. Please try again later.' });
   }
 };
 
-// Controller to delete a specific driver's commission by ID
-export const deleteDriverCommissionById = async (req, res) => {
-  const { id } = req.params;
 
+export const createMonthlyPEDriverCommission = async (req, res) => {
   try {
-    const deletedDriverCommission = await DriverCommission.findByIdAndDelete(id);
+    const {
+      date,
+     
+      driverName,
+      totalCommissionAmount,
+      description,
+      recordedBy,
+      status,
+    } = req.body;
 
-    if (!deletedDriverCommission) {
-      return res.status(404).json({ message: 'Driver commission not found' });
+    // Set default category to "Driver's Commission (PE)"
+    const category = 'Driver\'s Commission (PE)';
+
+    const newDriverCommission = new DriverCommission({
+      date,
+      driverName,
+      category,
+      totalCommissionAmount,
+      description,
+      recordedBy,
+      status, // Include the status field
+    });
+
+    await newDriverCommission.save();
+
+    res.status(201).json({ driverCommission: newDriverCommission });
+  } catch (error) {
+    console.error('Error creating PE driver commission:', error);
+    res.status(500).json({ error: 'Internal Server Error. Please try again later.' });
+  }
+};
+
+
+
+
+
+
+
+export const calculateExpectedOtherTripCommission = async (req, res) => {
+  try {
+    const { tripNumber } = req.query;
+
+    // Fetch income for the specified tripNumber
+    const income = await OtherTripIncome.findOne({ tripNumber });
+
+    if (!income) {
+      return res.status(404).json({ message: 'Income not found for the specified tripNumber' });
     }
 
-    res.status(200).json({ message: 'Driver commission deleted successfully' });
+    // Fetch expenditures for the specified tripNumber, considering "Fuel" and "Labourers Renumeration" categories
+    const expenditures = await OtherTripExpenditure.find({
+      tripNumber,
+      category: { $in: ['Fuel', 'Labourers Renumeration'] },
+    });
+
+    // Calculate overall expenditure
+    const overallExpenditure = expenditures.reduce((total, expenditure) => total + expenditure.amount, 0);
+
+    // Calculate expected driver's commission as 15% of the difference between income and overall expenditure
+    const expectedCommission = 0.15 * (income.amount - overallExpenditure);
+
+    res.status(200).json({
+      tripNumber,
+      income: income.amount,
+      overallExpenditure,
+      expectedCommission,
+    });
   } catch (error) {
-    console.error('Error deleting driver commission by ID:', error);
+    console.error('Error calculating expected driver commission:', error);
     res.status(500).json({ error: 'Internal Server Error. Please try again later.' });
   }
 };

@@ -13,12 +13,12 @@ const Dashboard = () => {
           <h2 className="mt-3 mb-4">Business Dashboard</h2>
           <ul className="nav flex-column">
             <li className="nav-item">
-              <Link to="/pe" className="nav-link text-light">
+              <Link to="/primary-evacuations" className="nav-link text-light">
                 Primary Evacuation
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/other-trips" className="nav-link text-light">
+              <Link to="/other-trip-main" className="nav-link text-light">
                 Other Trips
               </Link>
             </li>

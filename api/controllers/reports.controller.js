@@ -488,6 +488,62 @@ export const calculateAllOtherTripsProfitLoss = async (req, res) => {
   }
 };
 
+export const calculateSpecificTripProfitLoss = async (req, res) => {
+  try {
+    const { tripNumber } = req.query;
+
+    // Find income data for the specific trip
+    const incomeData = await OtherTripIncome.find({
+      tripNumber,
+    });
+
+    // Calculate total income for the specific trip
+    const totalIncome = incomeData.reduce((sum, record) => sum + record.amount, 0);
+
+    // Find expenditure data with status 'paid' for the specific trip
+    const expenditureData = await OtherTripExpenditure.find({
+      tripNumber,
+      status: 'paid',
+    });
+
+    // Calculate total expenditure for the specific trip
+    const totalExpenditure = expenditureData.reduce((sum, record) => sum + record.amount, 0);
+
+    // Fetch driver's commission data (Driver's Commission (OT) with status 'paid') for the specific trip
+    const driverCommissionData = await DriverCommission.find({
+      tripNumber,
+      category: "Driver's Commission (OT)",
+      status: 'paid',
+    });
+
+    // Calculate total driver's commission for the specific trip
+    const totalDriverCommission = driverCommissionData.reduce(
+      (sum, record) => sum + record.totalCommissionAmount,
+      0
+    );
+
+    // Adding driver's commission to total expenditure
+    const totalExpenditureIncludingDriversCommission = totalExpenditure + totalDriverCommission;
+
+    // Calculate profit or loss for the specific trip
+    const profitLoss = totalIncome - totalExpenditureIncludingDriversCommission;
+
+    res.status(200).json({
+      tripNumber,
+      incomeData,
+      totalIncome,
+      expenditureData,
+      totalExpenditure: totalExpenditureIncludingDriversCommission,
+      profitLoss,
+      totalDriverCommission,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+
 
 // controllers/generalExpenditureController.js
 

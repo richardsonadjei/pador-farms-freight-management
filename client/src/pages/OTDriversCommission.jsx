@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Form, FormGroup, Label, Input, Container, Row, Col } from 'reactstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const OTDriversCommission = () => {
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
+  const location = useLocation();
+
+  // Parse the query parameters from the URL using URLSearchParams
+  const queryParams = new URLSearchParams(location.search);
+  const expectedCommissionFromUrl = queryParams.get('expectedCommission');
+
   const [tripNumbers, setTripNumbers] = useState([]);
   const [driverNames, setDriverNames] = useState([]);
   const [formData, setFormData] = useState({
     date: '',
     tripNumber: '',
     driverName: '',
-    totalCommissionAmount: '',
+    totalCommissionAmount: expectedCommissionFromUrl || '', // Set the value from the URL parameter
     description: '',
     recordedBy: currentUser ? currentUser.userName : '',
     status: 'pending payment', // Adjust the status based on your requirements
@@ -24,7 +30,7 @@ const OTDriversCommission = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log('Other Trips Response:', data); // Log the response for debugging
-  
+
         if (Array.isArray(data.otherTrips)) {
           setTripNumbers(data.otherTrips);
         } else {
@@ -35,7 +41,7 @@ const OTDriversCommission = () => {
         console.error(error);
         alert('An error occurred while fetching other trips');
       });
-  
+
     // Fetch driver names
     fetch('/api/all-drivers')
       .then((response) => response.json())
@@ -52,8 +58,7 @@ const OTDriversCommission = () => {
         alert('An error occurred while fetching driver names');
       });
   }, [currentUser]);
-  
-  
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -84,6 +89,7 @@ const OTDriversCommission = () => {
         alert('An error occurred while recording OT Driver Commission');
       });
   };
+
 
   return (
     <Container>
@@ -127,12 +133,13 @@ const OTDriversCommission = () => {
 </Col>
 
           <Col md={6}>
-            <FormGroup>
+          <FormGroup>
               <Label className="text-white">Total Commission Amount</Label>
               <Input
                 type="number"
                 name="totalCommissionAmount"
                 onChange={handleChange}
+                value={formData.totalCommissionAmount}
                 required
               />
             </FormGroup>
