@@ -72,20 +72,19 @@ const UpdateDriver = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const response = await fetch(`/api/drivers/${id}`, {
+      const response = await fetch(`/api/update-drivers/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(driver),
       });
-
       const data = await response.json();
-
       if (response.ok) {
         setMessage(data.message);
+        // Redirect to /dashboard
+        window.location.href = '/dashboard';
       } else {
         setError(data.error || 'Failed to update driver details.');
       }
