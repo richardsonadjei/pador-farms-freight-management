@@ -65,19 +65,19 @@ const GeneralExpenditure = () => {
   };
 
   return (
-    <Container>
-      <h2 className="text-white">Create General Expenditure</h2>
-      <Form onSubmit={handleSubmit}>
+    <Container className="general-expenditure-container">
+      <h2 className="form-title text-black">Create General Expenditure</h2>
+      <Form onSubmit={handleSubmit}  className="custom-form">
         <Row>
           <Col md={6}>
             <FormGroup>
-              <Label className="text-white">Date</Label>
+              <Label className="text-black">Date</Label>
               <Input type="date" name="date" onChange={handleChange} required />
             </FormGroup>
           </Col>
           <Col md={6}>
             <FormGroup>
-              <Label className="text-white">Category</Label>
+              <Label className="text-black">Category</Label>
               <Input type="select" name="category" onChange={handleChange} required>
                 <option value="">Select Category</option>
                 {categories.map((category) => (
@@ -92,13 +92,13 @@ const GeneralExpenditure = () => {
         <Row>
           <Col md={6}>
             <FormGroup>
-              <Label className="text-white">Description</Label>
+              <Label className="text-black">Description</Label>
               <Input type="textarea" name="description" onChange={handleChange} required />
             </FormGroup>
           </Col>
           <Col md={6}>
             <FormGroup>
-              <Label className="text-white">Amount</Label>
+              <Label className="text-black">Amount</Label>
               <Input type="number" name="amount" onChange={handleChange} required />
             </FormGroup>
           </Col>
@@ -106,7 +106,7 @@ const GeneralExpenditure = () => {
         <Row>
           <Col md={6}>
             <FormGroup>
-              <Label className="text-white">Status</Label>
+              <Label className="text-black">Status</Label>
               <Input type="select" name="status" onChange={handleChange} required>
                 <option value="pending payment">Pending Payment</option>
                 <option value="paid">Paid</option>
@@ -115,7 +115,7 @@ const GeneralExpenditure = () => {
           </Col>
           <Col md={6}>
             <FormGroup>
-              <Label className="text-white">Recorded By</Label>
+              <Label className="text-black">Recorded By</Label>
               <Input type="text" name="recordedBy" value={currentUser ? currentUser.userName : ''} readOnly />
             </FormGroup>
           </Col>

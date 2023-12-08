@@ -65,9 +65,9 @@ const RegisterDriver = () => {
   };
 
   return (
-    <Container>
+    <Container className="register-container">
       <h1 style={{ color: 'white' }}>Register Driver</h1>
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} className="custom-form">
         <Row>
           <Col md={6}>
             <FormGroup>
