@@ -50,12 +50,12 @@ export default function Header() {
                 </Link>
                 <ul className="dropdown-menu">
                   <li>
-                    <Link className="dropdown-item" to="/pe">
+                    <Link className="dropdown-item" to="/primary-evacuations">
                       Primary Evacuations
                     </Link>
                   </li>
                   <li>
-                    <Link className="dropdown-item" to="other-trips">
+                    <Link className="dropdown-item" to="/other-trip-main">
                       Other Trips
                     </Link>
                   </li>
