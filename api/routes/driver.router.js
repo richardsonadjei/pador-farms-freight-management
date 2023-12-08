@@ -19,7 +19,7 @@ driverRouter.get('/all-drivers', getAllDrivers);
 driverRouter.get('/drivers/:id', getDriverById);
 
 // Update a driver by ID
-driverRouter.put('/drivers/:id', updateDriverById);
+driverRouter.put('/update-drivers/:id', updateDriverById);
 
 // Delete a driver by ID
 driverRouter.delete('/drivers/:id', deleteDriverById);
