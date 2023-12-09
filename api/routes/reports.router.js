@@ -1,5 +1,5 @@
 import express from 'express';
-import updateExpenditureStatus, { calculateAllOtherTripsProfitLoss, calculateAllPEProfitLoss,   calculateProfitLoss, calculateSpecificTripProfitLoss, generateProfitLossReport, getAllExpendituresByDateRange, getAllOtherTripExpendituresByDateRange, getAllOtherTripIncome,  getAllPEExpendituresByDateRange,  getIncomeReport,    viewFuelExpenditures,  viewPEincomeByDateRange, viewPaidDriversCommissions, viewPaidGeneralExpendituresByDateRange, viewPendingPaymentDriversCommissions, viewRepairsAndMaintenanceExpenditures } from '../controllers/reports.controller.js';
+import updateExpenditureStatus, { calculateAllOtherTripsProfitLoss, calculateAllPEProfitLoss,   calculatePEProfitLoss, calculateSpecificTripProfitLoss, generateProfitLossReport, getAllExpendituresByDateRange, getAllOtherTripExpendituresByDateRange, getAllOtherTripIncome,  getAllPEExpendituresByDateRange,  getIncomeReport,    viewFuelExpenditures,  viewPEincomeByDateRange, viewPaidDriversCommissions, viewPaidGeneralExpendituresByDateRange, viewPendingPaymentDriversCommissions, viewRepairsAndMaintenanceExpenditures } from '../controllers/reports.controller.js';
 
 const reportsRouter = express.Router();
 
@@ -13,7 +13,7 @@ reportsRouter.get('/all-expense-report', getAllExpendituresByDateRange);
 reportsRouter.get('/all-ot-report', getAllOtherTripExpendituresByDateRange );
 reportsRouter.get('/all-pe-expense', getAllPEExpendituresByDateRange );
 reportsRouter.post('/update-payment-status', updateExpenditureStatus );
-reportsRouter.get('/pe-income-expenditure', calculateProfitLoss );
+reportsRouter.get('/pe-income-expenditure', calculatePEProfitLoss );
 reportsRouter.get('/all-pe-income-expenditure', calculateAllPEProfitLoss );
 reportsRouter.get('/each-ot-income-expenditure', calculateSpecificTripProfitLoss );
 reportsRouter.get('/all-ot-income-expenditure', calculateAllOtherTripsProfitLoss );

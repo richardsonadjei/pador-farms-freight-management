@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Select from 'react-select';
 import { Button, Form, FormGroup, Label, Input, Container, Row, Col, Table } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
@@ -12,14 +13,14 @@ const ExpectedOTCommissionReport = () => {
       try {
         const response = await fetch('/api/other-trips');
         const data = await response.json();
-  
+
         // Ensure otherTrips is an array and set it in the state
         setOtherTrips(Array.isArray(data.otherTrips) ? data.otherTrips : []);
       } catch (error) {
         console.error('Error fetching other trips:', error);
       }
     };
-  
+
     fetchOtherTrips();
   }, []);
 
@@ -43,23 +44,16 @@ const ExpectedOTCommissionReport = () => {
           <Col md={6}>
             <FormGroup>
               <Label for="otherTripNumber" className="text-white">Select Other Trip Number</Label>
-              <Input
-                type="select"
-                name="otherTripNumber"
-                id="otherTripNumber"
-                value={selectedOtherTrip}
-                onChange={(e) => setSelectedOtherTrip(e.target.value)}
-              >
-                <option value="" disabled>Select Other Trip</option>
-                {Array.isArray(otherTrips) && otherTrips.map((trip) => (
-                  <option key={trip.tripNumber} value={trip.tripNumber}>
-                    {trip.tripNumber}
-                  </option>
-                ))}
-              </Input>
+              <Select
+                options={otherTrips.map((trip) => ({ value: trip.tripNumber, label: trip.tripNumber }))}
+                placeholder="Select Other Trip"
+                value={otherTrips.find((trip) => trip.value === selectedOtherTrip)}
+                onChange={(selectedOption) => setSelectedOtherTrip(selectedOption?.value || '')}
+                isSearchable
+              />
             </FormGroup>
           </Col>
-          <Col md={6}>
+          <Col md={6} className="d-flex align-items-end">
             <Button color="primary" type="submit">Generate Report</Button>
           </Col>
         </Row>

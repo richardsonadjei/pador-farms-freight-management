@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Select from 'react-select';
 import { Button, Form, FormGroup, Label, Input, Container, Row, Col } from 'reactstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -8,7 +9,6 @@ const OTDriversCommission = () => {
   const { currentUser } = useSelector((state) => state.user);
   const location = useLocation();
 
-  // Parse the query parameters from the URL using URLSearchParams
   const queryParams = new URLSearchParams(location.search);
   const expectedCommissionFromUrl = queryParams.get('expectedCommission');
 
@@ -18,19 +18,16 @@ const OTDriversCommission = () => {
     date: '',
     tripNumber: '',
     driverName: '',
-    totalCommissionAmount: expectedCommissionFromUrl || '', // Set the value from the URL parameter
+    totalCommissionAmount: expectedCommissionFromUrl || '',
     description: '',
     recordedBy: currentUser ? currentUser.userName : '',
-    status: 'pending payment', // Adjust the status based on your requirements
+    status: 'pending payment',
   });
 
   useEffect(() => {
-    // Fetch trip numbers
     fetch('/api/other-trips')
       .then((response) => response.json())
       .then((data) => {
-        console.log('Other Trips Response:', data); // Log the response for debugging
-
         if (Array.isArray(data.otherTrips)) {
           setTripNumbers(data.otherTrips);
         } else {
@@ -42,11 +39,9 @@ const OTDriversCommission = () => {
         alert('An error occurred while fetching other trips');
       });
 
-    // Fetch driver names
     fetch('/api/all-drivers')
       .then((response) => response.json())
       .then((data) => {
-        // Check if data has the 'drivers' property
         if (Array.isArray(data.drivers)) {
           setDriverNames(data.drivers.map((driver) => `${driver.firstName} ${driver.lastName}`));
         } else {
@@ -90,7 +85,6 @@ const OTDriversCommission = () => {
       });
   };
 
-
   return (
     <Container>
       <h2 className="text-white">Record OT Driver Commission</h2>
@@ -103,37 +97,34 @@ const OTDriversCommission = () => {
             </FormGroup>
           </Col>
           <Col md={6}>
-  <FormGroup>
-    <Label className="text-white">Trip Number</Label>
-    <Input type="select" name="tripNumber" onChange={handleChange} required>
-      <option value="">Select Trip Number</option>
-      {tripNumbers.map((trip) => (
-        <option key={trip._id} value={trip.tripNumber}>
-          {trip.tripNumber}
-        </option>
-      ))}
-    </Input>
-  </FormGroup>
-</Col>
-
+            <FormGroup>
+              <Label className="text-white">Trip Number</Label>
+              <Select
+                options={tripNumbers.map((trip) => ({ value: trip.tripNumber, label: trip.tripNumber }))}
+                placeholder="Select Trip Number"
+                onChange={(selectedOption) => setFormData({ ...formData, tripNumber: selectedOption.value })}
+                isSearchable
+                required
+              />
+            </FormGroup>
+          </Col>
         </Row>
         <Row>
-        <Col md={6}>
-  <FormGroup>
-    <Label className="text-white">Driver Name</Label>
-    <Input type="select" name="driverName" onChange={handleChange} required>
-      <option value="">Select Driver Name</option>
-      {driverNames.map((name) => (
-        <option key={name} value={name}>
-          {name}
-        </option>
-      ))}
-    </Input>
-  </FormGroup>
-</Col>
-
           <Col md={6}>
-          <FormGroup>
+            <FormGroup>
+              <Label className="text-white">Driver Name</Label>
+              <Input type="select" name="driverName" onChange={handleChange} required>
+                <option value="">Select Driver Name</option>
+                {driverNames.map((name) => (
+                  <option key={name} value={name}>
+                    {name}
+                  </option>
+                ))}
+              </Input>
+            </FormGroup>
+          </Col>
+          <Col md={6}>
+            <FormGroup>
               <Label className="text-white">Total Commission Amount</Label>
               <Input
                 type="number"
@@ -147,22 +138,11 @@ const OTDriversCommission = () => {
         </Row>
         <FormGroup>
           <Label className="text-white">Description</Label>
-          <Input
-            type="textarea"
-            name="description"
-            onChange={handleChange}
-            required
-          />
+          <Input type="textarea" name="description" onChange={handleChange} required />
         </FormGroup>
         <FormGroup>
           <Label className="text-white">Recorded By</Label>
-          <Input
-            type="text"
-            name="recordedBy"
-            value={formData.recordedBy}
-            readOnly
-            required
-          />
+          <Input type="text" name="recordedBy" value={formData.recordedBy} readOnly required />
         </FormGroup>
         <FormGroup>
           <Label className="text-white">Status</Label>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form, FormGroup, Label, Input, Container, Row, Col } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, Container, Row, Col } from 'reactstrap'; // Add Input to the import
+import Select from 'react-select'; // Import react-select
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -12,13 +13,13 @@ const OTExpenditure = () => {
   const [tripNumbers, setTripNumbers] = useState([]);
   const [formData, setFormData] = useState({
     date: '',
-    category: '',
+    category: null, // Use null for react-select
     vehicleRegistrationNumber: '',
     tripNumber: '',
-    amount: '', // Include the amount field
+    amount: '',
     description: '',
     recordedBy: currentUser ? currentUser.userName : '',
-    status: 'pending payment', // Set default status to 'pending payment'
+    status: 'pending payment',
   });
 
   const [success, setSuccess] = useState('');
@@ -43,61 +44,79 @@ const OTExpenditure = () => {
       })
       .catch((error) => console.error(error));
 
-    fetch('/api/other-trips')
+      fetch('/api/other-trips')
       .then((response) => response.json())
       .then((data) => {
         if (Array.isArray(data)) {
-          // If it's an array, directly map the trip numbers
-          setTripNumbers(data.map((trip) => trip.tripNumber));
+          setTripNumbers(data.map((trip) => ({ label: trip.tripNumber, value: trip.tripNumber })));
         } else if (data.otherTrips && Array.isArray(data.otherTrips)) {
-          // If it's an object with an 'otherTrips' property, map the trip numbers from that array
-          setTripNumbers(data.otherTrips.map((trip) => trip.tripNumber));
+          setTripNumbers(data.otherTrips.map((trip) => ({ label: trip.tripNumber, value: trip.tripNumber })));
         } else {
           console.error('Invalid response from /api/other-trips');
         }
       })
       .catch((error) => console.error(error));
-
   }, []);
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
+  
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+  
+
+  const handleCategoryChange = (selectedOption) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      category: selectedOption,
     });
   };
-
+  
+  
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Convert the selectedOption to the string value
+    const formDataToSend = {
+      ...formData,
+      category: formData.category ? formData.category.value : null,
+      tripNumber: formData.tripNumber ? formData.tripNumber.value : null,
+    };
+  
     fetch('/api/ot-expenditure', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(formDataToSend),
     })
       .then((response) => response.json())
       .then((data) => {
-       
-        if (data._id) { // Check if the response contains the _id property
+        if (data._id) {
           setSuccess('Expenditure recorded successfully');
-          setError(''); // Clear any previous errors
+          setError('');
           navigate('/dashboard');
         } else {
           setError('Failed to record expenditure');
-          setSuccess(''); // Clear any previous success message
+          setSuccess('');
         }
       })
       .catch((error) => {
         console.error(error);
         setError('Server Error');
-        setSuccess(''); // Clear any previous success message
+        setSuccess('');
       });
   };
+  
+
 
   return (
     <Container>
       <h2 className="text-white">Record Other Trip Expenditure</h2>
+      {error && <p className="text-danger mt-3">{error}</p>}
+      {success && <p className="text-success mt-3">{success}</p>}
       <Form onSubmit={handleSubmit}>
         <Row>
           <Col md={6}>
@@ -107,16 +126,18 @@ const OTExpenditure = () => {
             </FormGroup>
           </Col>
           <Col md={6}>
-            <FormGroup>
+          <FormGroup>
               <Label className="text-white">Category</Label>
-              <Input type="select" name="category" onChange={handleChange} required>
-                <option value="">Select Category</option>
-                {categories.map((category) => (
-                  <option key={category._id} value={category.name}>
-                    {category.name}
-                  </option>
-                ))}
-              </Input>
+              <Select
+  options={categories.map((category) => ({
+    label: category.name,
+    value: category.name,
+  }))}
+  value={formData.category}
+  onChange={handleCategoryChange}
+  isSearchable
+  placeholder="Search or select category"
+/>
             </FormGroup>
           </Col>
         </Row>
@@ -140,22 +161,16 @@ const OTExpenditure = () => {
             </FormGroup>
           </Col>
           <Col md={6}>
-            <FormGroup>
-              <Label className="text-white">Trip Number</Label>
-              <Input
-                type="select"
-                name="tripNumber"
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select Trip Number</option>
-                {tripNumbers.map((tripNumber) => (
-                  <option key={tripNumber} value={tripNumber}>
-                    {tripNumber}
-                  </option>
-                ))}
-              </Input>
-            </FormGroup>
+          <FormGroup>
+      <Label className="text-white">Trip Number</Label>
+      <Select
+        options={tripNumbers}
+        value={formData.tripNumber}
+        onChange={(selectedOption) => setFormData({ ...formData, tripNumber: selectedOption })}
+        isSearchable
+        placeholder="Search or select Trip Number"
+      />
+    </FormGroup>
           </Col>
         </Row>
         <Row>
@@ -191,8 +206,7 @@ const OTExpenditure = () => {
         </Row>
         <Button type="submit" color="primary">Submit</Button>
       </Form>
-      {error && <p className="text-danger mt-3">{error}</p>}
-      {success && <p className="text-success mt-3">{success}</p>}
+    
     </Container>
   );
 };

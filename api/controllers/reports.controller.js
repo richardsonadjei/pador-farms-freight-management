@@ -293,12 +293,7 @@ const updateExpenditureStatus = async (req, res) => {
 export default updateExpenditureStatus;
 
 
-
-
-
-
-
-export const calculateProfitLoss = async (req, res) => {
+export const calculatePEProfitLoss = async (req, res) => {
   try {
     const { peNumber, startDate, endDate } = req.query;
 
@@ -329,13 +324,26 @@ export const calculateProfitLoss = async (req, res) => {
     });
 
     // Calculate total expenditure by summing up the expenditureAmount for each record
-    const totalExpenditure = expenditureData.reduce((sum, record) => sum + record.expenditureAmount, 0);
+    let totalExpenditure = expenditureData.reduce((sum, record) => sum + record.expenditureAmount, 0);
+
+    // Fetch all driver commissions for the specified peNumber with status 'paid' within the date range
+    const driverCommissions = await DriverCommission.find({
+      peNumber,
+      status: 'paid',
+      date: {
+        $gte: parsedStartDate,
+        $lte: parsedEndDate,
+      },
+    });
+
+    // Calculate total driver's commission by summing up the totalCommissionAmount for each record
+    const totalDriverCommission = driverCommissions.reduce((sum, record) => sum + record.totalCommissionAmount, 0);
+
+    // Add total driver's commission to total expenditure
+    totalExpenditure += totalDriverCommission;
 
     // Calculate profit or loss
     const profitLoss = totalIncome - totalExpenditure;
-
-    // Calculate driver's commission (10% of profit or loss)
-    const driversCommission = 0.1 * profitLoss;
 
     res.status(200).json({
       incomeData,
@@ -343,13 +351,14 @@ export const calculateProfitLoss = async (req, res) => {
       expenditureData,
       totalExpenditure,
       profitLoss,
-      driversCommission,
+      totalDriverCommission,
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
 
 export const calculateAllPEProfitLoss = async (req, res) => {
   try {

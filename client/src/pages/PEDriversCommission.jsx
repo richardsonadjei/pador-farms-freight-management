@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Form, FormGroup, Label, Input, Container, Row, Col } from 'reactstrap';
+import Select from 'react-select';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -16,7 +17,7 @@ const PEDriversCommission = () => {
     totalCommissionAmount: '',
     description: '',
     recordedBy: currentUser ? currentUser.userName : '',
-    status: 'pending payment', // Adjust the status based on your requirements
+    status: 'pending payment',
   });
 
   useEffect(() => {
@@ -81,6 +82,7 @@ const PEDriversCommission = () => {
         alert('An error occurred while creating PE Driver Commission');
       });
   };
+
   return (
     <Container>
       <h2 className="text-white">Record PE Driver Commission</h2>
@@ -93,16 +95,18 @@ const PEDriversCommission = () => {
             </FormGroup>
           </Col>
           <Col md={6}>
-            <FormGroup>
+          <FormGroup>
               <Label className="text-white">PE Number</Label>
-              <Input type="select" name="peNumber" onChange={handleChange} required>
-                <option value="">Select PE Number</option>
-                {peNumbers.map((pe) => (
-                  <option key={pe._id} value={pe.peNumber}>
-                    {pe.peNumber}
-                  </option>
-                ))}
-              </Input>
+              <Select
+                options={peNumbers.map((pe) => ({
+                  label: pe.peNumber,
+                  value: pe.peNumber,
+                }))}
+                value={peNumbers.find((pe) => pe.value === formData.peNumber)}
+                onChange={(selectedOption) => setFormData({ ...formData, peNumber: selectedOption.value })}
+                isSearchable
+                placeholder="Search or select PE Number"
+              />
             </FormGroup>
           </Col>
         </Row>

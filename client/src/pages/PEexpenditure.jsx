@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Form, FormGroup, Label, Input, Container, Row, Col } from 'reactstrap';
+
+import Select from 'react-select';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const RecordPEexpenditure = () => {
   const navigate = useNavigate();
-  const { currentUser } = useSelector((state) => state.user); // Assuming you have a 'user' slice in your Redux store
+  const { currentUser } = useSelector((state) => state.user);
   const [categories, setCategories] = useState([]);
   const [peNumbers, setPENumbers] = useState([]);
   const [truckRegistrationNumbers, setTruckRegistrationNumbers] = useState([]);
@@ -16,8 +18,8 @@ const RecordPEexpenditure = () => {
     truckRegistrationNumber: '',
     expenditureAmount: '',
     description: '',
-    recordedBy: currentUser ? currentUser.userName : '', // Set recordedBy to current user
-    status: 'pending payment', // Set default status
+    recordedBy: currentUser ? currentUser.userName : '',
+    status: 'pending payment',
   });
 
   useEffect(() => {
@@ -53,12 +55,12 @@ const RecordPEexpenditure = () => {
         console.error(error);
         alert('An error occurred while fetching truck registration numbers');
       });
-  }, [currentUser]); // Add currentUser as a dependency to the useEffect
+  }, [currentUser]);
 
-  const handleChange = (e) => {
+  const handleChange = (name, selectedOption) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: selectedOption.value,
     });
   };
 
@@ -92,55 +94,48 @@ const RecordPEexpenditure = () => {
       <Form onSubmit={handleSubmit}>
         <Row>
           <Col md={6}>
-            <FormGroup>
-              <Label className="text-white">Date</Label>
-              <Input type="date" name="date" onChange={handleChange} required />
-            </FormGroup>
+          <FormGroup>
+  <Label className="text-white">Date</Label>
+  <Input type="date" name="date" onChange={(e) => setFormData({ ...formData, date: e.target.value })} required />
+</FormGroup>
+
           </Col>
           <Col md={6}>
-          <FormGroup>
-    <Label className="text-white">Category</Label>
-    <Input type="select" name="category" onChange={handleChange} required>
-      <option value="">Select Category</option>
-      {categories.map((category) => (
-        <option key={category._id} value={category.name}>
-          {category.name}
-        </option>
-      ))}
-    </Input>
-  </FormGroup>
+            <FormGroup>
+              <Label className="text-white">Category</Label>
+              <Select
+  options={categories.map((category) => ({ label: category.name, value: category.name }))}
+  value={formData.category ? { label: formData.category, value: formData.category } : null}
+  onChange={(selectedOption) => handleChange('category', selectedOption)}
+  isSearchable
+  placeholder="Search or select category"
+/>
+            </FormGroup>
           </Col>
         </Row>
         <Row>
           <Col md={6}>
             <FormGroup>
               <Label className="text-white">PE Number</Label>
-              <Input type="select" name="peNumber" onChange={handleChange} required>
-                <option value="">Select PE Number</option>
-                {peNumbers.map((pe) => (
-                  <option key={pe._id} value={pe.peNumber}>
-                    {pe.peNumber}
-                  </option>
-                ))}
-              </Input>
+              <Select
+  options={peNumbers.map((pe) => ({ label: pe.peNumber, value: pe.peNumber }))}
+  value={formData.peNumber ? { label: formData.peNumber, value: formData.peNumber } : null}
+  onChange={(selectedOption) => handleChange('peNumber', selectedOption)}
+  isSearchable
+  placeholder="Search or select PE Number"
+/>
             </FormGroup>
           </Col>
           <Col md={6}>
             <FormGroup>
               <Label className="text-white">Truck Registration Number</Label>
-              <Input
-                type="select"
-                name="truckRegistrationNumber"
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select Truck Registration Number</option>
-                {truckRegistrationNumbers.map((truck) => (
-                  <option key={truck._id} value={truck.registrationNumber}>
-                    {truck.registrationNumber}
-                  </option>
-                ))}
-              </Input>
+              <Select
+  options={truckRegistrationNumbers.map((truck) => ({ label: truck.registrationNumber, value: truck.registrationNumber }))}
+  value={formData.truckRegistrationNumber ? { label: formData.truckRegistrationNumber, value: formData.truckRegistrationNumber } : null}
+  onChange={(selectedOption) => handleChange('truckRegistrationNumber', selectedOption)}
+  isSearchable
+  placeholder="Search or select Truck Registration Number"
+/>
             </FormGroup>
           </Col>
         </Row>
@@ -148,13 +143,13 @@ const RecordPEexpenditure = () => {
           <Col md={6}>
             <FormGroup>
               <Label className="text-white">Expenditure Amount</Label>
-              <Input type="number" name="expenditureAmount" onChange={handleChange} required />
+              <Input type="number" name="expenditureAmount" onChange={(e) => setFormData({ ...formData, expenditureAmount: e.target.value })} required />
             </FormGroup>
           </Col>
           <Col md={6}>
             <FormGroup>
               <Label className="text-white">Description</Label>
-              <Input type="textarea" name="description" onChange={handleChange} required />
+              <Input type="textarea" name="description" onChange={(e) => setFormData({ ...formData, description: e.target.value })} required />
             </FormGroup>
           </Col>
         </Row>
@@ -165,8 +160,8 @@ const RecordPEexpenditure = () => {
               <Input
                 type="text"
                 name="recordedBy"
-                onChange={handleChange}
-                value={formData.recordedBy}
+                onChange={(e) => setFormData({ ...formData, recordedBy: e.target.value })}
+                value={currentUser ? currentUser.userName : ''}
                 readOnly
                 required
               />
@@ -175,10 +170,15 @@ const RecordPEexpenditure = () => {
           <Col md={6}>
             <FormGroup>
               <Label className="text-white">Status</Label>
-              <Input type="select" name="status" onChange={handleChange} required>
-                <option value="pending payment">Pending Payment</option>
-                <option value="paid">Paid</option>
-              </Input>
+              <Select
+                options={[
+                  { label: 'Pending Payment', value: 'pending payment' },
+                  { label: 'Paid', value: 'paid' },
+                ]}
+                value={{ label: formData.status, value: formData.status }}
+                onChange={(selectedOption) => handleChange('status', selectedOption)}
+                isSearchable
+              />
             </FormGroup>
           </Col>
         </Row>

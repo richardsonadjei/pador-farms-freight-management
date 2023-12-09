@@ -56,7 +56,7 @@ const PrimaryEvacuation = () => {
             <div className="card-body">
               <h5 className="card-title">View All PE Expenses</h5>
               <p className="card-text">View all expenses related to primary evacuation.</p>
-              <Link to="/view-all-pe-expenses" className="btn btn-danger"> {/* Added btn-danger class */}
+              <Link to="/pe-expense-reports" className="btn btn-danger"> {/* Added btn-danger class */}
                 View 
               </Link>
             </div>

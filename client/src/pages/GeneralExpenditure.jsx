@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Select from 'react-select';
 import { Button, Form, FormGroup, Label, Input, Container, Row, Col } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -12,9 +13,9 @@ const GeneralExpenditure = () => {
     date: '',
     category: '',
     description: '',
-    amount: '', // New field for amount
+    amount: '',
     recordedBy: currentUser ? currentUser.userName : '',
-    status: 'pending payment', // Default status
+    status: 'pending payment',
   });
 
   const [success, setSuccess] = useState('');
@@ -28,11 +29,17 @@ const GeneralExpenditure = () => {
       .catch((err) => console.error(err));
   }, []);
 
- 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleCategoryChange = (selectedOption) => {
+    setFormData({
+      ...formData,
+      category: selectedOption ? selectedOption.value : '',
     });
   };
 
@@ -67,7 +74,7 @@ const GeneralExpenditure = () => {
   return (
     <Container className="general-expenditure-container">
       <h2 className="form-title text-black">Create General Expenditure</h2>
-      <Form onSubmit={handleSubmit}  className="custom-form">
+      <Form onSubmit={handleSubmit} className="custom-form">
         <Row>
           <Col md={6}>
             <FormGroup>
@@ -78,14 +85,12 @@ const GeneralExpenditure = () => {
           <Col md={6}>
             <FormGroup>
               <Label className="text-black">Category</Label>
-              <Input type="select" name="category" onChange={handleChange} required>
-                <option value="">Select Category</option>
-                {categories.map((category) => (
-                  <option key={category._id} value={category.name}>
-                    {category.name}
-                  </option>
-                ))}
-              </Input>
+              <Select
+                options={categories.map((category) => ({ value: category.name, label: category.name }))}
+                placeholder="Select Category"
+                onChange={handleCategoryChange}
+                isSearchable
+              />
             </FormGroup>
           </Col>
         </Row>

@@ -92,8 +92,8 @@ const OtherTrips = () => {
           totalAmountCharged,
           destinationLocations,
           description,
-          recordedBy: currentUser ? currentUser.userName : '',
           category,
+          recordedBy: currentUser ? currentUser.userName : '',
         }),
       });
       const data = await response.json();
@@ -114,6 +114,8 @@ const OtherTrips = () => {
       <Row>
         <Col>
           <h1 style={{ color: 'white' }}>Create Other Trip</h1>
+          {error && <p>{error}</p>}
+          {success && <p>{success}</p>}
           <Form onSubmit={handleFormSubmit}>
             <Row>
               <Col md={6}>
@@ -219,22 +221,7 @@ const OtherTrips = () => {
               </Col>
             </Row>
             <Row>
-              <Col md={6}>
-                <FormGroup>
-                  <Label for="recordedBy" style={{ color: 'white' }}>Recorded By</Label>
-                  <Input
-                    type="text"
-                    name="recordedBy"
-                    id="recordedBy"
-                    placeholder="Enter recorded by"
-                    value={recordedBy}
-                    onChange={(e) => setRecordedBy(e.target.value)}
-                    required
-                    readOnly
-                  />
-                </FormGroup>
-              </Col>
-              <Col md={6}>
+            <Col md={6}>
                 <FormGroup>
                   <Label for="category" style={{ color: 'white' }}>Category</Label>
                   <Input
@@ -254,11 +241,26 @@ const OtherTrips = () => {
                   </Input>
                 </FormGroup>
               </Col>
+              <Col md={6}>
+                <FormGroup>
+                  <Label for="recordedBy" style={{ color: 'white' }}>Recorded By</Label>
+                  <Input
+                    type="text"
+                    name="recordedBy"
+                    id="recordedBy"
+                    placeholder="Enter recorded by"
+                    value={recordedBy}
+                    onChange={(e) => setRecordedBy(e.target.value)}
+                    required
+                    readOnly
+                  />
+                </FormGroup>
+              </Col>
+              
             </Row>
             <Button color="primary" type="submit">Create</Button>
           </Form>
-          {error && <p>{error}</p>}
-          {success && <p>{success}</p>}
+         
         </Col>
       </Row>
     </Container>
