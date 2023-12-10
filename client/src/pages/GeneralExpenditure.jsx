@@ -15,7 +15,7 @@ const GeneralExpenditure = () => {
     description: '',
     amount: '',
     recordedBy: currentUser ? currentUser.userName : '',
-    status: 'pending payment',
+    status: 'paid',
   });
 
   const [success, setSuccess] = useState('');

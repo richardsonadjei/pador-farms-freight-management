@@ -99,7 +99,7 @@ const OtherTrips = () => {
       const data = await response.json();
       if (response.ok) {
         setSuccess('Other trip created successfully!');
-        navigate('/dashboard');
+        navigate('/other-trip-main');
       } else {
         setError(data.message);
       }

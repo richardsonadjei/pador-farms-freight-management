@@ -19,7 +19,7 @@ const MonthlyPECommission = () => {
     totalCommissionAmount: totalCommissionFromUrl || '',
     description: '',
     recordedBy: currentUser ? currentUser.userName : '',
-    status: 'pending payment',
+    status: 'paid',
   });
 
   useEffect(() => {

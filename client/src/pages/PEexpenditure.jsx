@@ -19,7 +19,7 @@ const RecordPEexpenditure = () => {
     expenditureAmount: '',
     description: '',
     recordedBy: currentUser ? currentUser.userName : '',
-    status: 'pending payment',
+    status: 'paid',
   });
 
   useEffect(() => {
@@ -79,7 +79,7 @@ const RecordPEexpenditure = () => {
           alert(data.message);
         } else {
           alert('Expenditure recorded successfully');
-          navigate('/dashboard');
+          navigate('/primary-evacuations');
         }
       })
       .catch((error) => {

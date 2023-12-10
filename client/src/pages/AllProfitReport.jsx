@@ -32,8 +32,8 @@ const AllProfitReport = () => {
         {keys.map((key) => {
           const value = item[key];
           const formattedValue = (() => {
-            if (typeof value === 'string' && value.includes('T')) {
-              // Check if the value is a string and contains 'T' (ISO format)
+            if (typeof value === 'string' && value.includes('T') && key !== 'category' && key !== 'tripNumber') {
+              // Check if the value is a string, contains 'T', and is not 'category' or 'tripNumber'
               const dateOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
               return new Date(value).toLocaleDateString(undefined, dateOptions);
             }
@@ -49,6 +49,7 @@ const AllProfitReport = () => {
       </tr>
     ));
   };
+  
   
   
   

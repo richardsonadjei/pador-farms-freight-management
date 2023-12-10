@@ -74,7 +74,7 @@ const PEDriversCommission = () => {
           alert(data.error);
         } else {
           alert('PE Driver Commission created successfully');
-          navigate('/dashboard');
+          navigate('/primary-evacuations');
         }
       })
       .catch((error) => {

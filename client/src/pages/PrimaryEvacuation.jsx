@@ -33,7 +33,7 @@ const PrimaryEvacuation = () => {
             <div className="card-body">
               <h5 className="card-title">View All PE Incomes</h5>
               <p className="card-text">View all Incomes From Primary Evacuations.</p>
-              <Link to="/all-income-reports" className="btn btn-primary"> {/* Added btn-primary class */}
+              <Link to="/pe-income-reports" className="btn btn-primary"> {/* Added btn-primary class */}
                 View 
               </Link>
             </div>
@@ -69,28 +69,6 @@ const PrimaryEvacuation = () => {
               <p className="card-text">View commissions for primary evacuation services.</p>
               <Link to="/expected-pe-commission" className="btn btn-light"> {/* Added btn-danger class */}
                 View
-              </Link>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-4 mb-4">
-          <div className="card bg-info text-white">
-            <div className="card-body">
-              <h5 className="card-title">Pay Monthly PE Commission</h5>
-              <p className="card-text">Pay commission for primary evacuation services.</p>
-              <Link to="/monthly-pe-commission" className="btn btn-danger"> {/* Added btn-danger class */}
-                Pay 
-              </Link>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-4 mb-4">
-          <div className="card bg-info text-white">
-            <div className="card-body">
-              <h5 className="card-title">Pay Each PE Commission</h5>
-              <p className="card-text">Pay commission for primary evacuation services.</p>
-              <Link to="/pe-drivers-commission" className="btn btn-danger"> {/* Added btn-danger class */}
-                Pay 
               </Link>
             </div>
           </div>

@@ -4,19 +4,13 @@ import { Button, Form, FormGroup, Label, Input, Container, Table, Col, Row } fro
 const OTIncomeAndExpenditureReport = () => {
   const [tripNumbers, setTripNumbers] = useState([]);
   const [tripNumber, setTripNumber] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
   const [reportData, setReportData] = useState(null);
+
   useEffect(() => {
     // Fetch all available tripNumbers
     fetch('/api/other-trips')
-      .then((response) => {
-        
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((data) => {
-      
-  
         // Check if data is an array before calling map
         if (Array.isArray(data.otherTrips)) {
           setTripNumbers(data.otherTrips.map((trip) => trip.tripNumber));
@@ -31,7 +25,7 @@ const OTIncomeAndExpenditureReport = () => {
     e.preventDefault();
 
     // Construct the URL with query parameters
-    const url = `/api/ot-income-expenditure?tripNumber=${tripNumber}&startDate=${startDate}&endDate=${endDate}`;
+    const url = `/api/each-ot-income-expenditure?tripNumber=${tripNumber}`;
 
     // Fetch the report data
     const response = await fetch(url);
@@ -74,34 +68,6 @@ const OTIncomeAndExpenditureReport = () => {
                   </option>
                 ))}
               </Input>
-            </FormGroup>
-          </Col>
-          <Col sm={12} md={3}>
-            <FormGroup>
-              <Label for="startDate" className="text-white">
-                Start Date
-              </Label>
-              <Input
-                type="date"
-                name="startDate"
-                id="startDate"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-              />
-            </FormGroup>
-          </Col>
-          <Col sm={12} md={3}>
-            <FormGroup>
-              <Label for="endDate" className="text-white">
-                End Date
-              </Label>
-              <Input
-                type="date"
-                name="endDate"
-                id="endDate"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-              />
             </FormGroup>
           </Col>
         </Row>

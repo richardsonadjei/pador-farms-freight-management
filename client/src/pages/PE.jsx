@@ -13,7 +13,7 @@ const PE = () => {
   const [totalweightCarried, setTotalweightCarried] = useState('');
   const [destinationLocations, setDestinationLocations] = useState('');
   const [recordedBy, setRecordedBy] = useState(currentUser ? currentUser.userName : '');
-  const [incomeAmountPerBag, setIncomeAmountPerBag] = useState('');
+  const [incomeAmountPerBag, setIncomeAmountPerBag] = useState('9');
   const [category, setCategory] = useState('');
   const [drivers, setDrivers] = useState([]);
   const [vehicles, setVehicles] = useState([]);
@@ -73,7 +73,7 @@ const PE = () => {
   
   
       alert('Cocoa haulage and income transaction created successfully');
-      navigate('/dashboard');
+      navigate('/primary-evacuations');
     } catch (error) {
       console.error('Error creating cocoa haulage:', error);
       alert('An error occurred while creating the cocoa haulage. Please try again.');

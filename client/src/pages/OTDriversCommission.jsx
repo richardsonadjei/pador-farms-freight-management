@@ -21,7 +21,7 @@ const OTDriversCommission = () => {
     totalCommissionAmount: expectedCommissionFromUrl || '',
     description: '',
     recordedBy: currentUser ? currentUser.userName : '',
-    status: 'pending payment',
+    status: 'paid',
   });
 
   useEffect(() => {
@@ -76,7 +76,7 @@ const OTDriversCommission = () => {
           alert(data.message);
         } else {
           alert('OT Driver Commission recorded successfully');
-          navigate('/dashboard');
+          navigate('/other-trip-main');
         }
       })
       .catch((error) => {
@@ -132,6 +132,7 @@ const OTDriversCommission = () => {
                 onChange={handleChange}
                 value={formData.totalCommissionAmount}
                 required
+                readOnly
               />
             </FormGroup>
           </Col>

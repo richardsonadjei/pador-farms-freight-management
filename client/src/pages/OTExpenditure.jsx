@@ -19,7 +19,7 @@ const OTExpenditure = () => {
     amount: '',
     description: '',
     recordedBy: currentUser ? currentUser.userName : '',
-    status: 'pending payment',
+    status: 'paid',
   });
 
   const [success, setSuccess] = useState('');
@@ -97,7 +97,7 @@ const OTExpenditure = () => {
         if (data._id) {
           setSuccess('Expenditure recorded successfully');
           setError('');
-          navigate('/dashboard');
+          navigate('/other-trip-main');
         } else {
           setError('Failed to record expenditure');
           setSuccess('');
@@ -197,7 +197,7 @@ const OTExpenditure = () => {
           <Col md={6}>
             <FormGroup>
               <Label className="text-white">Status</Label>
-              <Input type="select" name="status" onChange={handleChange} defaultValue="pending payment">
+              <Input type="select" name="status" onChange={handleChange} defaultValue="paid">
                 <option value="paid">Paid</option>
                 <option value="pending payment">Pending Payment</option>
               </Input>

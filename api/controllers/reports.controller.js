@@ -428,23 +428,32 @@ export const calculateAllPEProfitLoss = async (req, res) => {
 
 
 
-
 export const calculateAllOtherTripsProfitLoss = async (req, res) => {
   try {
-    const { startDate, endDate } = req.query;
+    let { startDate, endDate } = req.query;
 
-    // Parse startDate and endDate strings into Date objects
-    const parsedStartDate = new Date(startDate);
-    const parsedEndDate = new Date(endDate);
+    // If startDate is an array, take the first element
+    startDate = Array.isArray(startDate) ? startDate[0] : startDate;
 
-    // Find all income data within the date range
-    const incomeData = await OtherTripIncome.find({
-      date: {
-        $gte: parsedStartDate,
-        $lte: parsedEndDate,
-      },
-    });
+    // Parse the dates using UTC format
+const parsedStartDate = new Date(`${startDate}T00:00:00.000Z`);
+const parsedEndDate = new Date(`${endDate}T23:59:59.999Z`);
 
+// Validate parsed dates
+if (isNaN(parsedStartDate.valueOf()) || isNaN(parsedEndDate.valueOf())) {
+  console.log('Invalid date format');
+  return res.status(400).json({ error: 'Invalid date format' });
+}
+
+// Find all income data within the date range
+const incomeData = await OtherTripIncome.find({
+  date: {
+    $gte: parsedStartDate,
+    $lte: parsedEndDate,
+  },
+});
+
+    
     // Calculate total income by summing up the amount for each income record
     const totalIncome = incomeData.reduce((sum, record) => sum + record.amount, 0);
 
@@ -476,10 +485,9 @@ export const calculateAllOtherTripsProfitLoss = async (req, res) => {
       0
     );
 
-    
-
     // Adding driver's commission to total expenditure
     const totalExpenditureIncludingDriversCommission = totalExpenditure + totalDriverCommission;
+
     // Calculate profit or loss
     const profitLoss = totalIncome - totalExpenditureIncludingDriversCommission;
 
@@ -496,6 +504,10 @@ export const calculateAllOtherTripsProfitLoss = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+
+
+
 
 export const calculateSpecificTripProfitLoss = async (req, res) => {
   try {
@@ -632,10 +644,22 @@ export { viewPaidDriversCommissions, viewPendingPaymentDriversCommissions };
 
 export const generateProfitLossReport = async (req, res) => {
   try {
-    const { startDate, endDate } = req.query;
+    let { startDate, endDate } = req.query;
+
+    const startDateArray = Array.isArray(startDate) ? startDate : [startDate];
+
+    // Take the first element of the array as the startDate
+    startDate = startDateArray[0];
+
     const parsedStartDate = new Date(`${startDate}T00:00:00Z`);
     const parsedEndDate = new Date(`${endDate}T23:59:59.999Z`);
+   
 
+    // Validate parsed dates
+    if (isNaN(parsedStartDate.valueOf()) || isNaN(parsedEndDate.valueOf())) {
+      console.log('Invalid date format');
+      return res.status(400).json({ error: 'Invalid date format' });
+    }
     // Fetching income data from IncomeHauling
     const incomeHaulingData = await IncomeHauling.find({
       date: {
@@ -643,6 +667,7 @@ export const generateProfitLossReport = async (req, res) => {
         $lte: parsedEndDate,
       },
     });
+   
 
     // Fetching income data from OtherTripIncome
     const otherTripIncomeData = await OtherTripIncome.find({
