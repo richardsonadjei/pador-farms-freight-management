@@ -90,11 +90,11 @@ const AllPEIncomeAndExpenditureReport = () => {
                   <td>{income.category}</td>
                   <td>{income.truckRegistrationNumber}</td>
                   <td>{income.incomeAmountPerBag}</td>
-                  <td>{income.totalIncomeAmount}</td>
+                  <td>{parseFloat(income.totalIncomeAmount).toFixed(2)}</td>
                   <td>{income.taxAmountPerBag}</td>
-                  <td>{income.totalTaxAmount}</td>
-                  <td>{income.netTotalAmountPerBag}</td>
-                  <td>{income.netTotalAmount}</td>
+                  <td>{parseFloat(income.totalTaxAmount).toFixed(2)}</td>
+                  <td>{income.netTotalAmountPerbag}</td>
+                  <td>{parseFloat(income.netTotalAmount).toFixed(2)}</td>
                   <td>{income.description}</td>
                   <td>{income.recordedBy}</td>
                 </tr>
@@ -157,10 +157,10 @@ const AllPEIncomeAndExpenditureReport = () => {
             </thead>
             <tbody>
               <tr>
-                <td>{reportData.totalIncome}</td>
-                <td>{reportData.totalExpenditure}</td>
-                <td>{reportData.totalDriverCommission}</td>
-                <td>{reportData.profitLoss}</td>
+              <td>{parseFloat(reportData.totalIncome).toFixed(2)}</td>
+              <td>{parseFloat(reportData.totalExpenditure).toFixed(2)}</td>
+              <td>{parseFloat(reportData.totalDriverCommission).toFixed(2)}</td>
+                <td>{parseFloat(reportData.profitLoss).toFixed(2)}</td>
               
               </tr>
             </tbody>
