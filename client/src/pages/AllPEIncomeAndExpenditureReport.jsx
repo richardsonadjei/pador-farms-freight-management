@@ -73,7 +73,7 @@ const AllPEIncomeAndExpenditureReport = () => {
                 <th>Category</th>
                 <th>Truck Registration Number</th>
                 <th>Income Amount Per Bag</th>
-                <th>Total Income Amount</th>
+                <th>Gross Income Amount</th>
                 <th>Tax Amount Per Bag</th>
                 <th>Total Tax Amount</th>
                 <th>Net Total Amount Per Bag</th>
