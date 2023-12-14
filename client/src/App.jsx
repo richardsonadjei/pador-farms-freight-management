@@ -66,6 +66,7 @@ import ExpectedOTCommissionReport from './pages/ExpectedOTCommission';
 import AllOtherTripsWithinPeriodReport from './pages/AllOTWithinAPeriod';
 import EachOTIncomeExpenseReport from './pages/EachOtherTripIncomeExpense';
 import UpdateDriver from './pages/UpdateDriver';
+import AllExpenseCategories from './pages/AllExpenseCategories';
 
 
 
@@ -140,6 +141,7 @@ export default function App() {
         <Route path='/all-other-trips' element={<AllOtherTripsWithinPeriodReport/>} />
         <Route path='/each-other-trips-income-expense' element={<EachOTIncomeExpenseReport/>} />
         <Route path='/update-driver/:id' element={<UpdateDriver />} />
+        <Route path='/all-expense-categories' element={<AllExpenseCategories />} />
         
         
         

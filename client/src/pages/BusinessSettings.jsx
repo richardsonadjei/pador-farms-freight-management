@@ -50,6 +50,17 @@ const BusinessSettings = () => {
             </div>
           </div>
         </div>
+        <div className="col-md-4 mb-4">
+          <div className="card">
+            <div className="card-body">
+              <h5 className="card-title">View All Expense Categories</h5>
+              <p className="card-text">All Expense Categories</p>
+              <Link to="/all-expense-categories" className="btn btn-primary">
+                View
+              </Link>
+            </div>
+          </div>
+        </div>
         {/* Add more cards with buttons for other business settings features */}
       </div>
     </div>

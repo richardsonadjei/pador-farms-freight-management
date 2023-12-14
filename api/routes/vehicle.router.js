@@ -3,8 +3,9 @@ import express from 'express';
 import {
   createVehicle,
   getAllVehicles,
-  getVehicleByRegistrationNumber,
-  updateVehicleStatus,
+  getVehicleById,
+  updateVehicleById,
+  deleteVehicleById,
 } from '../controllers/vehicle.controller.js';
 
 const vehicleRouter = express.Router();
@@ -15,10 +16,13 @@ vehicleRouter.post('/register-vehicle', createVehicle);
 // Route to get all vehicles
 vehicleRouter.get('/all-vehicles', getAllVehicles);
 
-// Route to get a specific vehicle by registration number
-vehicleRouter.get('/vehicles/:registrationNumber', getVehicleByRegistrationNumber);
+// Route to get a single vehicle by ID
+vehicleRouter.get('/vehicle/:id', getVehicleById);
 
-// Route to update the status of a vehicle
-vehicleRouter.put('/vehicles/:registrationNumber/status', updateVehicleStatus);
+// Route to update a vehicle by ID
+vehicleRouter.put('/update-vehicle/:id', updateVehicleById);
+
+// Route to delete a vehicle by ID
+vehicleRouter.delete('/delete-vehicle/:id', deleteVehicleById);
 
 export default vehicleRouter;

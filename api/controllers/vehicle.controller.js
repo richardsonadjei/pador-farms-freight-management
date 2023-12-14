@@ -67,11 +67,12 @@ export const getAllVehicles = async (req, res) => {
   }
 };
 
-// Controller to get a specific vehicle by registration number
-export const getVehicleByRegistrationNumber = async (req, res) => {
+
+
+// Controller to get a single vehicle by ID
+export const getVehicleById = async (req, res) => {
   try {
-    const { registrationNumber } = req.params;
-    const vehicle = await Vehicle.findOne({ registrationNumber });
+    const vehicle = await Vehicle.findById(req.params.id);
 
     if (!vehicle) {
       return res.status(404).json({ error: 'Vehicle not found.' });
@@ -79,31 +80,43 @@ export const getVehicleByRegistrationNumber = async (req, res) => {
 
     res.status(200).json({ vehicle });
   } catch (error) {
-    console.error('Error getting vehicle:', error);
+    console.error('Error getting vehicle by ID:', error);
     res.status(500).json({ error: 'Internal Server Error. Please try again later.' });
   }
 };
 
-// Controller to update the status of a vehicle
-export const updateVehicleStatus = async (req, res) => {
+// Controller to update a vehicle by ID
+export const updateVehicleById = async (req, res) => {
   try {
-    const { registrationNumber } = req.params;
-    const { status } = req.body;
+    const updatedVehicle = await Vehicle.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body },
+      { new: true }
+    );
 
-    // Find the vehicle by registration number
-    const vehicle = await Vehicle.findOne({ registrationNumber });
-
-    if (!vehicle) {
+    if (!updatedVehicle) {
       return res.status(404).json({ error: 'Vehicle not found.' });
     }
 
-    // Update the status
-    vehicle.status = status;
-    await vehicle.save();
-
-    res.status(200).json({ message: 'Vehicle status updated successfully.', vehicle });
+    res.status(200).json({ message: 'Vehicle updated successfully.', vehicle: updatedVehicle });
   } catch (error) {
-    console.error('Error updating vehicle status:', error);
+    console.error('Error updating vehicle by ID:', error);
+    res.status(500).json({ error: 'Internal Server Error. Please try again later.' });
+  }
+};
+
+// Controller to delete a vehicle by ID
+export const deleteVehicleById = async (req, res) => {
+  try {
+    const deletedVehicle = await Vehicle.findByIdAndDelete(req.params.id);
+
+    if (!deletedVehicle) {
+      return res.status(404).json({ error: 'Vehicle not found.' });
+    }
+
+    res.status(200).json({ message: 'Vehicle deleted successfully.' });
+  } catch (error) {
+    console.error('Error deleting vehicle by ID:', error);
     res.status(500).json({ error: 'Internal Server Error. Please try again later.' });
   }
 };
