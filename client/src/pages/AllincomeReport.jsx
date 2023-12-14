@@ -82,7 +82,7 @@ const AllIncomeReport = () => {
 
       {(incomeData.otherTripIncome.length > 0 || incomeData.incomeHauling.length > 0) && (
         <Row className="mt-3">
-            <h2 className="mt-3 mb-4" style={{ color: 'white' }}>All Income Report</h2>
+          <h2 className="mt-3 mb-4" style={{ color: 'white' }}>All Income Report</h2>
           <Col>
             <Table striped bordered responsive hover>
               <thead style={{ backgroundColor: '#007BFF', color: 'white' }}>
@@ -124,7 +124,7 @@ const AllIncomeReport = () => {
 
       {incomeData.otherTripIncome.length > 0 || incomeData.incomeHauling.length > 0 ? (
         <Row className="mt-3">
-            <h2 className="mt-3 mb-4" style={{ color: 'white' }}>Summary Income Report</h2>
+          <h2 className="mt-3 mb-4" style={{ color: 'white' }}>Summary Income Report</h2>
           <Col>
             <Table striped bordered responsive hover>
               <thead style={{ backgroundColor: '#007BFF', color: 'white' }}>
@@ -137,17 +137,25 @@ const AllIncomeReport = () => {
                 <tr>
                   <td>Other Trip</td>
                   <td>
-  {incomeData.otherTripIncome.reduce((total, income) => total + income.amount, 0).toFixed(2)}
-</td>
-
+                    {incomeData.otherTripIncome.reduce((total, income) => total + income.amount, 0).toFixed(2)}
+                  </td>
                 </tr>
                 <tr>
                   <td>Income Hauling</td>
                   <td>
-  {incomeData.incomeHauling.reduce((total, income) => total + income.netTotalAmount, 0).toFixed(2)}
-</td>
-
+                    {incomeData.incomeHauling.reduce((total, income) => total + income.netTotalAmount, 0).toFixed(2)}
+                  </td>
                 </tr>
+                {/* Total for Other Trip and Income Hauling */}
+                <tr>
+  <td style={{ fontWeight: 'bold', fontSize: '1.2em', color: 'green' }}>Total</td>
+  <td style={{ fontWeight: 'bold', fontSize: '1.2em', color: 'green' }}>
+    {(
+      incomeData.otherTripIncome.reduce((total, income) => total + income.amount, 0) +
+      incomeData.incomeHauling.reduce((total, income) => total + income.netTotalAmount, 0)
+    ).toFixed(2)}
+  </td>
+</tr>
               </tbody>
             </Table>
           </Col>

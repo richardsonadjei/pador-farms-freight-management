@@ -32,10 +32,14 @@ const AllProfitReport = () => {
         {keys.map((key) => {
           const value = item[key];
           const formattedValue = (() => {
-            if (typeof value === 'string' && value.includes('T') && key !== 'category' && key !== 'tripNumber') {
-              // Check if the value is a string, contains 'T', and is not 'category' or 'tripNumber'
+            if (key === 'date') {
+              // Convert date to local date
               const dateOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
-              return new Date(value).toLocaleDateString(undefined, dateOptions);
+              const formattedDate = new Date(value).toLocaleDateString(undefined, dateOptions);
+              return formattedDate;
+            } else if (typeof value === 'number') {
+              // Format numeric values to 2 decimal places
+              return value.toFixed(2);
             }
             return value;
           })();
@@ -51,11 +55,6 @@ const AllProfitReport = () => {
   };
   
   
-  
-  
-  
-  
-
   return (
     <Container>
       <Form>
@@ -106,8 +105,8 @@ const AllProfitReport = () => {
                 <th>Category</th>
                 <th>PE Number</th>
                 <th>Truck Registration Number</th>
-                <th>Income Amount Per Bag</th>
-                <th>Total Income Amount</th>
+                <th>Gross Income Per Bag</th>
+                <th>Gross Income Amount</th>
                 <th>Tax Amount Per Bag</th>
                 <th>Total Tax Amount</th>
                 <th>Net Total Amount Per Bag</th>
@@ -145,8 +144,9 @@ const AllProfitReport = () => {
                 <th>Category</th>
                 <th>Trip Number</th>
                 <th>Amount</th>
-                <th>Recorded By</th>
                 <th>Description</th>
+                <th>Recorded By</th>
+                
               </tr>
             </thead>
             {/* Table Body */}
@@ -156,8 +156,9 @@ const AllProfitReport = () => {
                 'category',
                 'tripNumber',
                 'amount',
-                'recordedBy',
                 'description',
+                'recordedBy',
+                
               ])}
             </tbody>
           </Table>
@@ -345,16 +346,16 @@ const AllProfitReport = () => {
   <tbody>
     <tr>
       <td style={{ color: '#3333FF', fontWeight: 'bold' }}>
-        {reportData.totalIncome}
+        {parseFloat(reportData.totalIncome).toFixed(2)}
       </td>
       <td style={{ color: '#FF0000', fontWeight: 'bold' }}>
-        {reportData.totalExpenditure}
+        {parseFloat(reportData.totalExpenditure).toFixed(2)}
       </td>
       <td style={{ color: '#FF0033', fontWeight: 'bold' }}>
-        {reportData.totalDriverCommission}
+        {parseFloat(reportData.totalDriverCommission).toFixed(2)}
       </td>
       <td style={{ color: reportData.profitLoss >= 0 ? 'green' : 'red', fontWeight: 'bold' }}>
-        {reportData.profitLoss}
+        {parseFloat(reportData.profitLoss).toFixed(2)}
       </td>
     </tr>
   </tbody>
