@@ -144,7 +144,8 @@ const PEReport = () => {
                 </tr>
                 <tr>
                   <td >Total Weight Carried (tonnes):</td>
-                  <td >{totalWeightCarried / 1000}</td>
+                  <td>{(totalWeightCarried / 1000).toFixed(2)}</td>
+
                 </tr>
               </tbody>
             </Table>

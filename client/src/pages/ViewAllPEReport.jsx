@@ -71,16 +71,18 @@ const renderSummaryReport = () => {
         <Table bordered responsive>
           <tbody>
             <tr>
-              <td>Total Quantity</td>
+              <td>Total Quantity Hauled</td>
               <td>{totalQuantity}</td>
             </tr>
             <tr>
               <td>Total Weight Carried(Kg)</td>
-              <td>{totalWeightCarried}</td>
+              <td>{totalWeightCarried.toFixed(2)}</td>
+
             </tr>
             <tr>
               <td>Total Weight in Tonnes</td>
-              <td>{totalWeightInTonnes}</td>
+              <td>{Number(totalWeightInTonnes).toFixed(2)}</td>
+
             </tr>
           </tbody>
         </Table>

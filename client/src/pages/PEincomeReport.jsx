@@ -110,12 +110,12 @@ const PEIncomeReport = () => {
                     <td>{new Date(income.date).toLocaleDateString()}</td>
                     <td>{income.peNumber}</td>
                     <td>{income.truckRegistrationNumber}</td>
-                    <td>{income.incomeAmountPerBag}</td>
-                    <td>{income.totalIncomeAmount}</td>
+                    <td>{Number(income.incomeAmountPerBag).toFixed(2)}</td>
+                    <td>{Number(income.totalIncomeAmount).toFixed(2)}</td>
                     <td>{income.taxAmountPerBag}</td>
-                    <td>{income.totalTaxAmount}</td>
-                    <td>{income.netTotalAmountPerbag}</td>
-                    <td>{income.netTotalAmount}</td>
+                    <td>{Number(income.totalTaxAmount).toFixed(2)}</td>
+                    <td>{Number(income.netTotalAmountPerbag).toFixed(2)}</td>
+                    <td>{Number(income.netTotalAmount).toFixed(2)}</td>
                     <td>{income.description}</td>
                     <td>{income.recordedBy}</td>
                   </tr>

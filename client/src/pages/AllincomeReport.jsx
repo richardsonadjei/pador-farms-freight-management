@@ -101,7 +101,7 @@ const AllIncomeReport = () => {
                     <td>Other Trip</td>
                     <td>{new Date(income.date).toLocaleDateString()}</td>
                     <td>{income.tripNumber}</td>
-                    <td>{income.amount}</td>
+                    <td>{income.amount.toFixed(2)}</td>
                     <td>{income.description}</td>
                     <td>{income.recordedBy}</td>
                   </tr>
@@ -111,7 +111,7 @@ const AllIncomeReport = () => {
                     <td>Income Hauling</td>
                     <td>{new Date(income.date).toLocaleDateString()}</td>
                     <td>{income.peNumber}</td>
-                    <td>{income.netTotalAmount}</td>
+                    <td>{income.netTotalAmount.toFixed(2)}</td>
                     <td>{income.description}</td>
                     <td>{income.recordedBy}</td>
                   </tr>
@@ -137,14 +137,16 @@ const AllIncomeReport = () => {
                 <tr>
                   <td>Other Trip</td>
                   <td>
-                    {incomeData.otherTripIncome.reduce((total, income) => total + income.amount, 0)}
-                  </td>
+  {incomeData.otherTripIncome.reduce((total, income) => total + income.amount, 0).toFixed(2)}
+</td>
+
                 </tr>
                 <tr>
                   <td>Income Hauling</td>
                   <td>
-                    {incomeData.incomeHauling.reduce((total, income) => total + income.netTotalAmount, 0)}
-                  </td>
+  {incomeData.incomeHauling.reduce((total, income) => total + income.netTotalAmount, 0).toFixed(2)}
+</td>
+
                 </tr>
               </tbody>
             </Table>
