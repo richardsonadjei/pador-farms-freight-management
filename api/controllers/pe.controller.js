@@ -110,3 +110,106 @@ const viewPEsByDateRange = async (req, res) => {
 };
 
 export { viewPEsByDateRange };
+
+
+const updateCocoaHaulage = async (req, res) => {
+  try {
+    const peNumber = req.params.peNumber; // Assuming peNumber is part of the route parameters
+
+    const {
+      date,
+      truckRegistrationNumber,
+      driverName,
+      quantity,
+      totalweightCarried,
+      destinationLocations,
+      recordedBy,
+      description,
+    } = req.body;
+
+    const incomeAmountPerBag = 9;
+    const category = 'PEs Income';
+
+    const totalIncomeAmount = incomeAmountPerBag * quantity;
+    const taxAmountPerBag = incomeAmountPerBag * 0.1;
+    const totalTaxAmount = taxAmountPerBag * quantity;
+
+    const netTotalAmountPerbag = incomeAmountPerBag - taxAmountPerBag;
+    const netTotalAmount = netTotalAmountPerbag * quantity;
+
+    // Find and update the CocoaHaulage instance using peNumber
+    const cocoaHaulage = await CocoaHaulage.findOneAndUpdate(
+      { peNumber: peNumber },
+      {
+        date,
+        truckRegistrationNumber,
+        driverName,
+        quantity,
+        totalweightCarried,
+        destinationLocations,
+        recordedBy,
+      },
+      { new: true }
+    );
+
+    
+
+    // Update corresponding IncomeHauling instance using peNumber
+    const defaultDescription = `Income from hauling ${quantity} bags of cocoa.`;
+    const incomeHauling = await IncomeHauling.findOneAndUpdate(
+      { peNumber: peNumber }, // Use peNumber as the condition
+      {
+        date,
+        category,
+        truckRegistrationNumber,
+        incomeAmountPerBag,
+        totalIncomeAmount,
+        taxAmountPerBag,
+        totalTaxAmount,
+        netTotalAmountPerbag,
+        netTotalAmount,
+        description: description || defaultDescription,
+        recordedBy,
+      },
+      { new: true }
+    );
+
+   
+
+    res.status(200).json({ cocoaHaulage, incomeHauling });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+
+
+const deleteCocoaHaulage = async (req, res) => {
+  try {
+    const peNumber = req.params.peNumber; // assuming peNumber is part of the route parameters
+
+    // Find CocoaHaulage instance by peNumber to get _id
+    const cocoaHaulage = await CocoaHaulage.findOne({ peNumber });
+
+    if (!cocoaHaulage) {
+      return res.status(404).json({ message: 'CocoaHaulage not found' });
+    }
+
+    const cocoaHaulageId = cocoaHaulage._id;
+
+    // Find and delete CocoaHaulage instance
+    await CocoaHaulage.findOneAndDelete({ _id: cocoaHaulageId });
+
+    // Find and delete corresponding IncomeHauling instance using peNumber
+    await IncomeHauling.findOneAndDelete({ peNumber });
+
+    res.status(204).end(); // No content
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+    
+export { updateCocoaHaulage, deleteCocoaHaulage };
