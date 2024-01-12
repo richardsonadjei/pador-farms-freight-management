@@ -7,10 +7,13 @@ const AllOtherTripsWithinPeriodReport = () => {
   const [endDate, setEndDate] = useState('');
   const [otherTrips, setOtherTrips] = useState([]);
   const [reportData, setReportData] = useState(null);
+  
 
   const [selectedTrip, setSelectedTrip] = useState(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  
+  const [updatedTripNumber, setUpdatedTripNumber] = useState('');
 
   const [updatedDate, setUpdatedDate] = useState('');
   const [updatedVehicleRegistrationNumber, setUpdatedVehicleRegistrationNumber] = useState('');
@@ -58,6 +61,7 @@ const AllOtherTripsWithinPeriodReport = () => {
 
   const handleEdit = (trip) => {
     setSelectedTrip(trip);
+    setUpdatedTripNumber(trip.tripNumber);
     setUpdatedDate(new Date(trip.date).toISOString().split('T')[0]);
     setUpdatedVehicleRegistrationNumber(trip.vehicleRegistrationNumber);
     setUpdatedDriverName(trip.driverName);
@@ -67,7 +71,8 @@ const AllOtherTripsWithinPeriodReport = () => {
     setUpdatedRecordedBy(trip.recordedBy);
     setEditModalOpen(true);
   };
-
+  
+  
   const handleUpdate = async () => {
     try {
       const response = await fetch(`/api/update-trip/${selectedTrip.tripNumber}`, {
@@ -204,6 +209,17 @@ const AllOtherTripsWithinPeriodReport = () => {
         <ModalHeader toggle={() => setEditModalOpen(!editModalOpen)}>Edit Trip</ModalHeader>
         <ModalBody>
           <Form>
+          <FormGroup>
+  <Label for="updatedTripNumber">Trip Number</Label>
+  <Input
+    type="text"
+    id="updatedTripNumber"
+    value={selectedTrip?.tripNumber || ''}
+    onChange={(e) => setUpdatedTripNumber(e.target.value)}
+    disabled
+  />
+</FormGroup>
+
             <FormGroup>
               <Label for="updatedDate">Date</Label>
               <Input
