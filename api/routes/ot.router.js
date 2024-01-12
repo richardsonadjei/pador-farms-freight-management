@@ -1,7 +1,9 @@
 import express from 'express';
 import {
   createOtherTrip,
+  deleteOtherTrip,
   getAllOtherTrips,
+  updateOtherTrip,
   viewOtherTripsByDateRange,
   
 } from '../controllers/ot.controller.js';
@@ -15,6 +17,9 @@ otRouter.post('/create-other-trip', createOtherTrip);
 otRouter.get('/other-trips', getAllOtherTrips);
 
 otRouter.post('/viewByDateRange', viewOtherTripsByDateRange);
+
+otRouter.put('/update-trip/:tripNumber', updateOtherTrip);
+otRouter.delete('/delete-trip/:tripNumber', deleteOtherTrip);
 
 
 

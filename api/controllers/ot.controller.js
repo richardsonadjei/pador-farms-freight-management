@@ -122,3 +122,91 @@ const viewOtherTripsByDateRange = async (req, res) => {
 };
 
 export { viewOtherTripsByDateRange };
+
+
+
+
+
+const updateOtherTrip = async (req, res) => {
+  try {
+    const tripNumber = req.params.tripNumber;
+
+    const {
+      date,
+      vehicleRegistrationNumber,
+      driverName,
+      totalAmountCharged,
+      destinationLocations,
+      recordedBy,
+      description,
+    } = req.body;
+
+    // Find and update the OtherTrip instance using tripNumber
+    const otherTrip = await OtherTrip.findOneAndUpdate(
+      { tripNumber: tripNumber },
+      {
+        date,
+        vehicleRegistrationNumber,
+        driverName,
+        totalAmountCharged,
+        destinationLocations,
+        recordedBy,
+        description,
+      },
+      { new: true }
+    );
+
+    // Update corresponding OtherTripIncome instance using tripNumber
+    const defaultCategory = 'Other Trip Income';
+    const otherTripIncome = await OtherTripIncome.findOneAndUpdate(
+      { tripNumber: tripNumber },
+      {
+        date,
+        category: defaultCategory,
+        tripNumber,
+        amount: totalAmountCharged, // Assuming totalAmountCharged is the relevant amount for income
+        recordedBy,
+        description: description || `Income from other trip ${tripNumber}.`,
+      },
+      { new: true }
+    );
+
+    res.status(200).json({ otherTrip, otherTripIncome });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+export { updateOtherTrip };
+
+
+
+
+const deleteOtherTrip = async (req, res) => {
+  try {
+    const tripNumber = req.params.tripNumber; // assuming tripNumber is part of the route parameters
+
+    // Find OtherTrip instance by tripNumber to get _id
+    const otherTrip = await OtherTrip.findOne({ tripNumber });
+
+    if (!otherTrip) {
+      return res.status(404).json({ message: 'OtherTrip not found' });
+    }
+
+    const otherTripId = otherTrip._id;
+
+    // Find and delete OtherTrip instance
+    await OtherTrip.findOneAndDelete({ _id: otherTripId });
+
+    // Find and delete corresponding OtherTripIncome instance using tripNumber
+    await OtherTripIncome.findOneAndDelete({ tripNumber });
+
+    res.status(204).end(); // No content
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+export { deleteOtherTrip };
