@@ -5,7 +5,8 @@ const { Schema, model } = mongoose;
 const cocoaHaulageSchema = new Schema(
   {
     peNumber: {
-      type: String, // Change to String type
+      type: String,
+      
     },
     date: {
       type: Date,
@@ -38,23 +39,30 @@ const cocoaHaulageSchema = new Schema(
     // You can add more fields as needed
   },
   {
-    timestamps: true, // Add createdAt and updatedAt fields
+    timestamps: true,
   }
 );
 
-// Function to generate the peNumber
+// Function to generate a new peNumber ensuring uniqueness
 const generatePENumber = async () => {
-  const count = await CocoaHaulage.countDocuments({});
-  const peNumber = `PE${(count + 1).toString().padStart(3, '0')}`;
+  let peNumber;
+  let count = await CocoaHaulage.countDocuments({});
+  do {
+    peNumber = `PE${(count + 1).toString().padStart(3, '0')}`;
+    count++;
+  } while (await CocoaHaulage.findOne({ peNumber }));
   return peNumber;
 };
 
+
 // Middleware to automatically generate peNumber before saving
 cocoaHaulageSchema.pre('save', async function (next) {
-  if (!this.peNumber) {
-    this.peNumber = await generatePENumber();
+  try {
+    this.peNumber = await generatePENumber(this);
+    next();
+  } catch (error) {
+    next(error);
   }
-  next();
 });
 
 const CocoaHaulage = model('CocoaHaulage', cocoaHaulageSchema);

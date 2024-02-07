@@ -45,6 +45,7 @@ const PE = () => {
       setRecordedBy(currentUser.userName);
     }
   }, [currentUser]);
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -71,7 +72,6 @@ const PE = () => {
         throw new Error(errorData.error);
       }
   
-  
       alert('Cocoa haulage and income transaction created successfully');
       navigate('/primary-evacuations');
     } catch (error) {
@@ -79,8 +79,6 @@ const PE = () => {
       alert('An error occurred while creating the cocoa haulage. Please try again.');
     }
   };
-  
-  
 
   return (
     <Container>
@@ -100,7 +98,7 @@ const PE = () => {
             </FormGroup>
           </Col>
           <Col md={6}>
-          <FormGroup>
+            <FormGroup>
               <Label for="truckRegistrationNumber" style={{ color: 'white' }}>Truck Registration Number</Label>
               {/* Use a select input to choose from available vehicles */}
               <Input
@@ -111,7 +109,7 @@ const PE = () => {
                 required
               >
                 <option value="" disabled>Select Truck</option>
-                {vehicles.map(vehicle => (
+                {vehicles && vehicles.map(vehicle => (
                   <option key={vehicle._id} value={vehicle.registrationNumber}>{vehicle.registrationNumber}</option>
                 ))}
               </Input>
@@ -120,7 +118,7 @@ const PE = () => {
         </Row>
         <Row>
           <Col md={6}>
-          <FormGroup>
+            <FormGroup>
               <Label for="driverName" style={{ color: 'white' }}>Driver Name</Label>
               {/* Use a select input to choose from available drivers */}
               <Input
@@ -131,7 +129,7 @@ const PE = () => {
                 required
               >
                 <option value="" disabled>Select Driver</option>
-                {drivers.map(driver => (
+                {drivers && drivers.map(driver => (
                   <option key={driver._id} value={driver.firstName}>{driver.firstName}</option>
                 ))}
               </Input>
@@ -214,7 +212,7 @@ const PE = () => {
                 required
               >
                 <option value="" disabled>Select Category</option>
-                {incomeCategories.map(cat => (
+                {incomeCategories && incomeCategories.map(cat => (
                   <option key={cat._id} value={cat.name}>{cat.name}</option>
                 ))}
               </Input>
