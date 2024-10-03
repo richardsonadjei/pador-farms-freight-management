@@ -1,27 +1,25 @@
 import React, { useState } from 'react';
-import { Button, Form, FormGroup, Label, Input, Container, Row, Col, Alert } from 'reactstrap';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice.js'; // Adjust the import path
+import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
 
 const SignIn = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.user.loading);
   const error = useSelector((state) => state.user.error);
-  const navigate = useNavigate();
-
 
   const [formData, setFormData] = useState({
     userNameOrEmail: '',
     password: '',
   });
 
-  
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [e.target.id]: e.target.value,
     });
   };
 
@@ -29,7 +27,7 @@ const SignIn = () => {
     e.preventDefault();
     try {
       dispatch(signInStart());
-      const res = await fetch('/api/auth/sign-in', {
+      const res = await fetch('/api/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -37,11 +35,12 @@ const SignIn = () => {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-     
-      if (data.success === false) {
-        dispatch(signInFailure(data.message));
+
+      if (!res.ok) {
+        dispatch(signInFailure(data.error || 'Sign-in failed.'));
         return;
       }
+
       dispatch(signInSuccess(data));
       navigate('/');
     } catch (error) {
@@ -49,42 +48,52 @@ const SignIn = () => {
     }
   };
 
+
   return (
-    <Container>
-      <Row className="justify-content-center mt-5">
-      {error && <div className="text-danger mt-3">{error}</div>}
-        <Col xs="12" md="6">
-          <Form onSubmit={handleSubmit}>
-            <FormGroup>
-              <Label for="userNameOrEmail" style={{ color: 'white' }}>Username or Email</Label>
-              <Input
-                type="text"
-                name="userNameOrEmail"
-                id="userNameOrEmail"
-                placeholder="Enter your username or email"
-                value={formData.userNameOrEmail}
-                onChange={handleChange}
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label for="password" style={{ color: 'white' }}>Password</Label>
-              <Input
-                type="password"
-                name="password"
-                id="password"
-                placeholder="Enter your password"
-                value={formData.password}
-                onChange={handleChange}
-              />
-            </FormGroup>
-            <button type="submit" className="btn btn-primary" disabled={loading}>
+    <div className="container mt-5">
+      <h2 className="mb-4">Sign In</h2>
+      <form onSubmit={handleSubmit}>
+        {/* UserName or Email */}
+        <div className="mb-3">
+          <label htmlFor="userNameOrEmail" className="form-label" style={{ color: 'black', fontWeight: 'bold' }}>
+            UserName or Email
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="userNameOrEmail"
+            name="userNameOrEmail"
+            value={formData.userNameOrEmail}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* Password */}
+        <div className="mb-3">
+          <label htmlFor="password" className="form-label" style={{ color: 'black', fontWeight: 'bold' }}>
+            Password
+          </label>
+          <input
+            type="password"
+            className="form-control"
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* Submit button */}
+        <button type="submit" className="btn btn-primary" disabled={loading}>
           {loading ? 'Signing In...' : 'Sign In'}
         </button>
 
-          </Form>
-        </Col>
-      </Row>
-    </Container>
+        {/* Error message */}
+        {error && <div className="text-danger mt-3">{error}</div>}
+      </form>
+    </div>
   );
 };
 

@@ -9,7 +9,7 @@ const SignOut = () => {
   const handleSignOut = async () => {
     try {
       // Make a request to your server to clear the session/token
-      const response = await fetch('/api/auth/sign-out', {
+      const response = await fetch('/api/signout', {
         method: 'POST',
         credentials: 'include', // Include credentials for cross-origin requests
       });

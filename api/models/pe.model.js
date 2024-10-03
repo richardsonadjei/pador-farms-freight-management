@@ -2,68 +2,49 @@ import mongoose from 'mongoose';
 
 const { Schema, model } = mongoose;
 
-const cocoaHaulageSchema = new Schema(
+const primaryEvacuationSchema = new Schema(
   {
-    peNumber: {
-      type: String,
-      
+    cocoaPricePerBag: {
+      type: Schema.Types.ObjectId,
+      ref: 'CocoaPricePerBag',
+      required: true,
     },
-    date: {
+    vehicle: {
+      type: Schema.Types.ObjectId,
+      ref: 'Vehicle',
+      required: true,
+    },
+    driver: {
+      type: Schema.Types.ObjectId,
+      ref: 'Employee',
+      required: true,
+    },
+    numberOfBags: {
+      type: Number,
+      required: true,
+      min: 1,
+    },
+    dateOfEvacuation: {
       type: Date,
       required: true,
+      default: Date.now,
     },
-    truckRegistrationNumber: {
+    evacuationLocation: {
       type: String,
-      required: true,
     },
-    driverName: {
+    notes: {
       type: String,
-      required: true,
-    },
-    quantity: {
-      type: Number,
-      required: true,
-    },
-    totalweightCarried: {
-      type: Number,
-      required: true,
-    },
-    destinationLocations: {
-      type: String,
-      required: true,
     },
     recordedBy: {
-      type: String,
-      required: true,
+    type: String,
+    required: true,
     },
-    // You can add more fields as needed
   },
   {
-    timestamps: true,
+    timestamps: true, // Automatically adds `createdAt` and `updatedAt` fields
   }
 );
 
-// Function to generate a new peNumber ensuring uniqueness
-const generatePENumber = async () => {
-  let peNumber;
-  let count = await CocoaHaulage.countDocuments({});
-  do {
-    peNumber = `PE${(count + 1).toString().padStart(3, '0')}`;
-    count++;
-  } while (await CocoaHaulage.findOne({ peNumber }));
-  return peNumber;
-};
+const PrimaryEvacuation = model('PrimaryEvacuation', primaryEvacuationSchema);
 
-
-// Middleware to automatically generate peNumber before saving
-cocoaHaulageSchema.pre('save', async function (next) {
-  try {
-    this.peNumber = await generatePENumber(this);
-    next();
-  } catch (error) {
-    next(error);
-  }
-});
-
-const CocoaHaulage = model('CocoaHaulage', cocoaHaulageSchema);
-export default CocoaHaulage;
+export default PrimaryEvacuation;

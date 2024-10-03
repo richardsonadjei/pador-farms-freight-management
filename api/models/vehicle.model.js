@@ -1,31 +1,67 @@
 import mongoose from 'mongoose';
+
 const { Schema, model } = mongoose;
 
-const vehicleSchema = new Schema({
-  registrationNumber: {
-    type: String,
-    required: true,
-    unique: true,
+const vehicleSchema = new Schema(
+  {
+    registrationNumber: {
+      type: String,
+      required: true,
+    },
+    make: {
+      type: String,
+      required: true,
+    },
+    model: {
+      type: String,
+      required: true,
+    },
+    year: {
+      type: Number,
+      required: true,
+    },
+    color: {
+      type: String,
+    },
+    owner: {
+      type: String,
+      
+    },
+    chassisNumber: {
+      type: String,
+      unique: true,
+      type: Number,
+      required: true,
+    },
+    engineNumber: {
+      type: String,
+      unique: true,
+    },
+    insuranceDetails: {
+      company: {
+        type: String,
+      },
+      policyNumber: {
+        type: String,
+      },
+      expirationDate: {
+        type: Date,
+      },
+    },
+    registrationDate: {
+      type: Date,
+      default: Date.now,
+    },
+    status: {
+      type: String,
+      enum: ['active', 'inactive', 'decommissioned'],
+      default: 'active',
+    },
   },
-  make: String,
-  chasisNumber: String,
-  model: String,
-  year: Number,
-  capacity: String,
-  yearPurchased: Number,
-  price: Number,
-  description: String,
-  status: String,
-  color: String,
-  mileage: Number,
-  fuelType: String,
-  description: String,
-  status: String,
-  registeredBy: {
-    type: String,
-    required: true,
-  },
-}, { timestamps: true });
+  {
+    timestamps: true, // Automatically create createdAt and updatedAt fields
+  }
+);
 
 const Vehicle = model('Vehicle', vehicleSchema);
 

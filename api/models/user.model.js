@@ -1,9 +1,12 @@
-// Import required dependencies
 import mongoose from 'mongoose';
 
 // Define the User schema
 const userSchema = new mongoose.Schema({
-  name: {
+  firstName: {
+    type: String,
+    required: true
+  },
+  lastName: {
     type: String,
     required: true
   },
@@ -14,63 +17,20 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true,
-    unique: true
   },
   password: {
     type: String,
     required: true
   },
-  telephoneNumber: {
+  phoneNumber: {
     type: String,
     required: true
   },
-  ghanaCardNumber: {
-    type: String,
-    required: true
-  },
-  bank: {
-    type: String,
-    required: true
-  },
-  bankAccountNumber: {
-    type: String,
-    required: true
-  },
-  bankBranch: {
-    type: String,
-    required: true
-  },
-  nextOfKinName: {
-      type: String,
-      required: true
-    },
-  nextOfKinContact: {
-      type: String,
-      required: true
-    },
-  nextOfKinGhanaCardNumber: {
-      type: String,
-      required: true
-    },
-  witnessName: {
-      type: String,
-      required: true
-    },
-  witnessContact: {
-      type: String,
-      required: true
-    },
   role: {
-    type: String,
-    enum: ['admin', 'employee',],
-    default: 'employee'
+    type: [String], // Array of strings for roles
+    enum: ['admin', 'manager', 'employee', 'finance', 'human-resource',],
+    default: ['employee'] // Default as an array with one element
   },
-  category: {
-    type: String,
-    enum: ['driver', 'labourer', 'all'],
-    required: true
-  }
 },
 { timestamps: true }
 );
