@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Offcanvas, Nav, Dropdown } from 'react-bootstrap';
-import { FaBell, FaHome, FaUser, FaSignOutAlt, FaSignInAlt, FaPlus, FaEllipsisV, FaUsers, FaList, FaTruck, FaRoad, FaIdCard, FaGasPump, FaBell as FaReminder, FaDollarSign, FaMapMarkerAlt, FaChartBar, FaCog, FaUserCircle } from 'react-icons/fa';
+import { FaBell, FaHome, FaUser, FaSignOutAlt, FaSignInAlt, FaPlus, FaEllipsisV, FaUsers, FaList, FaTruck, FaRoad, FaIdCard, FaGasPump, FaDollarSign, FaMapMarkerAlt, FaChartBar, FaCog, FaUserCircle } from 'react-icons/fa';
+
+
 import { Link } from 'react-router-dom';
 import NewExpenseCategoryModal from '../pages/finance/expensecategory';
 import RegisterVehicleModal from '../pages/extras/Vehicle/RegisterVehicleModal';
 import SignUpModal from '../pages/SignUp';
 import AddCocoaPriceModal from '../pages/extras/PricePerBag/NewPricePerBag';
+import NewPartnerModal from '../pages/extras/Partners/NewPartnerModal';
 
 
 const OffcanvasMenu = ({ showOffcanvasRight, handleClose, handleItemClick }) => {
@@ -14,7 +17,8 @@ const OffcanvasMenu = ({ showOffcanvasRight, handleClose, handleItemClick }) => 
   const [showExpenseCategoryModal, setShowExpenseCategoryModal] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showRegisterVehicleModal, setShowRegisterVehicleModal] = useState(false);
-  const [showCocoaPriceModal, setShowCocoaPriceModal] = useState(false); // State for Cocoa Price Modal
+  const [showCocoaPriceModal, setShowCocoaPriceModal] = useState(false);
+  const [showAddPartnerModal, setShowAddPartnerModal] = useState(false); // State for Add Partner Modal
 
   const handleAddExpenseCategoryClick = () => {
     setShowExpenseCategoryModal(true);
@@ -50,6 +54,15 @@ const OffcanvasMenu = ({ showOffcanvasRight, handleClose, handleItemClick }) => 
 
   const handleCocoaPriceModalClose = () => {
     setShowCocoaPriceModal(false);
+  };
+
+  const handleAddPartnerClick = () => {
+    setShowAddPartnerModal(true);
+    handleClose();
+  };
+
+  const handleAddPartnerModalClose = () => {
+    setShowAddPartnerModal(false);
   };
 
   return (
@@ -93,8 +106,9 @@ const OffcanvasMenu = ({ showOffcanvasRight, handleClose, handleItemClick }) => 
             </Dropdown>
 
             <Nav.Link as={Link} to="/reminder" onClick={handleItemClick} className="nav-link-new mt-3">
-              <FaReminder /> Reminder
-            </Nav.Link>
+  <FaBell /> Reminder
+</Nav.Link>
+
 
             <Nav.Link as={Link} to="/reports" onClick={handleItemClick} className="nav-link-new mt-3">
               <FaChartBar /> Reports
@@ -132,6 +146,9 @@ const OffcanvasMenu = ({ showOffcanvasRight, handleClose, handleItemClick }) => 
                 <Dropdown.Item onClick={handleAddCocoaPriceClick} className="dropdown-item-new">
                   Cocoa Price Per Bag
                 </Dropdown.Item>
+                <Dropdown.Item onClick={handleAddPartnerClick} className="dropdown-item-new">
+                  Add New Partner
+                </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
 
@@ -167,8 +184,16 @@ const OffcanvasMenu = ({ showOffcanvasRight, handleClose, handleItemClick }) => 
           show={showCocoaPriceModal}
           handleClose={handleCocoaPriceModalClose}
           handleSave={() => {
-            // Logic to refresh data or perform actions after saving
             console.log('Cocoa Price Per Bag Added');
+          }}
+        />
+      )}
+      {showAddPartnerModal && (
+        <NewPartnerModal
+          show={showAddPartnerModal}
+          handleClose={handleAddPartnerModalClose}
+          handleSave={() => {
+            console.log('New Partner Added');
           }}
         />
       )}

@@ -22,7 +22,6 @@ const primaryEvacuationSchema = new Schema(
     numberOfBags: {
       type: Number,
       required: true,
-      min: 1,
     },
     dateOfEvacuation: {
       type: Date,

@@ -2,21 +2,22 @@ import GeneralExpense from "../models/generalExpense.model.js";
 import Income from "../models/income.model.js";
 import OtherTrip from "../models/otherTrips.model.js";
 import OtherTripExpense from "../models/otherTripsExpense.model.js";
+import Partner from "../models/partner.model.js";
 import PrimaryEvacuation from "../models/pe.model.js";
 import PrimaryEvacuationExpense from "../models/pEexpense.model.js";
 import CocoaPricePerBag from "../models/pricePerBag.model.js";
+import Transfer from "../models/transfers.model.js";
 import Vehicle from "../models/vehicle.model.js";
 
 
 
 
-// Create a new primary evacuation record
 export const createPrimaryEvacuation = async (req, res, next) => {
   const {
     cocoaPricePerBag,
     vehicle,
     driver,
-    numberOfBags,
+    overallWeight,
     dateOfEvacuation,
     evacuationLocation,
     notes,
@@ -24,6 +25,13 @@ export const createPrimaryEvacuation = async (req, res, next) => {
   } = req.body;
 
   try {
+    // Calculate the number of bags based on the overall weight and round to 2 decimal places
+    if (!overallWeight || overallWeight < 1) {
+      return res.status(400).json({ success: false, message: 'Invalid overall weight' });
+    }
+
+    const numberOfBags = parseFloat((overallWeight / 64).toFixed(2));
+
     // Find the cocoa price per bag record to calculate the income
     const cocoaPrice = await CocoaPricePerBag.findById(cocoaPricePerBag);
     if (!cocoaPrice) {
@@ -31,7 +39,7 @@ export const createPrimaryEvacuation = async (req, res, next) => {
     }
 
     // Calculate the income amount
-    const incomeAmount = cocoaPrice.pricePerBagAfterTax * numberOfBags;
+    const incomeAmount = parseFloat((cocoaPrice.pricePerBagAfterTax * numberOfBags).toFixed(4));
 
     // Create the Primary Evacuation record
     const newEvacuation = new PrimaryEvacuation({
@@ -39,6 +47,7 @@ export const createPrimaryEvacuation = async (req, res, next) => {
       vehicle,
       driver,
       numberOfBags,
+      overallWeight,
       dateOfEvacuation,
       evacuationLocation,
       notes,
@@ -72,6 +81,7 @@ export const createPrimaryEvacuation = async (req, res, next) => {
     next(error);
   }
 };
+
 
 
 
@@ -670,5 +680,118 @@ export const getAllFinancialRecordsGroupedByVehicle = async (req, res, next) => 
   } catch (error) {
     console.error('Error fetching all financial records grouped by vehicle:', error);
     next(error);
+  }
+};
+
+
+
+
+// Create a new transfer
+export const createTransfer = async (req, res) => {
+  try {
+    const { vehicle, recipient, amount, paymentMethod, momoNumber, notes, recordedBy } = req.body;
+
+    // Check if the referenced vehicle exists
+    const existingVehicle = await Vehicle.findById(vehicle);
+    if (!existingVehicle) {
+      return res.status(404).json({ success: false, message: 'Vehicle not found' });
+    }
+
+    // Check if the referenced recipient (Partner) exists
+    const existingRecipient = await Partner.findById(recipient);
+    if (!existingRecipient) {
+      return res.status(404).json({ success: false, message: 'Recipient (Partner) not found' });
+    }
+
+    // Create the new transfer
+    const newTransfer = new Transfer({
+      vehicle,
+      recipient,
+      amount,
+      paymentMethod,
+      momoNumber,
+      notes,
+      recordedBy,
+    });
+
+    await newTransfer.save();
+
+    // Create a new expense with category "Transfer"
+    const newExpense = new GeneralExpense({
+      vehicle,
+      category: 'Transfer',
+      amount,
+      currency: 'Ghc', // Assuming the default currency is 'Ghc'
+      dateOfExpense: new Date(),
+      recordedBy,
+      notes: notes || `Transfer to ${existingRecipient.name}`,
+    });
+
+    await newExpense.save();
+
+    res.status(201).json({ success: true, data: newTransfer });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+
+// Get all transfers
+export const getAllTransfers = async (req, res) => {
+  try {
+    const transfers = await Transfer.find().populate('vehicle'); // Populating vehicle details
+    res.status(200).json({ success: true, data: transfers });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Get a transfer by ID
+export const getTransferById = async (req, res) => {
+  try {
+    const transfer = await Transfer.findById(req.params.id).populate('vehicle');
+    if (!transfer) {
+      return res.status(404).json({ success: false, message: 'Transfer not found' });
+    }
+    res.status(200).json({ success: true, data: transfer });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Update a transfer by ID
+export const updateTransfer = async (req, res) => {
+  try {
+    const { vehicle, amount, paymentMethod, momoNumber, notes, recordedBy } = req.body;
+
+    const updatedTransfer = await Transfer.findByIdAndUpdate(
+      req.params.id,
+      { vehicle, amount, paymentMethod, momoNumber, notes, recordedBy },
+      { new: true, runValidators: true }
+    ).populate('vehicle');
+
+    if (!updatedTransfer) {
+      return res.status(404).json({ success: false, message: 'Transfer not found' });
+    }
+
+    res.status(200).json({ success: true, data: updatedTransfer });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Delete a transfer by ID
+export const deleteTransfer = async (req, res) => {
+  try {
+    const deletedTransfer = await Transfer.findByIdAndDelete(req.params.id);
+
+    if (!deletedTransfer) {
+      return res.status(404).json({ success: false, message: 'Transfer not found' });
+    }
+
+    res.status(200).json({ success: true, message: 'Transfer deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };

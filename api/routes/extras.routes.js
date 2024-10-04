@@ -1,5 +1,5 @@
 import express from 'express';
-import { createCocoaPrice, createExpenseCategory, deleteCocoaPriceById, deleteExpenseCategory, getAllCocoaPrices, getAllExpenseCategories, getCocoaPriceById, getExpenseCategoryById, updateCocoaPriceById, updateExpenseCategory } from '../controllers/extras.controller.js';
+import { createCocoaPrice, createExpenseCategory, createPartner, deleteCocoaPriceById, deleteExpenseCategory, deletePartner, getAllCocoaPrices, getAllExpenseCategories, getAllPartners, getCocoaPriceById, getExpenseCategoryById, getPartnerById, updateCocoaPriceById, updateExpenseCategory, updatePartner } from '../controllers/extras.controller.js';
 
 
 const extrasRouter = express.Router();
@@ -32,5 +32,11 @@ extrasRouter.put('/edit-expense-categories/:id', updateExpenseCategory);
 
 // Delete an expense category
 extrasRouter.delete('/delete-expense-categories/:id', deleteExpenseCategory);
+
+extrasRouter.post('/partners', createPartner); // Create a new partner
+extrasRouter.get('/partners', getAllPartners); // Get all partners
+extrasRouter.get('/partners/:id', getPartnerById); // Get a partner by ID
+extrasRouter.put('/partners/:id', updatePartner); // Update a partner by ID
+extrasRouter.delete('/partners/:id', deletePartner); // Delete a partner by ID
 
 export default extrasRouter;

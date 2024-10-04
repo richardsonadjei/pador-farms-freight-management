@@ -1,5 +1,5 @@
 import express from 'express';
-import { createGeneralExpense, createOtherTrip, createOtherTripExpense, createPrimaryEvacuation, createPrimaryEvacuationExpense, deleteGeneralExpense, deleteOtherTrip, deleteOtherTripExpense, deletePrimaryEvacuation, deletePrimaryEvacuationExpense, getAllActivitiesAndTransactionsRecords, getAllFinancialRecordsGroupedByVehicle, getAllGeneralExpenses, getAllOtherTripExpenses, getAllOtherTrips, getAllPrimaryEvacuationExpenses, getAllPrimaryEvacuations, getGeneralExpenseById, getOtherTripById, getOtherTripExpenseById, getPrimaryEvacuationById, getPrimaryEvacuationExpenseById, updateGeneralExpense, updateOtherTrip, updateOtherTripExpense, updatePrimaryEvacuation, updatePrimaryEvacuationExpense } from '../controllers/haulingsAndFinance.controller.js';
+import { createGeneralExpense, createOtherTrip, createOtherTripExpense, createPrimaryEvacuation, createPrimaryEvacuationExpense, createTransfer, deleteGeneralExpense, deleteOtherTrip, deleteOtherTripExpense, deletePrimaryEvacuation, deletePrimaryEvacuationExpense, deleteTransfer, getAllActivitiesAndTransactionsRecords, getAllFinancialRecordsGroupedByVehicle, getAllGeneralExpenses, getAllOtherTripExpenses, getAllOtherTrips, getAllPrimaryEvacuationExpenses, getAllPrimaryEvacuations, getAllTransfers, getGeneralExpenseById, getOtherTripById, getOtherTripExpenseById, getPrimaryEvacuationById, getPrimaryEvacuationExpenseById, getTransferById, updateGeneralExpense, updateOtherTrip, updateOtherTripExpense, updatePrimaryEvacuation, updatePrimaryEvacuationExpense, updateTransfer } from '../controllers/haulingsAndFinance.controller.js';
 
 
 const haulingsAndFinanceRouter = express.Router();
@@ -79,6 +79,17 @@ haulingsAndFinanceRouter.delete('/general-expenses/:id', deleteGeneralExpense);
 haulingsAndFinanceRouter.get('/all-records', getAllActivitiesAndTransactionsRecords);
 
 haulingsAndFinanceRouter.get('/financial-records/grouped-by-vehicle', getAllFinancialRecordsGroupedByVehicle);
+
+
+
+haulingsAndFinanceRouter.post('/transfers', createTransfer);
+haulingsAndFinanceRouter.get('/transfers', getAllTransfers);
+haulingsAndFinanceRouter.get('/transfers/:id', getTransferById);
+haulingsAndFinanceRouter.put('/transfers/:id', updateTransfer);
+haulingsAndFinanceRouter.delete('/transfers/:id', deleteTransfer);
+
+
+
 
 
 export default haulingsAndFinanceRouter;

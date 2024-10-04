@@ -1,150 +1,216 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Form, InputGroup, Row, Col } from 'react-bootstrap';
-import { FaMotorcycle, FaMoneyBill, FaWallet, FaStickyNote, FaPhoneAlt } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
-import Select from 'react-select';
+import { Modal, Button, Form, Row, Col, InputGroup } from 'react-bootstrap';
+import { FaTruck, FaUser, FaMoneyBillWave, FaDollarSign, FaPhone, FaStickyNote, FaUserCircle } from 'react-icons/fa';
 
-const TransferModal = ({ show, handleClose, handleSave }) => {
-  const [selectedMotorbike, setSelectedMotorbike] = useState(null);
-  const [amount, setAmount] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('Momo');
-  const [notes, setNotes] = useState('');
-  const [momoNumber, setMomoNumber] = useState('');
-  const [motorbikes, setMotorbikes] = useState([]);
+const RecordTransferModal = ({ show, handleClose, handleSave }) => {
+  const { currentUser } = useSelector((state) => state.user);
 
-  const currentUser = useSelector((state) => state.user.currentUser?.userName || '');
+  const [formData, setFormData] = useState({
+    vehicle: '',
+    recipient: '',
+    amount: '',
+    paymentMethod: 'Cash', // Default to Cash
+    momoNumber: '',
+    notes: '',
+    recordedBy: currentUser ? currentUser.userName : '', // Assuming this will be set by current user context
+  });
 
-  // Fetch motorbikes using the same pattern as you provided
+  const [vehicles, setVehicles] = useState([]);
+  const [partners, setPartners] = useState([]);
+
+  // Fetch vehicles when modal is shown
   useEffect(() => {
-    const fetchMotorbikes = async () => {
-      try {
-        const response = await fetch('/api/motorbikes');
-        const data = await response.json();
-        const sortedMotorbikes = data.sort((a, b) => String(a.model).localeCompare(String(b.model)));
-        setMotorbikes(
-          sortedMotorbikes.map((motorbike) => ({
-            label: `${motorbike.registrationNumber}`,
-            value: motorbike._id,
-          }))
-        );
-      } catch (error) {
-        console.error('Error fetching motorbikes:', error);
-      }
-    };
+    if (show) {
+      const fetchVehicles = async () => {
+        try {
+          const vehiclesResponse = await fetch('/api/vehicle');
+          if (vehiclesResponse.ok) {
+            const vehiclesData = await vehiclesResponse.json();
+            const vehicleList = Array.isArray(vehiclesData) ? vehiclesData : vehiclesData.data || [];
+            setVehicles(vehicleList);
+            if (vehicleList.length > 0) {
+              // Set the first vehicle as default
+              setFormData((prev) => ({
+                ...prev,
+                vehicle: vehicleList[0]._id,
+              }));
+            }
+          } else {
+            throw new Error('Failed to fetch vehicles');
+          }
+        } catch (error) {
+          console.error('Error fetching vehicles:', error);
+        }
+      };
 
-    fetchMotorbikes();
-  }, []);
+      const fetchPartners = async () => {
+        try {
+          const partnersResponse = await fetch('/api/partners');
+          if (partnersResponse.ok) {
+            const partnersData = await partnersResponse.json();
+            setPartners(Array.isArray(partnersData) ? partnersData : partnersData.data || []);
+          } else {
+            throw new Error('Failed to fetch partners');
+          }
+        } catch (error) {
+          console.error('Error fetching partners:', error);
+        }
+      };
 
-  const onSubmit = async (e) => {
+      fetchVehicles();
+      fetchPartners();
+    }
+  }, [show]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const transferData = {
-      motorbike: selectedMotorbike?.value || '',
-      amount,
-      paymentMethod,
-      momoNumber: paymentMethod === 'Momo' ? momoNumber : '',
-      notes,
-      recordedBy: currentUser,
-    };
-
     try {
       const response = await fetch('/api/transfers', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(transferData),
+        body: JSON.stringify(formData),
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to save transfer');
+      if (response.ok) {
+        const data = await response.json();
+        alert('Transfer recorded successfully!');
+        handleSave(data);
+        handleClose();
+      } else {
+        const errorData = await response.json();
+        alert(`Error: ${errorData.message}`);
       }
-
-      const result = await response.json();
-      window.alert('Transfer saved successfully!');
-      handleSave(result);
-      handleClose();
     } catch (error) {
-      console.error('Error:', error);
-      window.alert('Error saving transfer');
+      console.error('Error recording transfer:', error);
+      alert('Failed to record transfer. Please try again.');
     }
   };
 
   return (
-    <Modal show={show} onHide={handleClose}>
+    <Modal show={show} onHide={handleClose} backdrop="static" animation={true}>
       <Modal.Header closeButton>
-        <Modal.Title>Record Fund Transfer</Modal.Title>
+        <Modal.Title>Record Transfer</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form onSubmit={onSubmit}>
-          {/* Motorbike and Amount */}
-          <Row>
+        <Form onSubmit={handleSubmit}>
+          <Row className="mb-3">
             <Col md={6}>
-              <Form.Group controlId="motorbike" className="mt-3">
-                <Form.Label>Motorbike</Form.Label>
-                <Select
-                  value={selectedMotorbike}
-                  onChange={(option) => setSelectedMotorbike(option)}
-                  options={motorbikes}
-                  isClearable
-                  isSearchable
-                  placeholder="Select Motorbike"
-                />
+              <Form.Group controlId="vehicle">
+                <Form.Label>Vehicle</Form.Label>
+                <InputGroup>
+                  <InputGroup.Text>
+                    <FaTruck />
+                  </InputGroup.Text>
+                  <Form.Control
+                    as="select"
+                    name="vehicle"
+                    value={formData.vehicle}
+                    onChange={handleChange}
+                    disabled
+                    required
+                  >
+                    {vehicles.map((vehicle) => (
+                      <option key={vehicle._id} value={vehicle._id}>
+                        {vehicle.registrationNumber}
+                      </option>
+                    ))}
+                  </Form.Control>
+                </InputGroup>
               </Form.Group>
             </Col>
             <Col md={6}>
-              <Form.Group controlId="amount" className="mt-3">
-                <Form.Label>Transfer Amount</Form.Label>
+              <Form.Group controlId="recipient">
+                <Form.Label>Recipient (Partner)</Form.Label>
                 <InputGroup>
                   <InputGroup.Text>
-                    <FaMoneyBill />
+                    <FaUser />
                   </InputGroup.Text>
                   <Form.Control
-                    type="number"
-                    placeholder="Enter transfer amount"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
+                    as="select"
+                    name="recipient"
+                    value={formData.recipient}
+                    onChange={handleChange}
                     required
-                  />
+                  >
+                    <option value="">Select Recipient</option>
+                    {partners.map((partner) => (
+                      <option key={partner._id} value={partner._id}>
+                        {partner.name}
+                      </option>
+                    ))}
+                  </Form.Control>
                 </InputGroup>
               </Form.Group>
             </Col>
           </Row>
 
-          {/* Payment Method and Momo Number */}
-          <Row>
-            <Col md={6}>
-              <Form.Group controlId="paymentMethod" className="mt-3">
+          <Row className="mb-3">
+            <Col md={4}>
+              <Form.Group controlId="amount">
+                <Form.Label>Amount</Form.Label>
+                <InputGroup>
+                  <InputGroup.Text>
+                    <FaDollarSign />
+                  </InputGroup.Text>
+                  <Form.Control
+                    type="number"
+                    name="amount"
+                    value={formData.amount}
+                    onChange={handleChange}
+                    min="0"
+                    placeholder="Enter amount"
+                    required
+                  />
+                </InputGroup>
+              </Form.Group>
+            </Col>
+            <Col md={4}>
+              <Form.Group controlId="paymentMethod">
                 <Form.Label>Payment Method</Form.Label>
                 <InputGroup>
                   <InputGroup.Text>
-                    <FaWallet />
+                    <FaMoneyBillWave />
                   </InputGroup.Text>
                   <Form.Control
                     as="select"
-                    value={paymentMethod}
-                    onChange={(e) => setPaymentMethod(e.target.value)}
+                    name="paymentMethod"
+                    value={formData.paymentMethod}
+                    onChange={handleChange}
                     required
                   >
                     <option value="Cash">Cash</option>
+                    <option value="Bank Transfer">Bank Transfer</option>
                     <option value="Momo">Momo</option>
                   </Form.Control>
                 </InputGroup>
               </Form.Group>
             </Col>
-            {paymentMethod === 'Momo' && (
-              <Col md={6}>
-                <Form.Group controlId="momoNumber" className="mt-3">
+            {formData.paymentMethod === 'Momo' && (
+              <Col md={4}>
+                <Form.Group controlId="momoNumber">
                   <Form.Label>Momo Number</Form.Label>
                   <InputGroup>
                     <InputGroup.Text>
-                      <FaPhoneAlt />
+                      <FaPhone />
                     </InputGroup.Text>
                     <Form.Control
                       type="text"
+                      name="momoNumber"
+                      value={formData.momoNumber}
+                      onChange={handleChange}
                       placeholder="Enter Momo number"
-                      value={momoNumber}
-                      onChange={(e) => setMomoNumber(e.target.value)}
-                      required={paymentMethod === 'Momo'}
+                      required={formData.paymentMethod === 'Momo'}
                     />
                   </InputGroup>
                 </Form.Group>
@@ -152,35 +218,46 @@ const TransferModal = ({ show, handleClose, handleSave }) => {
             )}
           </Row>
 
-          {/* Notes and Recorded By */}
-          <Row>
+         
+
+          <Form.Group controlId="notes" className="mb-3">
+            <Form.Label>Notes</Form.Label>
+            <InputGroup>
+              <InputGroup.Text>
+                <FaStickyNote />
+              </InputGroup.Text>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                name="notes"
+                value={formData.notes}
+                onChange={handleChange}
+                placeholder="Enter any additional notes"
+              />
+            </InputGroup>
+          </Form.Group>
+          <Row className="mb-3">
             <Col md={6}>
-              <Form.Group controlId="notes" className="mt-3">
-                <Form.Label>Notes</Form.Label>
+              <Form.Group controlId="recordedBy">
+                <Form.Label>Recorded By</Form.Label>
                 <InputGroup>
                   <InputGroup.Text>
-                    <FaStickyNote />
+                    <FaUserCircle />
                   </InputGroup.Text>
                   <Form.Control
-                    as="textarea"
-                    rows={2}
-                    placeholder="Add any notes (optional)"
-                    value={notes}
-                    onChange={(e) => setNotes(e.target.value)}
+                    type="text"
+                    name="recordedBy"
+                    value={formData.recordedBy}
+                    onChange={handleChange}
+                    disabled
+                    required
                   />
                 </InputGroup>
               </Form.Group>
             </Col>
-            <Col md={6}>
-              <Form.Group controlId="recordedBy" className="mt-3">
-                <Form.Label>Recorded By</Form.Label>
-                <Form.Control type="text" value={currentUser} readOnly />
-              </Form.Group>
-            </Col>
           </Row>
-
-          <Button variant="primary" type="submit" className="mt-4">
-            Save Transfer
+          <Button variant="primary" type="submit" className="mt-3">
+            Save
           </Button>
         </Form>
       </Modal.Body>
@@ -188,4 +265,4 @@ const TransferModal = ({ show, handleClose, handleSave }) => {
   );
 };
 
-export default TransferModal;
+export default RecordTransferModal;

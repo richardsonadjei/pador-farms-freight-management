@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Table } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 
 // Utility function to get the date range for the current month
@@ -18,12 +18,6 @@ const getCurrentMonthRange = () => {
 const isDateInCurrentMonth = (date) => {
   const now = new Date();
   return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
-};
-
-// Extract number of bags from notes field
-const extractNumberOfBagsFromNotes = (notes) => {
-  const match = notes.match(/(\d+)\s+bags/);
-  return match ? parseInt(match[1], 10) : 0;
 };
 
 const BalanceSummary = () => {
@@ -49,7 +43,7 @@ const BalanceSummary = () => {
 
   useEffect(() => {
     fetchData();
-    const intervalId = setInterval(fetchData, 1000); // Update every 100 seconds
+    const intervalId = setInterval(fetchData, 10000); // Update every 10000 milliseconds (10 seconds)
 
     return () => clearInterval(intervalId);
   }, []);
@@ -73,6 +67,7 @@ const BalanceSummary = () => {
               vehicleInfo,
               primaryEvacuationExpenses = [],
               otherTripExpenses = [],
+              generalExpenses = [],
               incomes = [],
             } = data;
 
@@ -81,7 +76,7 @@ const BalanceSummary = () => {
               (income) => income.source === 'Primary Evacuation' && isDateInCurrentMonth(new Date(income.date))
             );
             const totalBagsHauled = primaryEvacuationIncomes.reduce(
-              (sum, income) => sum + extractNumberOfBagsFromNotes(income.notes),
+              (sum, income) => sum + parseFloat(income.notes.match(/([\d.]+)\s+bags/)?.[1] || 0),
               0
             );
             const totalPrimaryEvacuationIncome = primaryEvacuationIncomes.reduce(
@@ -90,8 +85,6 @@ const BalanceSummary = () => {
             );
             const totalPrimaryEvacuationExpense = calculateTotal(primaryEvacuationExpenses, isDateInCurrentMonth);
             const driverCommissionPrimaryEvacuation = totalPrimaryEvacuationIncome * 0.2;
-            const netIncomePrimaryEvacuation =
-              totalPrimaryEvacuationIncome - totalPrimaryEvacuationExpense - driverCommissionPrimaryEvacuation;
 
             // Calculations for Other Trips
             const otherTripsIncomes = incomes.filter(
@@ -100,61 +93,94 @@ const BalanceSummary = () => {
             const totalOtherTripsIncome = otherTripsIncomes.reduce((acc, income) => acc + (income.amount || 0), 0);
             const totalOtherTripsExpense = calculateTotal(otherTripExpenses, isDateInCurrentMonth);
             const driverCommissionOtherTrips = totalOtherTripsIncome * 0.2;
-            const netRevenueOtherTrips = totalOtherTripsIncome - totalOtherTripsExpense - driverCommissionOtherTrips;
+
+            // Calculations for General Expenses
+            const totalGeneralExpenses = calculateTotal(generalExpenses, isDateInCurrentMonth);
+
+            // Total Income, Expenses, and Balance
+            const totalIncome = totalPrimaryEvacuationIncome + totalOtherTripsIncome;
+            const totalExpenses =
+              totalPrimaryEvacuationExpense + totalOtherTripsExpense + totalGeneralExpenses;
+            const balance = totalIncome - totalExpenses;
 
             return (
-              <Col xs={12} md={6} className="mb-4" key={index}>
+              <Col xs={12} md={8} className="mb-4" key={index}>
                 <div className="summary-card motorbike-summary">
                   {/* Motorbike Summary */}
-                  <div className="summary-header">
-                    <h5>Truck:{vehicleInfo?.registrationNumber || 'Unknown'}</h5>
+                  <div className="summary-header" style={{ textAlign: 'center', padding: '2px 0' }}>
+                    <h5>Truck: {vehicleInfo?.registrationNumber || 'Unknown'}</h5>
                     <span>{getCurrentMonthRange()}</span>
-                  </div>
-
-                  {/* Primary Evacuation Summary */}
-                  <div className="summary-table mt-3">
-                    <h6>Primary Evacuations</h6>
-                    <div>
-                      <strong>Total Bags Hauled</strong>
-                      <div>{totalBagsHauled}</div>
-                    </div>
-                    <div>
-                      <strong>Total Income</strong>
-                      <div>{totalPrimaryEvacuationIncome.toLocaleString()}</div>
-                    </div>
-                    <div>
-                      <strong>Total Expenses</strong>
-                      <div className="text-danger">{totalPrimaryEvacuationExpense.toLocaleString()}</div>
-                    </div>
-                    <div>
-                      <strong>Driver's Commission</strong>
-                      <div className="text-danger">{driverCommissionPrimaryEvacuation.toLocaleString()}</div>
-                    </div>
-                    <div>
-                      <strong>Net Income</strong>
-                      <div>{netIncomePrimaryEvacuation.toLocaleString()}</div>
+                    <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: '10px' }}>
+                      <p style={{ fontWeight: 'bold', color: 'blue' }}>
+                        Total Income: {totalIncome.toLocaleString('en-US', { style: 'currency', currency: 'Ghc' })}
+                      </p>
+                      <p style={{ fontWeight: 'bold', color: '#e74c3c' }}>
+                        Total Expense: {totalExpenses.toLocaleString('en-US', { style: 'currency', currency: 'Ghc' })}
+                      </p>
+                      <p style={{ fontWeight: 'bold', color: balance >= 0 ? 'green' : 'red' }}>
+                        Balance: {balance.toLocaleString('en-US', { style: 'currency', currency: 'Ghc' })}
+                      </p>
                     </div>
                   </div>
 
-                  {/* Other Trips Summary */}
-                  <div className="summary-table mt-4">
-                    <h6>Other Trips</h6>
-                    <div>
-                      <strong>Total Income</strong>
-                      <div>{totalOtherTripsIncome.toLocaleString()}</div>
-                    </div>
-                    <div>
-                      <strong>Total Expenses</strong>
-                      <div className="text-danger">{totalOtherTripsExpense.toLocaleString()}</div>
-                    </div>
-                    <div>
-                      <strong>Driver's Commission</strong>
-                      <div className="text-danger">{driverCommissionOtherTrips.toLocaleString()}</div>
-                    </div>
-                    <div>
-                      <strong>Net Revenue</strong>
-                      <div>{netRevenueOtherTrips.toLocaleString()}</div>
-                    </div>
+                  {/* Primary Evacuation Summary Table */}
+                  <div className="table-responsive">
+                    <h6 style={{ textAlign: 'center', margin: '5px 0 5px' }}>Primary Evacuations</h6>
+                    <Table striped bordered hover variant="light" className="mb-4">
+                      <thead>
+                        <tr>
+                          <th>Total Bags Hauled</th>
+                          <th>Total Income</th>
+                          <th>Total Expenses</th>
+                          <th>Driver's Commission</th>
+                          <th>Net Income</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td style={{ textAlign: 'center' }}>{totalBagsHauled.toFixed(2)}</td>
+                          <td style={{ textAlign: 'center' }}>{totalPrimaryEvacuationIncome.toLocaleString()}</td>
+                          <td style={{ textAlign: 'center', color: '#e74c3c' }}>
+                            {totalPrimaryEvacuationExpense.toLocaleString()}
+                          </td>
+                          <td style={{ textAlign: 'center', color: '#e74c3c' }}>
+                            {driverCommissionPrimaryEvacuation.toLocaleString()}
+                          </td>
+                          <td style={{ textAlign: 'center' }}>
+                            {(totalPrimaryEvacuationIncome - totalPrimaryEvacuationExpense - driverCommissionPrimaryEvacuation).toLocaleString()}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </div>
+
+                  {/* Other Trips Summary Table */}
+                  <div className="table-responsive">
+                    <h6 style={{ textAlign: 'center', margin: '5px 0 5px' }}>Other Trips</h6>
+                    <Table striped bordered hover variant="light">
+                      <thead>
+                        <tr>
+                          <th>Total Income</th>
+                          <th>Total Expenses</th>
+                          <th>Driver's Commission</th>
+                          <th>Net Revenue</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td style={{ textAlign: 'center' }}>{totalOtherTripsIncome.toLocaleString()}</td>
+                          <td style={{ textAlign: 'center', color: '#e74c3c' }}>
+                            {totalOtherTripsExpense.toLocaleString()}
+                          </td>
+                          <td style={{ textAlign: 'center', color: '#e74c3c' }}>
+                            {driverCommissionOtherTrips.toLocaleString()}
+                          </td>
+                          <td style={{ textAlign: 'center' }}>
+                            {(totalOtherTripsIncome - totalOtherTripsExpense - driverCommissionOtherTrips).toLocaleString()}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </Table>
                   </div>
                 </div>
               </Col>

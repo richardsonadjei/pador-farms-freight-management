@@ -168,23 +168,25 @@ const AddOtherTripExpenseModal = ({ show, handleClose, handleSave }) => {
 
           <Row className="mb-3">
             <Col md={6}>
-              <Form.Group controlId="amount">
-                <Form.Label>Amount</Form.Label>
-                <InputGroup>
-                  <InputGroup.Text>
-                    <FaMoneyBillWave />
-                  </InputGroup.Text>
-                  <Form.Control
-                    type="number"
-                    name="amount"
-                    value={formData.amount}
-                    onChange={handleChange}
-                    min="0"
-                    placeholder="Enter amount"
-                    required
-                  />
-                </InputGroup>
-              </Form.Group>
+            <Form.Group controlId="amount">
+  <Form.Label>Amount</Form.Label>
+  <InputGroup>
+    <InputGroup.Text>
+      <FaMoneyBillWave />
+    </InputGroup.Text>
+    <Form.Control
+      type="number"
+      name="amount"
+      value={formData.amount}
+      onChange={handleChange}
+      min="0"
+      placeholder="Enter amount"
+      required
+      style={{ backgroundColor: 'yellow' }} // Custom background color
+    />
+  </InputGroup>
+</Form.Group>
+
             </Col>
             <Col md={6}>
               <Form.Group controlId="currency">

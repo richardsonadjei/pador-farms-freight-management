@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col, InputGroup } from 'react-bootstrap';
-import { FaCalendarAlt, FaTruck, FaUser, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaCalendarAlt, FaTruck, FaUser, FaMapMarkerAlt, FaWeightHanging } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 
 const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
@@ -10,10 +10,10 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
     cocoaPricePerBag: '',
     vehicle: '',
     driver: '',
-    numberOfBags: '', // Set default number of bags to 10
+    overallWeight: '', // Added overallWeight for user input
     dateOfEvacuation: today,
     evacuationLocation: 'Asikuma-Odoben-Ajumako General Area',
-    notes: `Haulage of 10 Cocoa Bags on ${new Date(today).toLocaleDateString('en-GB', {
+    notes: `Haulage of cocoa weighing on ${new Date(today).toLocaleDateString('en-GB', {
       weekday: 'short',
       day: 'numeric',
       month: 'short',
@@ -109,11 +109,11 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
       [name]: value,
     }));
 
-    // Update notes when numberOfBags or dateOfEvacuation changes
-    if (name === 'numberOfBags' || name === 'dateOfEvacuation') {
+    // Update notes when overallWeight or dateOfEvacuation changes
+    if (name === 'overallWeight' || name === 'dateOfEvacuation') {
       setFormData((prev) => ({
         ...prev,
-        notes: `Haulage of ${name === 'numberOfBags' ? value : prev.numberOfBags} Cocoa Bags on ${new Date(prev.dateOfEvacuation || today).toLocaleDateString('en-GB', {
+        notes: `Haulage of cocoa weighing ${name === 'overallWeight' ? value : prev.overallWeight} kg on ${new Date(prev.dateOfEvacuation || today).toLocaleDateString('en-GB', {
           weekday: 'short',
           day: 'numeric',
           month: 'short',
@@ -164,7 +164,8 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
                   name="cocoaPricePerBag"
                   value={formData.cocoaPricePerBag}
                   onChange={handleChange}
-                  required
+                  readOnly
+                  disabled
                 >
                   <option value="">Select Cocoa Price</option>
                   {Array.isArray(cocoaPrices) &&
@@ -188,7 +189,8 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
                     name="vehicle"
                     value={formData.vehicle}
                     onChange={handleChange}
-                    required
+                    readOnly
+                    disabled
                   >
                     <option value="">Select Vehicle</option>
                     {Array.isArray(vehicles) &&
@@ -216,7 +218,8 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
                     name="driver"
                     value={formData.driver}
                     onChange={handleChange}
-                    required
+                    readOnly
+                    disabled
                   >
                     <option value="">Select Driver</option>
                     {Array.isArray(drivers) &&
@@ -230,21 +233,20 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
               </Form.Group>
             </Col>
             <Col md={6}>
-              <Form.Group controlId="numberOfBags">
-                <Form.Label>Number of Bags</Form.Label>
+              <Form.Group controlId="overallWeight">
+                <Form.Label>Overall Weight (kg)</Form.Label>
                 <InputGroup>
+                  <InputGroup.Text>
+                    <FaWeightHanging />
+                  </InputGroup.Text>
                   <Form.Control
                     type="number"
-                    name="numberOfBags"
-                    value={formData.numberOfBags}
+                    name="overallWeight"
+                    value={formData.overallWeight}
                     onChange={handleChange}
-                    min="1"
-                    placeholder="Enter number of bags"
+                    placeholder="Enter overall weight in kg"
                     required
-                    style={{
-                      backgroundColor: 'yellow',
-                      transition: 'background-color 0.5s ease-in-out',
-                    }}
+                    style={{ backgroundColor: 'yellow' }}
                   />
                 </InputGroup>
               </Form.Group>
@@ -264,7 +266,8 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
                     name="dateOfEvacuation"
                     value={formData.dateOfEvacuation}
                     onChange={handleChange}
-                    required
+                    readOnly
+                    disabled
                   />
                 </InputGroup>
               </Form.Group>
@@ -281,8 +284,8 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
                     name="evacuationLocation"
                     value={formData.evacuationLocation}
                     onChange={handleChange}
-                    placeholder="Enter evacuation location"
-                    required
+                    readOnly
+                    disabled
                   />
                 </InputGroup>
               </Form.Group>
@@ -298,7 +301,8 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
                 name="notes"
                 value={formData.notes}
                 onChange={handleChange}
-                placeholder="Enter any additional notes"
+                readOnly
+                disabled
               />
             </InputGroup>
           </Form.Group>
@@ -308,7 +312,6 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
           </Button>
         </Form>
       </Modal.Body>
-      
     </Modal>
   );
 };

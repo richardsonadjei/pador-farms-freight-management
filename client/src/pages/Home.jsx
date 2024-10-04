@@ -12,6 +12,7 @@ import AddOtherTripModal from './Trips/OtherTrips/OtherTripsModal';
 import AddGeneralExpenseModal from './finance/Expense/GeneralExpenseModal';
 import AddOtherTripExpenseModal from './finance/Expense/OtExpenseModal';
 import AddPrimaryEvacuationExpenseModal from './finance/Expense/PeExpenseModal';
+import RecordTransferModal from './Transfer/AddTransferModal';
 
 
 const Home = () => {
@@ -23,12 +24,39 @@ const Home = () => {
   const [showPrimaryEvacuationModal, setShowPrimaryEvacuationModal] = useState(false);
   const [showOtherTripModal, setShowOtherTripModal] = useState(false);
   const [showTransferModal, setShowTransferModal] = useState(false);
+  const [showRecordTransferModal, setShowRecordTransferModal] = useState(false);
   const [selectedIncomeType, setSelectedIncomeType] = useState('');
   const [selectedExpenseType, setSelectedExpenseType] = useState('');
 
   // Handle Expense Selection Modal
   const handleCloseExpenseSelection = () => setShowExpenseSelectionModal(false);
   const handleShowExpenseSelection = () => setShowExpenseSelectionModal(true);
+
+  // Handle Income Selection Modal
+  const handleCloseIncomeSelection = () => setShowIncomeSelectionModal(false);
+  const handleShowIncomeSelection = () => setShowIncomeSelectionModal(true);
+
+  // Handle Primary Evacuation Modal
+  const handleClosePrimaryEvacuation = () => setShowPrimaryEvacuationModal(false);
+  const handleShowPrimaryEvacuation = () => {
+    setShowPrimaryEvacuationModal(true);
+    handleCloseIncomeSelection();
+  };
+
+  // Handle Other Trip Modal
+  const handleCloseOtherTrip = () => setShowOtherTripModal(false);
+  const handleShowOtherTrip = () => {
+    setShowOtherTripModal(true);
+    handleCloseIncomeSelection();
+  };
+
+  // Handle Transfer Modal
+  const handleCloseTransfer = () => setShowTransferModal(false);
+  const handleShowTransfer = () => setShowTransferModal(true);
+
+  // Handle Record Transfer Modal
+  const handleCloseRecordTransfer = () => setShowRecordTransferModal(false);
+  const handleShowRecordTransfer = () => setShowRecordTransferModal(true);
 
   // Handle Primary Evacuation Expense Modal
   const handleShowPrimaryEvacuationExpense = () => {
@@ -51,41 +79,9 @@ const Home = () => {
   };
   const handleCloseGeneralExpense = () => setShowGeneralExpenseModal(false);
 
-  // Handle Income Selection Modal
-  const handleCloseIncomeSelection = () => setShowIncomeSelectionModal(false);
-  const handleShowIncomeSelection = () => setShowIncomeSelectionModal(true);
-
-  // Handle Primary Evacuation Modal
-  const handleShowPrimaryEvacuation = () => {
-    setShowPrimaryEvacuationModal(true);
-    handleCloseIncomeSelection();
-  };
-  const handleClosePrimaryEvacuation = () => setShowPrimaryEvacuationModal(false);
-
-  // Handle Other Trip Modal
-  const handleShowOtherTrip = () => {
-    setShowOtherTripModal(true);
-    handleCloseIncomeSelection();
-  };
-  const handleCloseOtherTrip = () => setShowOtherTripModal(false);
-
-  // Handle Transfer Modal
-  const handleCloseTransfer = () => setShowTransferModal(false);
-  const handleShowTransfer = () => setShowTransferModal(true);
-
-  // Save Primary Evacuation Expense
-  const handleSavePrimaryEvacuationExpense = (expenseData) => {
-    console.log('Saved Primary Evacuation Expense:', expenseData);
-  };
-
-  // Save Other Trip Expense
-  const handleSaveOtherTripExpense = (expenseData) => {
-    console.log('Saved Other Trip Expense:', expenseData);
-  };
-
-  // Save General Expense
-  const handleSaveGeneralExpense = (expenseData) => {
-    console.log('Saved General Expense:', expenseData);
+  // Save Transfer
+  const handleSaveTransfer = (transferData) => {
+    console.log('Saved Transfer:', transferData);
   };
 
   return (
@@ -99,7 +95,7 @@ const Home = () => {
             <ExpenseCard handleShow={handleShowExpenseSelection} />
           </Col>
           <Col xs={6} md={3}>
-            <TransferCard handleShow={handleShowTransfer} />
+            <TransferCard handleShow={handleShowRecordTransfer} />
           </Col>
           <Col xs={6} md={3}>
             <TransactionCard />
@@ -109,6 +105,13 @@ const Home = () => {
 
       <BalanceSummary />
       <RecentTransactions />
+
+      {/* Record Transfer Modal */}
+      <RecordTransferModal
+        show={showRecordTransferModal}
+        handleClose={handleCloseRecordTransfer}
+        handleSave={handleSaveTransfer}
+      />
 
       {/* Expense Selection Modal */}
       <Modal
@@ -182,21 +185,21 @@ const Home = () => {
       <AddPrimaryEvacuationExpenseModal
         show={showPrimaryEvacuationExpenseModal}
         handleClose={handleClosePrimaryEvacuationExpense}
-        handleSave={handleSavePrimaryEvacuationExpense}
+        handleSave={(data) => console.log('Primary Evacuation Expense Saved:', data)}
       />
 
       {/* Other Trip Expense Modal */}
       <AddOtherTripExpenseModal
         show={showOtherTripExpenseModal}
         handleClose={handleCloseOtherTripExpense}
-        handleSave={handleSaveOtherTripExpense}
+        handleSave={(data) => console.log('Other Trip Expense Saved:', data)}
       />
 
       {/* General Expense Modal */}
       <AddGeneralExpenseModal
         show={showGeneralExpenseModal}
         handleClose={handleCloseGeneralExpense}
-        handleSave={handleSaveGeneralExpense}
+        handleSave={(data) => console.log('General Expense Saved:', data)}
       />
 
       {/* Income Selection Modal */}
@@ -259,21 +262,21 @@ const Home = () => {
       <AddPrimaryEvacuationModal
         show={showPrimaryEvacuationModal}
         handleClose={handleClosePrimaryEvacuation}
-        handleSave={() => {}}
+        handleSave={(data) => console.log('Primary Evacuation Saved:', data)}
       />
 
       {/* Other Trip Modal */}
       <AddOtherTripModal
         show={showOtherTripModal}
         handleClose={handleCloseOtherTrip}
-        handleSave={() => {}}
+        handleSave={(data) => console.log('Other Trip Saved:', data)}
       />
 
       {/* Transfer Modal */}
       <TransferModal
         show={showTransferModal}
         handleClose={handleCloseTransfer}
-        handleSave={() => {}}
+        handleSave={(data) => console.log('Transfer Saved:', data)}
       />
     </div>
   );

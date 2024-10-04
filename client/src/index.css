@@ -4,7 +4,7 @@
 }
 
 .home-container {
-  padding: 20px;
+  padding: 2px;
 }
 
 .button-grid {
@@ -13,7 +13,7 @@
 
 .custom-card {
   margin: 10px 0;
-  padding: 20px;
+  padding: 2px;
   border-radius: 10px;
   box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.1);
 }
@@ -26,15 +26,15 @@
 .balance-summary {
   text-align: center;
   background-color: #f8f9fa;
-  padding: 10px;
-  margin-bottom: 20px;
+  padding: 2px;
+  margin-bottom: 5px;
   border-radius: 10px;
   box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.1);
 }
 
 .summary-header {
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .summary-table {
@@ -50,7 +50,7 @@
 }
 
 .recent-transactions {
-  margin-top: 20px;
+  margin-top: 2px;
 }
 
 .transaction-date {
@@ -225,14 +225,15 @@ body {
 
 
 .balance-summary {
-  padding: 20px;
+  padding: 2px;
   background-color: #19437D;
+  width: 100%;
 }
 
 .summary-card {
   background-color: #ffffff;
   border-radius: 12px;
-  padding: 20px;
+  padding: 2px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -262,6 +263,7 @@ body {
   display: flex;
   justify-content: space-between;
   font-size: 16px;
+  flex-wrap: wrap; /* Wrap content on smaller screens */
 }
 
 .summary-table div {
@@ -284,18 +286,23 @@ body {
 }
 
 @media (max-width: 767px) {
-  .summary-table {
-    flex-direction: row;
-    justify-content: space-around;
+  .balance-summary {
+    padding: 10px; /* Reduce padding on smaller screens */
   }
 
   .summary-header h5,
   .summary-header span {
-    text-align: left;
+    text-align: center; /* Center-align text for smaller screens */
+  }
+
+  .summary-table {
+    flex-direction: column; /* Change flex direction for smaller screens */
+    align-items: center; /* Center the content */
   }
 
   .summary-table div {
-    text-align: center;
+    margin-bottom: 10px; /* Add spacing between items */
+    width: 100%; /* Ensure items take full width */
   }
 }
 

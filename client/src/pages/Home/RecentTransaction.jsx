@@ -35,7 +35,7 @@ const RecentTransactions = () => {
 
       const primaryEvacuationExpenseTransactions = data.primaryEvacuationExpenses.map((item) => ({
         ...item,
-        description: `Primary Evacuation Expense - ${item.category.name || item.category} (${item.vehicle?.registrationNumber || ''})`,
+        description: `Primary Evacuation Expense - ${(item.category?.name || item.category) || 'Unknown Category'} (${item.vehicle?.registrationNumber || ''})`,
         transactionType: 'Expense',
         color: 'text-danger',
         date: item.dateOfExpense,
@@ -43,7 +43,7 @@ const RecentTransactions = () => {
 
       const otherTripExpenseTransactions = data.otherTripExpenses.map((item) => ({
         ...item,
-        description: `Other Trip Expense - ${item.category.name || item.category} (${item.vehicle?.registrationNumber || ''})`,
+        description: `Other Trip Expense - ${(item.category?.name || item.category) || 'Unknown Category'} (${item.vehicle?.registrationNumber || ''})`,
         transactionType: 'Expense',
         color: 'text-danger',
         date: item.dateOfExpense,
@@ -51,7 +51,7 @@ const RecentTransactions = () => {
 
       const generalExpenseTransactions = data.generalExpenses.map((item) => ({
         ...item,
-        description: `General Expense - ${item.category.name || item.category}`,
+        description: `General Expense - ${(item.category?.name || item.category) || 'Unknown Category'}`,
         transactionType: 'Expense',
         color: 'text-danger',
         date: item.dateOfExpense,
@@ -73,10 +73,11 @@ const RecentTransactions = () => {
         ...otherTripExpenseTransactions,
         ...generalExpenseTransactions,
         ...incomeTransactions,
-      ].sort((a, b) => new Date(b.date) - new Date(a.date));
+      ].filter((transaction) => transaction.date) // Ensure date is valid
+        .sort((a, b) => new Date(b.date) - new Date(a.date));
 
-      // Only show the 5 most recent transactions
-      setTransactions(allTransactions.slice(0, 5));
+      // Set the transactions state
+      setTransactions(allTransactions); // Remove `.slice(0, 5)` to show all transactions or use `.slice(0, n)` to limit
     } catch (error) {
       console.error('Error fetching transactions:', error);
     }
@@ -97,6 +98,7 @@ const RecentTransactions = () => {
 
   // Function to format the date as Mon Aug 8 -24
   const formatDate = (dateString) => {
+    if (!dateString) return 'Unknown Date';
     const date = new Date(dateString);
     const options = { weekday: 'short', month: 'short', day: 'numeric' };
     const formattedDate = date.toLocaleDateString('en-US', options);
@@ -107,7 +109,7 @@ const RecentTransactions = () => {
   return (
     <div className="recent-transactions">
       <h5 style={{ color: 'white' }}>Recent Transactions</h5>
-      <ListGroup style={{ maxHeight: '200px', overflowY: 'auto' }}>
+      <ListGroup style={{ maxHeight: '400px', overflowY: 'auto' }}>
         {transactions.length > 0 ? (
           transactions.map((transaction, index) => (
             <ListGroup.Item key={index} className="d-flex flex-column">
@@ -118,7 +120,7 @@ const RecentTransactions = () => {
               <div className="mt-1">
                 <span>{transaction.description}</span>
                 <span className={`float-end ${transaction.color}`}>
-                  {transaction.amount ? `${transaction.currency || 'Ghc'} ${transaction.amount.toFixed(2)}` : '0.00'}
+                  {transaction.amount ? `${transaction.currency || 'Ghc'} ${transaction.amount.toFixed(2)}` : 'Trip'}
                 </span>
               </div>
             </ListGroup.Item>
