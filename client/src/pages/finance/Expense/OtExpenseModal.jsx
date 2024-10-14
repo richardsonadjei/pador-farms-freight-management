@@ -147,6 +147,7 @@ const AddOtherTripExpenseModal = ({ show, handleClose, handleSave }) => {
                     onChange={(selectedOption) => handleSelectChange(selectedOption, { name: 'vehicle' })}
                     placeholder="Select vehicle"
                     isClearable
+                    isDisabled
                   />
                 </InputGroup>
               </Form.Group>
@@ -196,6 +197,7 @@ const AddOtherTripExpenseModal = ({ show, handleClose, handleSave }) => {
                   name="currency"
                   value={formData.currency}
                   onChange={handleChange}
+                  disabled
                 >
                   <option value="Ghc">Ghc</option>
                   <option value="USD">USD</option>

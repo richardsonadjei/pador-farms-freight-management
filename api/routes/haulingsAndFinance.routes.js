@@ -1,5 +1,5 @@
 import express from 'express';
-import { createGeneralExpense, createOtherTrip, createOtherTripExpense, createPrimaryEvacuation, createPrimaryEvacuationExpense, createTransfer, deleteGeneralExpense, deleteOtherTrip, deleteOtherTripExpense, deletePrimaryEvacuation, deletePrimaryEvacuationExpense, deleteTransfer, getAllActivitiesAndTransactionsRecords, getAllFinancialRecordsGroupedByVehicle, getAllGeneralExpenses, getAllOtherTripExpenses, getAllOtherTrips, getAllPrimaryEvacuationExpenses, getAllPrimaryEvacuations, getAllTransfers, getGeneralExpenseById, getOtherTripById, getOtherTripExpenseById, getPrimaryEvacuationById, getPrimaryEvacuationExpenseById, getTransferById, updateGeneralExpense, updateOtherTrip, updateOtherTripExpense, updatePrimaryEvacuation, updatePrimaryEvacuationExpense, updateTransfer } from '../controllers/haulingsAndFinance.controller.js';
+import { createGeneralExpense, createInsurance, createOtherTrip, createOtherTripExpense, createPrimaryEvacuation, createPrimaryEvacuationExpense, createRoadworthy, createTransfer, deleteGeneralExpense, deleteInsurance, deleteOtherTrip, deleteOtherTripExpense, deletePrimaryEvacuation, deletePrimaryEvacuationExpense, deleteRoadworthy, deleteTransfer, getAllActivitiesAndTransactionsRecords, getAllFinancialRecordsGroupedByVehicle, getAllGeneralExpenses, getAllInsurance, getAllOtherTripExpenses, getAllOtherTrips, getAllPrimaryEvacuationExpenses, getAllPrimaryEvacuations, getAllRoadworthy, getAllTransfers, getGeneralExpenseById, getInsuranceById,  getMostRecentActiveInsurance, getMostRecentActiveRoadworthy, getOtherTripById, getOtherTripExpenseById, getPrimaryEvacuationById, getPrimaryEvacuationExpenseById, getRoadworthyById, getTransferById, updateGeneralExpense, updateInsurance, updateOtherTrip, updateOtherTripExpense, updatePrimaryEvacuation, updatePrimaryEvacuationExpense, updateRoadworthy, updateTransfer } from '../controllers/haulingsAndFinance.controller.js';
 
 
 const haulingsAndFinanceRouter = express.Router();
@@ -90,6 +90,30 @@ haulingsAndFinanceRouter.delete('/transfers/:id', deleteTransfer);
 
 
 
+haulingsAndFinanceRouter.post('/insurance', createInsurance);        // Create a new insurance
+haulingsAndFinanceRouter.get('/insurance', getAllInsurance);         // Get all insurance records
+haulingsAndFinanceRouter.get('/insurance/:id', getInsuranceById);    // Get insurance by ID
+haulingsAndFinanceRouter.put('/insurance/:id', updateInsurance);     // Update insurance by ID
+haulingsAndFinanceRouter.delete('/insurance/:id', deleteInsurance);  // Delete insurance by ID
+haulingsAndFinanceRouter.get('/insurance/vehicle/:vehicleId', getMostRecentActiveInsurance);
+
+// Route to create a roadworthy record and save expense
+haulingsAndFinanceRouter.post('/roadworthy', createRoadworthy);
+
+// Route to get all roadworthy records
+haulingsAndFinanceRouter.get('/roadworthy', getAllRoadworthy);
+
+// Route to get roadworthy record by ID
+haulingsAndFinanceRouter.get('/roadworthy/:id', getRoadworthyById);
+
+// Route to get most recent active roadworthy for a vehicle
+haulingsAndFinanceRouter.get('/roadworthy/vehicle/:vehicleId', getMostRecentActiveRoadworthy);
+
+// Route to update roadworthy record by ID
+haulingsAndFinanceRouter.put('/roadworthy/:id', updateRoadworthy);
+
+// Route to delete roadworthy record by ID
+haulingsAndFinanceRouter.delete('/roadworthy/:id', deleteRoadworthy);
 
 
 export default haulingsAndFinanceRouter;

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col, InputGroup } from 'react-bootstrap';
 import { FaCalendarAlt, FaTruck, FaUser, FaMapMarkerAlt, FaWeightHanging } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
+import AddPrimaryEvacuationExpenseModal from '../../finance/Expense/PeExpenseModal';
+
 
 const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
   const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
@@ -25,6 +27,7 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
   const [cocoaPrices, setCocoaPrices] = useState([]);
   const [vehicles, setVehicles] = useState([]);
   const [drivers, setDrivers] = useState([]);
+  const [showFuelModal, setShowFuelModal] = useState(false); // To show fuel modal
 
   const { currentUser } = useSelector((state) => state.user);
 
@@ -113,7 +116,9 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
     if (name === 'overallWeight' || name === 'dateOfEvacuation') {
       setFormData((prev) => ({
         ...prev,
-        notes: `Haulage of cocoa weighing ${name === 'overallWeight' ? value : prev.overallWeight} kg on ${new Date(prev.dateOfEvacuation || today).toLocaleDateString('en-GB', {
+        notes: `Haulage of cocoa weighing ${name === 'overallWeight' ? value : prev.overallWeight} kg on ${new Date(
+          prev.dateOfEvacuation || today
+        ).toLocaleDateString('en-GB', {
           weekday: 'short',
           day: 'numeric',
           month: 'short',
@@ -149,170 +154,193 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
   };
 
   return (
-    <Modal show={show} onHide={handleClose} animation={true} backdrop="static">
-      <Modal.Header closeButton>
-        <Modal.Title>Add New Primary Evacuation</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Form onSubmit={handleSubmit}>
-          <Row className="mb-3">
-            <Col md={6}>
-              <Form.Group controlId="cocoaPricePerBag">
-                <Form.Label>Cocoa Price Per Bag</Form.Label>
+    <>
+      <Modal show={show} onHide={handleClose} animation={true} backdrop="static">
+        <Modal.Header closeButton>
+          <Modal.Title>Add New Primary Evacuation</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleSubmit}>
+            {/* Form fields */}
+            <Row className="mb-3">
+            <p >
+            
+            <Button
+              variant="link"
+              onClick={() => setShowFuelModal(true)}
+              style={{ textDecoration: 'none', color: 'red', fontWeight: 'bold' }}
+            >
+              Click here to record Fuel Purchase.
+            </Button>
+          </p>
+              <Col md={6}>
+                <Form.Group controlId="cocoaPricePerBag">
+                  <Form.Label>Cocoa Price Per Bag</Form.Label>
+                  <Form.Control
+                    as="select"
+                    name="cocoaPricePerBag"
+                    value={formData.cocoaPricePerBag}
+                    onChange={handleChange}
+                    readOnly
+                    disabled
+                  >
+                    <option value="">Select Cocoa Price</option>
+                    {Array.isArray(cocoaPrices) &&
+                      cocoaPrices.map((price) => (
+                        <option key={price._id} value={price._id}>
+                          {`${price.currency}${price.pricePerBagAfterTax} `}
+                        </option>
+                      ))}
+                  </Form.Control>
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group controlId="vehicle">
+                  <Form.Label>Vehicle</Form.Label>
+                  <InputGroup>
+                    <InputGroup.Text>
+                      <FaTruck />
+                    </InputGroup.Text>
+                    <Form.Control
+                      as="select"
+                      name="vehicle"
+                      value={formData.vehicle}
+                      onChange={handleChange}
+                      readOnly
+                      disabled
+                    >
+                      <option value="">Select Vehicle</option>
+                      {Array.isArray(vehicles) &&
+                        vehicles.map((vehicle) => (
+                          <option key={vehicle._id} value={vehicle._id}>
+                            {vehicle.registrationNumber}
+                          </option>
+                        ))}
+                    </Form.Control>
+                  </InputGroup>
+                </Form.Group>
+              </Col>
+            </Row>
+
+            <Row className="mb-3">
+              <Col md={6}>
+                <Form.Group controlId="driver">
+                  <Form.Label>Driver</Form.Label>
+                  <InputGroup>
+                    <InputGroup.Text>
+                      <FaUser />
+                    </InputGroup.Text>
+                    <Form.Control
+                      as="select"
+                      name="driver"
+                      value={formData.driver}
+                      onChange={handleChange}
+                      readOnly
+                      disabled
+                    >
+                      <option value="">Select Driver</option>
+                      {Array.isArray(drivers) &&
+                        drivers.map((driver) => (
+                          <option key={driver._id} value={driver._id}>
+                            {`${driver.firstName} ${driver.lastName}`}
+                          </option>
+                        ))}
+                    </Form.Control>
+                  </InputGroup>
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group controlId="overallWeight">
+                  <Form.Label>Overall Weight (kg)</Form.Label>
+                  <InputGroup>
+                    <InputGroup.Text>
+                      <FaWeightHanging />
+                    </InputGroup.Text>
+                    <Form.Control
+                      type="number"
+                      name="overallWeight"
+                      value={formData.overallWeight}
+                      onChange={handleChange}
+                      placeholder="Enter overall weight in kg"
+                      required
+                      style={{ backgroundColor: 'yellow' }}
+                    />
+                  </InputGroup>
+                </Form.Group>
+              </Col>
+            </Row>
+
+            <Row className="mb-3">
+              <Col md={6}>
+                <Form.Group controlId="dateOfEvacuation">
+                  <Form.Label>Date of Evacuation</Form.Label>
+                  <InputGroup>
+                    <InputGroup.Text>
+                      <FaCalendarAlt />
+                    </InputGroup.Text>
+                    <Form.Control
+                      type="date"
+                      name="dateOfEvacuation"
+                      value={formData.dateOfEvacuation}
+                      onChange={handleChange}
+                      readOnly
+                      disabled
+                    />
+                  </InputGroup>
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group controlId="evacuationLocation">
+                  <Form.Label>Evacuation Location</Form.Label>
+                  <InputGroup>
+                    <InputGroup.Text>
+                      <FaMapMarkerAlt />
+                    </InputGroup.Text>
+                    <Form.Control
+                      type="text"
+                      name="evacuationLocation"
+                      value={formData.evacuationLocation}
+                      onChange={handleChange}
+                      readOnly
+                      disabled
+                    />
+                  </InputGroup>
+                </Form.Group>
+              </Col>
+            </Row>
+
+            <Form.Group controlId="notes" className="mb-3">
+              <Form.Label>Notes</Form.Label>
+              <InputGroup>
                 <Form.Control
-                  as="select"
-                  name="cocoaPricePerBag"
-                  value={formData.cocoaPricePerBag}
+                  as="textarea"
+                  rows={3}
+                  name="notes"
+                  value={formData.notes}
                   onChange={handleChange}
                   readOnly
                   disabled
-                >
-                  <option value="">Select Cocoa Price</option>
-                  {Array.isArray(cocoaPrices) &&
-                    cocoaPrices.map((price) => (
-                      <option key={price._id} value={price._id}>
-                        {`${price.currency}${price.pricePerBagAfterTax} `}
-                      </option>
-                    ))}
-                </Form.Control>
-              </Form.Group>
-            </Col>
-            <Col md={6}>
-              <Form.Group controlId="vehicle">
-                <Form.Label>Vehicle</Form.Label>
-                <InputGroup>
-                  <InputGroup.Text>
-                    <FaTruck />
-                  </InputGroup.Text>
-                  <Form.Control
-                    as="select"
-                    name="vehicle"
-                    value={formData.vehicle}
-                    onChange={handleChange}
-                    readOnly
-                    disabled
-                  >
-                    <option value="">Select Vehicle</option>
-                    {Array.isArray(vehicles) &&
-                      vehicles.map((vehicle) => (
-                        <option key={vehicle._id} value={vehicle._id}>
-                          {vehicle.registrationNumber}
-                        </option>
-                      ))}
-                  </Form.Control>
-                </InputGroup>
-              </Form.Group>
-            </Col>
-          </Row>
+                />
+              </InputGroup>
+            </Form.Group>
+ {/* Paragraph to record fuel */}
+ 
+            <Button variant="primary" type="submit" className="mt-3">
+              Save
+            </Button>
+          </Form>
 
-          <Row className="mb-3">
-            <Col md={6}>
-              <Form.Group controlId="driver">
-                <Form.Label>Driver</Form.Label>
-                <InputGroup>
-                  <InputGroup.Text>
-                    <FaUser />
-                  </InputGroup.Text>
-                  <Form.Control
-                    as="select"
-                    name="driver"
-                    value={formData.driver}
-                    onChange={handleChange}
-                    readOnly
-                    disabled
-                  >
-                    <option value="">Select Driver</option>
-                    {Array.isArray(drivers) &&
-                      drivers.map((driver) => (
-                        <option key={driver._id} value={driver._id}>
-                          {`${driver.firstName} ${driver.lastName}`}
-                        </option>
-                      ))}
-                  </Form.Control>
-                </InputGroup>
-              </Form.Group>
-            </Col>
-            <Col md={6}>
-              <Form.Group controlId="overallWeight">
-                <Form.Label>Overall Weight (kg)</Form.Label>
-                <InputGroup>
-                  <InputGroup.Text>
-                    <FaWeightHanging />
-                  </InputGroup.Text>
-                  <Form.Control
-                    type="number"
-                    name="overallWeight"
-                    value={formData.overallWeight}
-                    onChange={handleChange}
-                    placeholder="Enter overall weight in kg"
-                    required
-                    style={{ backgroundColor: 'yellow' }}
-                  />
-                </InputGroup>
-              </Form.Group>
-            </Col>
-          </Row>
+         
+        </Modal.Body>
+      </Modal>
 
-          <Row className="mb-3">
-            <Col md={6}>
-              <Form.Group controlId="dateOfEvacuation">
-                <Form.Label>Date of Evacuation</Form.Label>
-                <InputGroup>
-                  <InputGroup.Text>
-                    <FaCalendarAlt />
-                  </InputGroup.Text>
-                  <Form.Control
-                    type="date"
-                    name="dateOfEvacuation"
-                    value={formData.dateOfEvacuation}
-                    onChange={handleChange}
-                    readOnly
-                    disabled
-                  />
-                </InputGroup>
-              </Form.Group>
-            </Col>
-            <Col md={6}>
-              <Form.Group controlId="evacuationLocation">
-                <Form.Label>Evacuation Location</Form.Label>
-                <InputGroup>
-                  <InputGroup.Text>
-                    <FaMapMarkerAlt />
-                  </InputGroup.Text>
-                  <Form.Control
-                    type="text"
-                    name="evacuationLocation"
-                    value={formData.evacuationLocation}
-                    onChange={handleChange}
-                    readOnly
-                    disabled
-                  />
-                </InputGroup>
-              </Form.Group>
-            </Col>
-          </Row>
-
-          <Form.Group controlId="notes" className="mb-3">
-            <Form.Label>Notes</Form.Label>
-            <InputGroup>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                name="notes"
-                value={formData.notes}
-                onChange={handleChange}
-                readOnly
-                disabled
-              />
-            </InputGroup>
-          </Form.Group>
-
-          <Button variant="primary" type="submit" className="mt-3">
-            Save
-          </Button>
-        </Form>
-      </Modal.Body>
-    </Modal>
+      {/* Fuel Modal */}
+      <AddPrimaryEvacuationExpenseModal
+        show={showFuelModal}
+        handleClose={() => setShowFuelModal(false)}
+        handleSave={() => setShowFuelModal(false)} // Handle fuel modal save
+      />
+    </>
   );
 };
 

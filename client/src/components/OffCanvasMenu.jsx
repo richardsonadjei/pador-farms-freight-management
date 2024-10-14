@@ -91,7 +91,7 @@ const OffcanvasMenu = ({ showOffcanvasRight, handleClose, handleItemClick }) => 
               </Dropdown.Menu>
             </Dropdown>
 
-            <Dropdown className="mt-3">
+            {/* <Dropdown className="mt-3">
               <Dropdown.Toggle variant="link" id="dropdown-drivers" className="dropdown-toggle-new nav-link-new no-underline">
                 <FaIdCard /> Driver's
               </Dropdown.Toggle>
@@ -103,20 +103,18 @@ const OffcanvasMenu = ({ showOffcanvasRight, handleClose, handleItemClick }) => 
                   Add Driver
                 </Dropdown.Item>
               </Dropdown.Menu>
-            </Dropdown>
+            </Dropdown> */}
 
-            <Nav.Link as={Link} to="/reminder" onClick={handleItemClick} className="nav-link-new mt-3">
-  <FaBell /> Reminder
-</Nav.Link>
+         
 
 
-            <Nav.Link as={Link} to="/reports" onClick={handleItemClick} className="nav-link-new mt-3">
+            {/* <Nav.Link as={Link} to="/reports" onClick={handleItemClick} className="nav-link-new mt-3">
               <FaChartBar /> Reports
-            </Nav.Link>
+            </Nav.Link> */}
 
-            <Nav.Link as={Link} to="/settings" onClick={handleItemClick} className="nav-link-new mt-3">
+            {/* <Nav.Link as={Link} to="/settings" onClick={handleItemClick} className="nav-link-new mt-3">
               <FaCog /> Setting's
-            </Nav.Link>
+            </Nav.Link> */}
 
             <Dropdown className="mt-3">
               <Dropdown.Toggle variant="link" id="dropdown-hr" className="dropdown-toggle-new nav-link-new no-underline">

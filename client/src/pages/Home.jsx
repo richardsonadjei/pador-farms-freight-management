@@ -126,38 +126,54 @@ const Home = () => {
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Row className="mb-3">
-              <Col xs={4}>
-                <Form.Check
-                  type="radio"
-                  label="Primary Evacuation Expense"
-                  name="expenseType"
-                  value="primaryEvacuation"
-                  onChange={(e) => setSelectedExpenseType(e.target.value)}
-                  checked={selectedExpenseType === 'primaryEvacuation'}
-                />
-              </Col>
-              <Col xs={4}>
-                <Form.Check
-                  type="radio"
-                  label="Other Trip Expense"
-                  name="expenseType"
-                  value="otherTrip"
-                  onChange={(e) => setSelectedExpenseType(e.target.value)}
-                  checked={selectedExpenseType === 'otherTrip'}
-                />
-              </Col>
-              <Col xs={4}>
-                <Form.Check
-                  type="radio"
-                  label="General Expense"
-                  name="expenseType"
-                  value="generalExpense"
-                  onChange={(e) => setSelectedExpenseType(e.target.value)}
-                  checked={selectedExpenseType === 'generalExpense'}
-                />
-              </Col>
-            </Row>
+          <Row className="mb-3">
+  <Col xs={4}>
+    <Form.Check
+      type="radio"
+      id="primaryEvacuation"
+      label={
+        <span style={{ fontWeight: 'bold', color: '#007bff', cursor: 'pointer' }}>
+          Primary Evacuation Expense
+        </span>
+      }
+      name="expenseType"
+      value="primaryEvacuation"
+      onChange={(e) => setSelectedExpenseType(e.target.value)}
+      checked={selectedExpenseType === 'primaryEvacuation'}
+    />
+  </Col>
+  <Col xs={4}>
+    <Form.Check
+      type="radio"
+      id="otherTrip"
+      label={
+        <span style={{ fontWeight: 'bold', color: '#28a745', cursor: 'pointer' }}>
+          Other Trip Expense
+        </span>
+      }
+      name="expenseType"
+      value="otherTrip"
+      onChange={(e) => setSelectedExpenseType(e.target.value)}
+      checked={selectedExpenseType === 'otherTrip'}
+    />
+  </Col>
+  <Col xs={4}>
+    <Form.Check
+      type="radio"
+      id="generalExpense"
+      label={
+        <span style={{ fontWeight: 'bold', color: '#ff5733', cursor: 'pointer' }}>
+          General Expense
+        </span>
+      }
+      name="expenseType"
+      value="generalExpense"
+      onChange={(e) => setSelectedExpenseType(e.target.value)}
+      checked={selectedExpenseType === 'generalExpense'}
+    />
+  </Col>
+</Row>
+
           </Form>
         </Modal.Body>
         <Modal.Footer>
@@ -214,30 +230,41 @@ const Home = () => {
           <Modal.Title>Select Income Type</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form>
-            <Row className="mb-3">
-              <Col xs={6}>
-                <Form.Check
-                  type="radio"
-                  label="Primary Evacuation"
-                  name="incomeType"
-                  value="primaryEvacuation"
-                  onChange={(e) => setSelectedIncomeType(e.target.value)}
-                  checked={selectedIncomeType === 'primaryEvacuation'}
-                />
-              </Col>
-              <Col xs={6}>
-                <Form.Check
-                  type="radio"
-                  label="Other Trip"
-                  name="incomeType"
-                  value="otherTrip"
-                  onChange={(e) => setSelectedIncomeType(e.target.value)}
-                  checked={selectedIncomeType === 'otherTrip'}
-                />
-              </Col>
-            </Row>
-          </Form>
+        <Form>
+  <Row className="mb-3">
+    <Col xs={6}>
+      <Form.Check
+        type="radio"
+        id="primaryEvacuation"
+        label={
+          <span style={{ fontWeight: 'bold', color: '#007bff', cursor: 'pointer' }}>
+            Primary Evacuation
+          </span>
+        }
+        name="incomeType"
+        value="primaryEvacuation"
+        onChange={(e) => setSelectedIncomeType(e.target.value)}
+        checked={selectedIncomeType === 'primaryEvacuation'}
+      />
+    </Col>
+    <Col xs={6}>
+      <Form.Check
+        type="radio"
+        id="otherTrip"
+        label={
+          <span style={{ fontWeight: 'bold', color: '#28a745', cursor: 'pointer' }}>
+            Other Trip
+          </span>
+        }
+        name="incomeType"
+        value="otherTrip"
+        onChange={(e) => setSelectedIncomeType(e.target.value)}
+        checked={selectedIncomeType === 'otherTrip'}
+      />
+    </Col>
+  </Row>
+</Form>
+
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseIncomeSelection}>

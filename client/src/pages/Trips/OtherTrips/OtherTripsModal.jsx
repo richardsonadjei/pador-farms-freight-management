@@ -3,6 +3,8 @@ import { Modal, Button, Form, Row, Col, InputGroup } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import Select from 'react-select';
 import { FaTruck, FaUser, FaMapMarkerAlt, FaStickyNote, FaCalendarAlt, FaMoneyBillWave } from 'react-icons/fa';
+import AddOtherTripExpenseModal from '../../finance/Expense/OtExpenseModal';
+
 
 const AddOtherTripModal = ({ show, handleClose, handleSave }) => {
   const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
@@ -27,6 +29,7 @@ const AddOtherTripModal = ({ show, handleClose, handleSave }) => {
 
   const [vehicles, setVehicles] = useState([]);
   const [drivers, setDrivers] = useState([]);
+  const [showFuelModal, setShowFuelModal] = useState(false); // State to show the fuel modal
 
   // Fetch vehicles and drivers when the modal is opened
   useEffect(() => {
@@ -135,168 +138,196 @@ const AddOtherTripModal = ({ show, handleClose, handleSave }) => {
   };
 
   return (
-    <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Record Other Trip and Income</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Form onSubmit={handleSubmit}>
-          <Row className="mb-3">
-            <Col md={6}>
-              <Form.Group controlId="vehicle">
-                <Form.Label>Vehicle</Form.Label>
-                <InputGroup>
-                  <InputGroup.Text>
-                    <FaTruck />
-                  </InputGroup.Text>
-                  <Select
-                    options={vehicles}
-                    name="vehicle"
-                    value={vehicles.find((v) => v.value === formData.vehicle) || ''}
-                    onChange={(selectedOption) => handleSelectChange(selectedOption, { name: 'vehicle' })}
-                    placeholder="Select vehicle"
-                    isClearable
-                  />
-                </InputGroup>
-              </Form.Group>
-            </Col>
-            <Col md={6}>
-              <Form.Group controlId="driver">
-                <Form.Label>Driver</Form.Label>
-                <InputGroup>
-                  <InputGroup.Text>
-                    <FaUser />
-                  </InputGroup.Text>
-                  <Select
-                    options={drivers}
-                    name="driver"
-                    value={drivers.find((d) => d.value === formData.driver) || ''}
-                    onChange={(selectedOption) => handleSelectChange(selectedOption, { name: 'driver' })}
-                    placeholder="Select driver"
-                    isClearable
-                  />
-                </InputGroup>
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row className="mb-3">
-            <Col md={6}>
-              <Form.Group controlId="purpose">
-                <Form.Label>Purpose</Form.Label>
-                <InputGroup>
-                  <Form.Control
-                    type="text"
-                    name="purpose"
-                    value={formData.purpose}
-                    onChange={handleChange}
-                    placeholder="Enter purpose of the trip"
-                    required
-                  />
-                </InputGroup>
-              </Form.Group>
-            </Col>
-            <Col md={6}>
-              <Form.Group controlId="dateOfTrip">
-                <Form.Label>Date of Trip</Form.Label>
-                <InputGroup>
-                  <InputGroup.Text>
-                    <FaCalendarAlt />
-                  </InputGroup.Text>
-                  <Form.Control
-                    type="date"
-                    name="dateOfTrip"
-                    value={formData.dateOfTrip}
-                    onChange={handleChange}
-                    required
-                  />
-                </InputGroup>
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row className="mb-3">
-            <Col md={6}>
-              <Form.Group controlId="startLocation">
-                <Form.Label>Start Location</Form.Label>
-                <InputGroup>
-                  <InputGroup.Text>
-                    <FaMapMarkerAlt />
-                  </InputGroup.Text>
-                  <Form.Control
-                    type="text"
-                    name="startLocation"
-                    value={formData.startLocation}
-                    onChange={handleChange}
-                    placeholder="Enter start location"
-                  />
-                </InputGroup>
-              </Form.Group>
-            </Col>
-            <Col md={6}>
-              <Form.Group controlId="endLocation">
-                <Form.Label>End Location</Form.Label>
-                <InputGroup>
-                  <InputGroup.Text>
-                    <FaMapMarkerAlt />
-                  </InputGroup.Text>
-                  <Form.Control
-                    type="text"
-                    name="endLocation"
-                    value={formData.endLocation}
-                    onChange={handleChange}
-                    placeholder="Enter end location"
-                  />
-                </InputGroup>
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row className="mb-3">
-            <Col md={6}>
-              <Form.Group controlId="incomeAmount">
-                <Form.Label>Income Amount</Form.Label>
-                <InputGroup>
-                  <InputGroup.Text>
-                    <FaMoneyBillWave />
-                  </InputGroup.Text>
-                  <Form.Control
-                    type="number"
-                    name="incomeAmount"
-                    value={formData.incomeAmount}
-                    onChange={handleChange}
-                    min="0"
-                    placeholder="Enter income amount"
-                    required
-                    style={{
-                      backgroundColor: 'yellow',
-                      transition: 'background-color 0.5s ease',
-                    }}
-                  />
-                </InputGroup>
-              </Form.Group>
-            </Col>
-            <Col md={6}>
-              <Form.Group controlId="notes">
-                <Form.Label>Notes</Form.Label>
-                <InputGroup>
-                  <InputGroup.Text>
-                    <FaStickyNote />
-                  </InputGroup.Text>
-                  <Form.Control
-                    type="text"
-                    name="notes"
-                    value={formData.notes}
-                    onChange={handleChange}
-                    placeholder="Enter any additional notes"
-                  />
-                </InputGroup>
-              </Form.Group>
-            </Col>
-          </Row>
-          <Button variant="primary" type="submit">
-            Save
-          </Button>
-        </Form>
-      </Modal.Body>
-    </Modal>
+    <>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Record Other Trip and Income</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleSubmit}>
+            {/* Form fields */}
+            <Row className="mb-3">
+            <p className="mt-3" style={{ color: 'red', fontWeight: 'bold' }}>
+
+<Button
+  variant="link"
+  onClick={() => setShowFuelModal(true)}
+  style={{ textDecoration: 'none', color: 'red', fontWeight: 'bold' }}
+>
+  Click here to record Fuel Purchase.
+</Button>
+</p>
+              <Col md={6}>
+                <Form.Group controlId="vehicle">
+                  <Form.Label>Vehicle</Form.Label>
+                  <InputGroup>
+                    <InputGroup.Text>
+                      <FaTruck />
+                    </InputGroup.Text>
+                    <Select
+                      options={vehicles}
+                      name="vehicle"
+                      value={vehicles.find((v) => v.value === formData.vehicle) || ''}
+                      onChange={(selectedOption) => handleSelectChange(selectedOption, { name: 'vehicle' })}
+                      placeholder="Select vehicle"
+                      isClearable
+                      isDisabled
+                    />
+                  </InputGroup>
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group controlId="incomeAmount">
+                  <Form.Label>Income Amount</Form.Label>
+                  <InputGroup>
+                    <InputGroup.Text>
+                      <FaMoneyBillWave />
+                    </InputGroup.Text>
+                    <Form.Control
+                      type="number"
+                      name="incomeAmount"
+                      value={formData.incomeAmount}
+                      onChange={handleChange}
+                      min="0"
+                      placeholder="Enter income amount"
+                      required
+                      style={{
+                        backgroundColor: 'yellow',
+                        transition: 'background-color 0.5s ease',
+                      }}
+                    />
+                  </InputGroup>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row className="mb-3">
+              <Col md={6}>
+                <Form.Group controlId="purpose">
+                  <Form.Label>Purpose</Form.Label>
+                  <InputGroup>
+                    <Form.Control
+                      type="text"
+                      name="purpose"
+                      value={formData.purpose}
+                      onChange={handleChange}
+                      placeholder="Enter purpose of the trip"
+                      disabled
+                    />
+                  </InputGroup>
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group controlId="dateOfTrip">
+                  <Form.Label>Date of Trip</Form.Label>
+                  <InputGroup>
+                    <InputGroup.Text>
+                      <FaCalendarAlt />
+                    </InputGroup.Text>
+                    <Form.Control
+                      type="date"
+                      name="dateOfTrip"
+                      value={formData.dateOfTrip}
+                      onChange={handleChange}
+                      disabled
+                    />
+                  </InputGroup>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row className="mb-3">
+              <Col md={6}>
+                <Form.Group controlId="startLocation">
+                  <Form.Label>Start Location</Form.Label>
+                  <InputGroup>
+                    <InputGroup.Text>
+                      <FaMapMarkerAlt />
+                    </InputGroup.Text>
+                    <Form.Control
+                      type="text"
+                      name="startLocation"
+                      value={formData.startLocation}
+                      onChange={handleChange}
+                      placeholder="Enter start location"
+                      disabled
+                    />
+                  </InputGroup>
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group controlId="endLocation">
+                  <Form.Label>End Location</Form.Label>
+                  <InputGroup>
+                    <InputGroup.Text>
+                      <FaMapMarkerAlt />
+                    </InputGroup.Text>
+                    <Form.Control
+                      type="text"
+                      name="endLocation"
+                      value={formData.endLocation}
+                      onChange={handleChange}
+                      placeholder="Enter end location"
+                    />
+                  </InputGroup>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row className="mb-3">
+              <Col md={6}>
+                <Form.Group controlId="driver">
+                  <Form.Label>Driver</Form.Label>
+                  <InputGroup>
+                    <InputGroup.Text>
+                      <FaUser />
+                    </InputGroup.Text>
+                    <Select
+                      options={drivers}
+                      name="driver"
+                      value={drivers.find((d) => d.value === formData.driver) || ''}
+                      onChange={(selectedOption) => handleSelectChange(selectedOption, { name: 'driver' })}
+                      placeholder="Select driver"
+                      isClearable
+                      isDisabled
+                    />
+                  </InputGroup>
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group controlId="notes">
+                  <Form.Label>Notes</Form.Label>
+                  <InputGroup>
+                    <InputGroup.Text>
+                      <FaStickyNote />
+                    </InputGroup.Text>
+                    <Form.Control
+                      type="text"
+                      name="notes"
+                      value={formData.notes}
+                      onChange={handleChange}
+                      placeholder="Enter any additional notes"
+                    />
+                  </InputGroup>
+                </Form.Group>
+              </Col>
+            </Row>
+             {/* Paragraph to record fuel */}
+          
+
+            <Button variant="primary" type="submit">
+              Save
+            </Button>
+          </Form>
+
+         
+        </Modal.Body>
+      </Modal>
+
+      {/* Fuel Modal */}
+      <AddOtherTripExpenseModal
+        show={showFuelModal}
+        handleClose={() => setShowFuelModal(false)}
+        handleSave={() => setShowFuelModal(false)} // Handle fuel modal save
+      />
+    </>
   );
 };
 

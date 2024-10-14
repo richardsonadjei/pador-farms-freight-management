@@ -151,6 +151,7 @@ const AddPrimaryEvacuationExpenseModal = ({ show, handleClose, handleSave }) => 
                     onChange={(selectedOption) => handleSelectChange(selectedOption, { name: 'vehicle' })}
                     placeholder="Select vehicle"
                     isClearable
+                    isDisabled
                   />
                 </InputGroup>
               </Form.Group>
@@ -174,25 +175,27 @@ const AddPrimaryEvacuationExpenseModal = ({ show, handleClose, handleSave }) => 
           </Row>
 
           <Row className="mb-3">
-            <Col md={6}>
-              <Form.Group controlId="amount">
-                <Form.Label>Amount</Form.Label>
-                <InputGroup>
-                  <InputGroup.Text>
-                    <FaMoneyBillWave />
-                  </InputGroup.Text>
-                  <Form.Control
-                    type="number"
-                    name="amount"
-                    value={formData.amount}
-                    onChange={handleChange}
-                    min="0"
-                    placeholder="Enter amount"
-                    required
-                  />
-                </InputGroup>
-              </Form.Group>
-            </Col>
+          <Col md={6}>
+  <Form.Group controlId="amount">
+    <Form.Label>Amount</Form.Label>
+    <InputGroup>
+      <InputGroup.Text>
+        <FaMoneyBillWave />
+      </InputGroup.Text>
+      <Form.Control
+        type="number"
+        name="amount"
+        value={formData.amount}
+        onChange={handleChange}
+        min="0"
+        placeholder="Enter amount"
+        required
+        style={{ backgroundColor: 'yellow' }} // Inline CSS to make background yellow
+      />
+    </InputGroup>
+  </Form.Group>
+</Col>
+
             <Col md={6}>
               <Form.Group controlId="currency">
                 <Form.Label>Currency</Form.Label>
@@ -201,6 +204,7 @@ const AddPrimaryEvacuationExpenseModal = ({ show, handleClose, handleSave }) => 
                   name="currency"
                   value={formData.currency}
                   onChange={handleChange}
+                  disabled
                 >
                   <option value="Ghc">Ghc</option>
                   <option value="USD">USD</option>

@@ -1,11 +1,13 @@
 import GeneralExpense from "../models/generalExpense.model.js";
 import Income from "../models/income.model.js";
+import insuranceModel from "../models/insurance.model.js";
 import OtherTrip from "../models/otherTrips.model.js";
 import OtherTripExpense from "../models/otherTripsExpense.model.js";
 import Partner from "../models/partner.model.js";
 import PrimaryEvacuation from "../models/pe.model.js";
 import PrimaryEvacuationExpense from "../models/pEexpense.model.js";
 import CocoaPricePerBag from "../models/pricePerBag.model.js";
+import roadworthyModel from "../models/roadworthy.model.js";
 import Transfer from "../models/transfers.model.js";
 import Vehicle from "../models/vehicle.model.js";
 
@@ -793,5 +795,296 @@ export const deleteTransfer = async (req, res) => {
     res.status(200).json({ success: true, message: 'Transfer deleted successfully' });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+
+
+export const createInsurance = async (req, res) => {
+  const session = await insuranceModel.startSession();
+  session.startTransaction(); // Start a transaction to ensure atomic operations
+  try {
+    const {
+      vehicle,
+      insuranceCompany,
+      policyNumber,
+      startDate,
+      endDate,
+      premiumAmount,
+      coverageDetails,
+      recordedBy,
+    } = req.body;
+
+    // Create the insurance record
+    const newInsurance = new insuranceModel({
+      vehicle,
+      insuranceCompany,
+      policyNumber,
+      startDate,
+      endDate,
+      premiumAmount,
+      coverageDetails,
+      recordedBy,
+    });
+
+    // Save the insurance record
+    await newInsurance.save({ session });
+
+    // Create the corresponding expense record
+    const newExpense = new GeneralExpense({
+      vehicle,
+      category: 'Insurance', // Set the default category to 'Insurance'
+      amount: premiumAmount, // Using the insurance premium amount as the expense
+      currency: 'Ghc', // Default currency
+      dateOfExpense: new Date(), // Expense date as the current date
+      recordedBy, // Recorded by the same person who recorded the insurance
+      notes: `Insurance premium for policy ${policyNumber}`, // Notes for clarity
+    });
+
+    // Save the expense record
+    await newExpense.save({ session });
+
+    // Commit the transaction
+    await session.commitTransaction();
+    session.endSession();
+
+    return res.status(201).json({
+      message: 'Insurance record and corresponding expense created successfully!',
+      insurance: newInsurance,
+      expense: newExpense,
+    });
+  } catch (error) {
+    // If something goes wrong, abort the transaction
+    await session.abortTransaction();
+    session.endSession();
+    return res.status(500).json({
+      message: 'Error creating insurance record and expense',
+      error: error.message,
+    });
+  }
+};
+
+
+
+// Get all insurance records
+export const getAllInsurance = async (req, res) => {
+  try {
+    const insurances = await insuranceModel.find().populate('vehicle'); // Populating the vehicle reference
+    return res.status(200).json(insurances);
+  } catch (error) {
+    return res.status(500).json({ message: 'Error fetching insurance records', error: error.message });
+  }
+};
+
+
+// Get an insurance record by ID
+export const getInsuranceById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const insurance = await insuranceModel.findById(id).populate('vehicle'); // Populating the vehicle reference
+
+    if (!insurance) {
+      return res.status(404).json({ message: 'Insurance record not found' });
+    }
+
+    return res.status(200).json(insurance);
+  } catch (error) {
+    return res.status(500).json({ message: 'Error fetching insurance record', error: error.message });
+  }
+};
+
+
+// Update an insurance record by ID
+export const updateInsurance = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+
+    const updatedInsurance = await insuranceModel.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
+
+    if (!updatedInsurance) {
+      return res.status(404).json({ message: 'Insurance record not found' });
+    }
+
+    return res.status(200).json({ message: 'Insurance record updated successfully!', insurance: updatedInsurance });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error updating insurance record', error: error.message });
+  }
+};
+
+// Delete an insurance record by ID
+export const deleteInsurance = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedInsurance = await insuranceModel.findByIdAndDelete(id);
+
+    if (!deletedInsurance) {
+      return res.status(404).json({ message: 'Insurance record not found' });
+    }
+
+    return res.status(200).json({ message: 'Insurance record deleted successfully!' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error deleting insurance record', error: error.message });
+  }
+};
+
+
+// Backend - Fetch the most recent active insurance for a vehicle
+export const getMostRecentActiveInsurance = async (req, res) => {
+  try {
+    const { vehicleId } = req.params;
+
+    // Find the most recent and active insurance record for the vehicle
+    const insurance = await insuranceModel
+      .findOne({ vehicle: vehicleId, isActive: true })
+      .sort({ endDate: -1 }); // Sort by endDate in descending order
+
+    if (!insurance) {
+      return res.status(404).json({ message: 'No active insurance found for this vehicle' });
+    }
+
+    return res.status(200).json(insurance);
+  } catch (error) {
+    return res.status(500).json({ message: 'Error fetching insurance record', error: error.message });
+  }
+};
+
+
+
+
+// Create a new Roadworthy record and save an expense
+export const createRoadworthy = async (req, res) => {
+  try {
+    const {
+      vehicle,
+      certificateNumber,
+      issueDate,
+      expiryDate,
+      renewalAmount,
+      details,
+      roadworthyCenter,  // Added roadworthyCenter field
+      recordedBy
+    } = req.body;
+
+    // Step 1: Create the new roadworthy record
+    const newRoadworthy = new roadworthyModel({
+      vehicle,
+      certificateNumber,
+      issueDate,
+      expiryDate,
+      renewalAmount,
+      details,
+      roadworthyCenter,  // Save the roadworthyCenter field
+      recordedBy
+    });
+
+    await newRoadworthy.save();
+
+    // Step 2: Save the associated expense for the roadworthy certificate
+    const newExpense = new GeneralExpense({
+      vehicle,
+      category: 'Roadworthy', // Default category
+      amount: renewalAmount,
+      recordedBy,
+      notes: `Roadworthy renewal for certificate number ${certificateNumber}`,
+    });
+
+    await newExpense.save();
+
+    return res.status(201).json({
+      message: 'Roadworthy record and expense created successfully!',
+      roadworthy: newRoadworthy,
+      expense: newExpense
+    });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error creating roadworthy record', error: error.message });
+  }
+};
+
+
+
+export const getAllRoadworthy = async (req, res) => {
+  try {
+    const roadworthyRecords = await roadworthyModel.find().populate('vehicle'); // Populate the vehicle reference
+    return res.status(200).json(roadworthyRecords);
+  } catch (error) {
+    return res.status(500).json({ message: 'Error fetching roadworthy records', error: error.message });
+  }
+};
+
+
+export const getRoadworthyById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const roadworthy = await roadworthyModel.findById(id).populate('vehicle');
+
+    if (!roadworthy) {
+      return res.status(404).json({ message: 'Roadworthy record not found' });
+    }
+
+    return res.status(200).json(roadworthy);
+  } catch (error) {
+    return res.status(500).json({ message: 'Error fetching roadworthy record', error: error.message });
+  }
+};
+
+
+export const updateRoadworthy = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedRoadworthy = await roadworthyModel.findByIdAndUpdate(id, req.body, {
+      new: true, // Return the updated document
+      runValidators: true, // Run schema validators on update
+    });
+
+    if (!updatedRoadworthy) {
+      return res.status(404).json({ message: 'Roadworthy record not found' });
+    }
+
+    return res.status(200).json({
+      message: 'Roadworthy record updated successfully',
+      roadworthy: updatedRoadworthy
+    });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error updating roadworthy record', error: error.message });
+  }
+};
+
+
+export const deleteRoadworthy = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedRoadworthy = await roadworthyModel.findByIdAndDelete(id);
+
+    if (!deletedRoadworthy) {
+      return res.status(404).json({ message: 'Roadworthy record not found' });
+    }
+
+    return res.status(200).json({
+      message: 'Roadworthy record deleted successfully'
+    });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error deleting roadworthy record', error: error.message });
+  }
+};
+
+
+export const getMostRecentActiveRoadworthy = async (req, res) => {
+  try {
+    const { vehicleId } = req.params;
+
+    const roadworthy = await roadworthyModel
+      .findOne({ vehicle: vehicleId, isActive: true })
+      .sort({ expiryDate: -1 });
+
+    if (!roadworthy) {
+      return res.status(404).json({ message: 'No active roadworthy certificate found for this vehicle' });
+    }
+
+    return res.status(200).json(roadworthy);
+  } catch (error) {
+    return res.status(500).json({ message: 'Error fetching roadworthy record', error: error.message });
   }
 };
