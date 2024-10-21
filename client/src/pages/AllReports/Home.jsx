@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import DashboardContent from './Dashboard';
 import PrimaryEvacuationContent from './PE';
 import OtherTripsContent from './OT';
-import FinanceContent from './Finance';
+
 import ReportHeader from './Header';
+import LegalObligations from './LegalObligations';
 
 const ReportHome = () => {
   const [activeTab, setActiveTab] = useState('Dashboard'); // Default to Dashboard
@@ -17,8 +18,8 @@ const ReportHome = () => {
         return <PrimaryEvacuationContent />;
       case 'Other Trips':
         return <OtherTripsContent />;
-      case 'Finance':
-        return <FinanceContent />;
+      case 'Legal Obligations':
+        return <LegalObligations />;
       default:
         return <DashboardContent />;
     }

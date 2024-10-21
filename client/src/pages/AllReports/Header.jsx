@@ -2,7 +2,7 @@ import React from 'react';
 
 
 const ReportHeader = ({ activeTab, setActiveTab }) => {
-  const tabs = ['Dashboard', 'PrimaryEvacuation', 'Other Trips', 'Finance'];
+  const tabs = ['Dashboard', 'PrimaryEvacuation', 'Other Trips', 'Legal Obligations'];
 
   return (
     <div className="report-header">
