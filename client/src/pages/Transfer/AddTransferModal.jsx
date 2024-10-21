@@ -161,7 +161,7 @@ const RecordTransferModal = ({ show, handleClose, handleSave }) => {
                 <Form.Label>Amount</Form.Label>
                 <InputGroup>
                   <InputGroup.Text>
-                    <FaDollarSign />
+                    Ghc{/* <FaDollarSign /> */}
                   </InputGroup.Text>
                   <Form.Control
                     type="number"

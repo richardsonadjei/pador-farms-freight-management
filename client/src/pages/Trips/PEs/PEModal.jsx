@@ -174,7 +174,7 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
                   }}
                 >
                   <FaGasPump style={{ marginRight: '5px' }} />
-                  Click here to record Fuel Purchase.
+                  Click here to record Fuel Purchase Before Proceeding .
                 </Button>
               </p>
               <Col md={6}>

@@ -151,7 +151,7 @@ const DashboardContent = () => {
             <h4>Total Income vs Expenses ({vehicleName})</h4>
             <Bar data={totalIncomeExpenseData} options={chartOptions} />
             <p style={{ marginTop: '10px', color: '#4bc0c0' }}>
-              Net Total Income: {netIncome.toFixed(2)} GHS
+              Net Total Income: Ghc {netIncome.toFixed(2)} 
             </p>
           </div>
 
@@ -160,7 +160,7 @@ const DashboardContent = () => {
             <h4>Monthly Income vs Expenses ({vehicleName})</h4>
             <Line data={monthlyIncomeExpenseData} options={chartOptions} />
             <p style={{ marginTop: '10px', color: '#4bc0c0' }}>
-              Net Income for {currentMonthName}: {monthlyNetIncome[currentMonthIndex].toFixed(2)} GHS
+              Net Income for {currentMonthName}:Ghc {monthlyNetIncome[currentMonthIndex].toFixed(2)} 
             </p>
           </div>
 

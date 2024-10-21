@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col, InputGroup } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import Select from 'react-select';
-import { FaTruck, FaUser, FaMapMarkerAlt, FaStickyNote, FaCalendarAlt, FaMoneyBillWave } from 'react-icons/fa';
+import { FaTruck, FaUser, FaMapMarkerAlt, FaStickyNote, FaCalendarAlt, FaMoneyBillWave, FaGasPump } from 'react-icons/fa';
 import AddOtherTripExpenseModal from '../../finance/Expense/OtExpenseModal';
 
 
@@ -149,13 +149,34 @@ const AddOtherTripModal = ({ show, handleClose, handleSave }) => {
             <Row className="mb-3">
             <p className="mt-3" style={{ color: 'red', fontWeight: 'bold' }}>
 
+
+
 <Button
   variant="link"
   onClick={() => setShowFuelModal(true)}
-  style={{ textDecoration: 'none', color: 'red', fontWeight: 'bold' }}
+  style={{
+    textDecoration: 'none',
+    color: 'red',
+    fontWeight: 'bold',
+    animation: 'blinker 1.5s linear infinite', // Add blinking effect
+    display: 'flex',
+    alignItems: 'center', // Align icon and text
+  }}
 >
-  Click here to record Fuel Purchase.
+  <FaGasPump style={{ marginRight: '5px' }} /> {/* Fuel pump icon */}
+  Click here to record Fuel Purchase Before Proceeding.
 </Button>
+
+<style>
+  {`
+    @keyframes blinker {
+      50% {
+        opacity: 0;
+      }
+    }
+  `}
+</style>
+
 </p>
               <Col md={6}>
                 <Form.Group controlId="vehicle">
