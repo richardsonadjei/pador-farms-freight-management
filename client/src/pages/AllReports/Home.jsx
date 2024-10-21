@@ -5,7 +5,6 @@ import OtherTripsContent from './OT';
 import FinanceContent from './Finance';
 import ReportHeader from './Header';
 
-
 const ReportHome = () => {
   const [activeTab, setActiveTab] = useState('Dashboard'); // Default to Dashboard
 
@@ -26,9 +25,29 @@ const ReportHome = () => {
   };
 
   return (
-    <div className="report-home">
+    <div 
+      className="report-home"
+      style={{
+        backgroundColor: '#f0f2f5', // Custom background color for the entire page
+        minHeight: '100vh', // Ensure it takes up the full viewport height
+        padding: '20px',
+      }}
+    >
+      {/* Header with background */}
       <ReportHeader activeTab={activeTab} setActiveTab={setActiveTab} />
-      <div className="tab-content">{renderContent()}</div> {/* Only display content of the active tab */}
+      
+      {/* Content with a different background */}
+      <div
+        className="tab-content"
+        style={{
+          backgroundColor: '#ffffff', // Background for the content section
+          borderRadius: '8px', // Optional: add some rounding to the corners
+          padding: '20px', // Padding around the content
+          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', // Add a light shadow for emphasis
+        }}
+      >
+        {renderContent()}
+      </div>
     </div>
   );
 };

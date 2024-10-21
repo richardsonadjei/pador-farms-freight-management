@@ -69,7 +69,7 @@ const AddGeneralExpenseModal = ({ show, handleClose, handleSave }) => {
   
         // Assuming the response is an array of category objects with a 'name' property
         const categoryOptions = data.map((category) => ({
-          value: category._id, // or category.name if you want to use the name as value
+          value: category.name, // or category.name if you want to use the name as value
           label: category.name, // Make sure the label is a string, which is a valid React child
         }));
   
