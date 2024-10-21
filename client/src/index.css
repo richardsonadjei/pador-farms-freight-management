@@ -359,5 +359,107 @@ body {
   font-weight: bold;
 }
 
+/* General Styling */
+.report-home {
+  background-color: #f8f9fa;
+  padding: 20px;
+}
 
+.tab-content {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+}
 
+/* Styling for the header and tabs */
+.report-header {
+  background-color: #ffffff;
+  padding: 10px 20px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.report-nav {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap; /* Allow the tabs to wrap on smaller screens */
+}
+
+.report-tab {
+  background-color: transparent;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+  outline: none;
+  transition: color 0.3s ease-in-out, border-bottom 0.3s ease-in-out;
+}
+
+.report-tab.active {
+  color: #007bff;
+  border-bottom: 2px solid #007bff;
+}
+
+.report-tab:hover {
+  color: #007bff;
+}
+
+/* Responsive Media Queries */
+
+/* For screens 768px or smaller (Tablets, etc.) */
+@media (max-width: 768px) {
+  .report-home {
+    padding: 10px;
+  }
+
+  .report-tab {
+    font-size: 14px;
+    padding: 8px 15px;
+  }
+
+  .tab-content {
+    padding: 15px;
+  }
+
+  .report-nav {
+    justify-content: center; /* Align tabs to the center */
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .report-tab {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 5px;
+  }
+}
+
+/* For screens 480px or smaller (Mobile phones) */
+@media (max-width: 480px) {
+  .report-home {
+    padding: 5px;
+  }
+
+  .report-tab {
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+
+  .tab-content {
+    padding: 10px;
+  }
+
+  .report-nav {
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .report-tab {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 5px;
+  }
+}

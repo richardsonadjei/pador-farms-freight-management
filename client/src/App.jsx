@@ -7,7 +7,6 @@ import SignUp from './pages/SignUp';
 import Header from './components/Header';
 import Profile from './pages/Profile';
 import PrivateRoute from './components/PrivateRoute';
-import ReportsDashboard from './pages/reports-new/FinancialReport';
 import AllIncome from './pages/reports-new/allreports/AllIncomeReport';
 import IncomeByPeriod from './pages/reports-new/allreports/IncomeByPeriod';
 import { MotorbikeProvider } from './pages/reports-new/allreports/MotorBikeContext';
@@ -16,6 +15,7 @@ import ExpenseByPeriod from './pages/reports-new/allreports/expenseReports/Expen
 import AllEmployeesReport from './pages/HumanResource/EmployeeList';
 import AllPayrollsReport from './pages/HumanResource/PayRoll';
 import VehicleList from './pages/extras/Vehicle/RegisterVehicle/AllVehicles';
+import ReportHome from './pages/AllReports/Home';
 
 
 export default function App() {
@@ -30,7 +30,7 @@ export default function App() {
             <Route path='/sign-up' element={<SignUp />} />
             <Route path='/profile' element={<Profile />} />
             <Route path='/' element={<Home />} />
-            <Route path='/reports' element={<ReportsDashboard />} />
+            <Route path='/reports' element={<ReportHome />} />
             <Route path='/all-bike-income' element={<AllIncome />} />
             <Route path='/all-bike-income-by-period' element={<IncomeByPeriod />} />
             <Route path='/all-bike-expense' element={<AllExpenseReport/>} />

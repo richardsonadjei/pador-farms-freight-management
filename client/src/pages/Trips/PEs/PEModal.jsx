@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col, InputGroup } from 'react-bootstrap';
-import { FaCalendarAlt, FaTruck, FaUser, FaMapMarkerAlt, FaWeightHanging } from 'react-icons/fa';
+import { FaCalendarAlt, FaTruck, FaUser, FaMapMarkerAlt, FaWeightHanging, FaGasPump } from 'react-icons/fa'; // Import icon
 import { useSelector } from 'react-redux';
 import AddPrimaryEvacuationExpenseModal from '../../finance/Expense/PeExpenseModal';
-
 
 const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
   const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
@@ -163,16 +162,21 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
           <Form onSubmit={handleSubmit}>
             {/* Form fields */}
             <Row className="mb-3">
-            <p >
-            
-            <Button
-              variant="link"
-              onClick={() => setShowFuelModal(true)}
-              style={{ textDecoration: 'none', color: 'red', fontWeight: 'bold' }}
-            >
-              Click here to record Fuel Purchase.
-            </Button>
-          </p>
+              <p>
+                <Button
+                  variant="link"
+                  onClick={() => setShowFuelModal(true)}
+                  style={{
+                    textDecoration: 'none',
+                    color: 'red',
+                    fontWeight: 'bold',
+                    animation: 'blinkingText 1.5s infinite, scalePulse 1.5s infinite',
+                  }}
+                >
+                  <FaGasPump style={{ marginRight: '5px' }} />
+                  Click here to record Fuel Purchase.
+                </Button>
+              </p>
               <Col md={6}>
                 <Form.Group controlId="cocoaPricePerBag">
                   <Form.Label>Cocoa Price Per Bag</Form.Label>
@@ -323,14 +327,11 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
                 />
               </InputGroup>
             </Form.Group>
- {/* Paragraph to record fuel */}
- 
+
             <Button variant="primary" type="submit" className="mt-3">
               Save
             </Button>
           </Form>
-
-         
         </Modal.Body>
       </Modal>
 
@@ -340,6 +341,22 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
         handleClose={() => setShowFuelModal(false)}
         handleSave={() => setShowFuelModal(false)} // Handle fuel modal save
       />
+
+      {/* Inline CSS for blinking text and scaling animation */}
+      <style type="text/css">
+        {`
+        @keyframes blinkingText {
+          0% { opacity: 1; }
+          50% { opacity: 0.5; }
+          100% { opacity: 1; }
+        }
+
+        @keyframes scalePulse {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.2); }
+        }
+        `}
+      </style>
     </>
   );
 };
