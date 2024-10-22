@@ -95,18 +95,15 @@ const PrimaryEvacuationContent = () => {
 
   const chartOptions = {
     responsive: true,
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-      // title: {
-      //   display: true,
-      //   text: 'Primary Evacuation Reports',
-      // },
-    },
+    maintainAspectRatio: false, // Ensure charts resize properly
     scales: {
       y: {
         beginAtZero: true,
+      },
+    },
+    plugins: {
+      legend: {
+        position: 'top',
       },
     },
     barPercentage: 0.4, // Reduce the thickness of the bars
@@ -120,7 +117,7 @@ const PrimaryEvacuationContent = () => {
       ) : (
         <div>
           {/* Responsive container for charts */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
             <div style={{ height: '300px', width: '100%' }}>
               <h3>Total Bags Hauled per Month</h3>
               <Bar data={monthlyChartData} options={chartOptions} />
