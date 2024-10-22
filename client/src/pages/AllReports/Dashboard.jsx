@@ -210,10 +210,15 @@ const DashboardContent = () => {
         flexWrap: 'wrap', // To wrap vehicles in a new row if space is tight
       }}
     >
-      {financialData &&
+      {financialData && Object.keys(financialData).length > 0 ? (
         Object.keys(financialData).map((vehicleName) =>
           generateChartsForVehicle(financialData[vehicleName], vehicleName)
-        )}
+        )
+      ) : (
+        <p style={{ textAlign: 'center', marginTop: '20px', color: 'blue' }}>
+          No financial records available.
+        </p>
+      )}
     </div>
   );
 };
