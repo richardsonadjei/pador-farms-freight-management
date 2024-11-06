@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Container, Form, Button } from 'react-bootstrap';
-import ReportsHomeSidebar from '../SideBar';
-import { useMotorbike } from './MotorBikeContext';
+
+import ReportsHomeSidebar from '../../AllReports/SideBar';
 
 const IncomeByPeriod = () => {
   const { selectedBikeId } = useMotorbike(); // Use the context to get the selectedBikeId

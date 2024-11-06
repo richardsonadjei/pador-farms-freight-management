@@ -174,6 +174,8 @@ const ReportsHomeSidebar = ({ setSelectedDashboard }) => {
               value="all"
               checked={reportType === 'all'}
               onChange={(e) => setReportType(e.target.value)}
+              id="expenseAll"
+              style={{ cursor: 'pointer' }}
             />
             <Form.Check
               type="radio"
@@ -182,6 +184,8 @@ const ReportsHomeSidebar = ({ setSelectedDashboard }) => {
               value="period"
               checked={reportType === 'period'}
               onChange={(e) => setReportType(e.target.value)}
+              id="expensePeriod"
+              style={{ cursor: 'pointer' }}
             />
           </Form>
         </Modal.Body>
@@ -209,6 +213,8 @@ const ReportsHomeSidebar = ({ setSelectedDashboard }) => {
               value="all"
               checked={reportType === 'all'}
               onChange={(e) => setReportType(e.target.value)}
+              id="incomeAll"
+              style={{ cursor: 'pointer' }}
             />
             <Form.Check
               type="radio"
@@ -217,6 +223,8 @@ const ReportsHomeSidebar = ({ setSelectedDashboard }) => {
               value="period"
               checked={reportType === 'period'}
               onChange={(e) => setReportType(e.target.value)}
+              id="incomePeriod"
+              style={{ cursor: 'pointer' }}
             />
           </Form>
         </Modal.Body>
