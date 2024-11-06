@@ -32,7 +32,7 @@ export const createPrimaryEvacuation = async (req, res, next) => {
       return res.status(400).json({ success: false, message: 'Invalid overall weight' });
     }
 
-    const numberOfBags = parseFloat((overallWeight / 64).toFixed(2));
+    const numberOfBags = parseFloat((overallWeight / 63.3).toFixed(2));
 
     // Find the cocoa price per bag record to calculate the income
     const cocoaPrice = await CocoaPricePerBag.findById(cocoaPricePerBag);
