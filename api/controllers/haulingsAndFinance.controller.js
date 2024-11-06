@@ -686,6 +686,82 @@ export const getAllFinancialRecordsGroupedByVehicle = async (req, res, next) => 
 };
 
 
+export const getFinancialRecordsByVehicleWithinPeriod = async (req, res, next) => {
+  try {
+    const { startDate, endDate } = req.query;
+
+    // Validate that both startDate and endDate are provided
+    if (!startDate || !endDate) {
+      return res.status(400).json({ success: false, message: 'Please provide both startDate and endDate.' });
+    }
+
+    // Convert startDate and endDate to Date objects
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    // Ensure end date includes the entire day
+    end.setHours(23, 59, 59, 999);
+
+    // Fetch all vehicles
+    const vehicles = await Vehicle.find();
+
+    // Prepare an object to store the grouped records
+    const groupedRecords = {};
+
+    // Iterate over each vehicle and gather the financial records within the specified period
+    for (let vehicle of vehicles) {
+      const vehicleId = vehicle._id;
+      const registrationNumber = vehicle.registrationNumber;
+
+      // Fetch records associated with this vehicle within the date range
+      const primaryEvacuationExpenses = await PrimaryEvacuationExpense.find({
+        vehicle: vehicleId,
+        dateOfExpense: { $gte: start, $lte: end },
+      });
+
+      const generalExpenses = await GeneralExpense.find({
+        vehicle: vehicleId,
+        dateOfExpense: { $gte: start, $lte: end },
+      });
+
+      const otherTripExpenses = await OtherTripExpense.find({
+        vehicle: vehicleId,
+        dateOfExpense: { $gte: start, $lte: end },
+      });
+
+      const incomes = await Income.find({
+        vehicle: vehicleId,
+        date: { $gte: start, $lte: end },
+      });
+
+      // Create an object for this vehicle containing all its related records within the period
+      groupedRecords[registrationNumber] = {
+        vehicleInfo: {
+          registrationNumber: vehicle.registrationNumber,
+          make: vehicle.make,
+          model: vehicle.model,
+          year: vehicle.year,
+          color: vehicle.color,
+          owner: vehicle.owner,
+        },
+        primaryEvacuationExpenses,
+        generalExpenses,
+        otherTripExpenses,
+        incomes,
+      };
+    }
+
+    // Respond with the grouped records within the specified period
+    res.status(200).json({
+      success: true,
+      data: groupedRecords,
+    });
+  } catch (error) {
+    console.error('Error fetching financial records by vehicle within period:', error);
+    next(error);
+  }
+};
+
 
 
 // Create a new transfer

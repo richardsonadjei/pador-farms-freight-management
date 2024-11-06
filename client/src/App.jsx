@@ -31,10 +31,10 @@ export default function App() {
             <Route path='/profile' element={<Profile />} />
             <Route path='/' element={<Home />} />
             <Route path='/reports' element={<ReportHome />} />
-            <Route path='/all-bike-income' element={<AllIncome />} />
-            <Route path='/all-bike-income-by-period' element={<IncomeByPeriod />} />
-            <Route path='/all-bike-expense' element={<AllExpenseReport/>} />
-            <Route path='/all-bike-expense-by-period' element={<ExpenseByPeriod/>} />
+            <Route path='/all-vehicle-income' element={<AllIncome />} />
+            <Route path='/all-vehicle-income-by-period' element={<IncomeByPeriod />} />
+            <Route path='/all-vehicle-expense' element={<AllExpenseReport/>} />
+            <Route path='/all-vehicle-expense-by-period' element={<ExpenseByPeriod/>} />
             <Route path='/employee-list' element={<AllEmployeesReport/>} />
             <Route path='/payrolls' element={<AllPayrollsReport/>} />
             <Route path='/vehicle-list' element={<VehicleList/>} />

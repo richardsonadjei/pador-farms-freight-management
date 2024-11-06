@@ -1,5 +1,5 @@
 import express from 'express';
-import { createGeneralExpense, createInsurance, createOtherTrip, createOtherTripExpense, createPrimaryEvacuation, createPrimaryEvacuationExpense, createRoadworthy, createTransfer, deleteGeneralExpense, deleteInsurance, deleteOtherTrip, deleteOtherTripExpense, deletePrimaryEvacuation, deletePrimaryEvacuationExpense, deleteRoadworthy, deleteTransfer, getAllActivitiesAndTransactionsRecords, getAllFinancialRecordsGroupedByVehicle, getAllGeneralExpenses, getAllInsurance, getAllOtherTripExpenses, getAllOtherTrips, getAllPrimaryEvacuationExpenses, getAllPrimaryEvacuations, getAllRoadworthy, getAllTransfers, getGeneralExpenseById, getInsuranceById,  getMostRecentActiveInsurance, getMostRecentActiveRoadworthy, getOtherTripById, getOtherTripExpenseById, getPrimaryEvacuationById, getPrimaryEvacuationExpenseById, getRoadworthyById, getTransferById, updateGeneralExpense, updateInsurance, updateOtherTrip, updateOtherTripExpense, updatePrimaryEvacuation, updatePrimaryEvacuationExpense, updateRoadworthy, updateTransfer } from '../controllers/haulingsAndFinance.controller.js';
+import { createGeneralExpense, createInsurance, createOtherTrip, createOtherTripExpense, createPrimaryEvacuation, createPrimaryEvacuationExpense, createRoadworthy, createTransfer, deleteGeneralExpense, deleteInsurance, deleteOtherTrip, deleteOtherTripExpense, deletePrimaryEvacuation, deletePrimaryEvacuationExpense, deleteRoadworthy, deleteTransfer, getAllActivitiesAndTransactionsRecords, getAllFinancialRecordsGroupedByVehicle, getAllGeneralExpenses, getAllInsurance, getAllOtherTripExpenses, getAllOtherTrips, getAllPrimaryEvacuationExpenses, getAllPrimaryEvacuations, getAllRoadworthy, getAllTransfers, getFinancialRecordsByVehicleWithinPeriod, getGeneralExpenseById, getInsuranceById,  getMostRecentActiveInsurance, getMostRecentActiveRoadworthy, getOtherTripById, getOtherTripExpenseById, getPrimaryEvacuationById, getPrimaryEvacuationExpenseById, getRoadworthyById, getTransferById, updateGeneralExpense, updateInsurance, updateOtherTrip, updateOtherTripExpense, updatePrimaryEvacuation, updatePrimaryEvacuationExpense, updateRoadworthy, updateTransfer } from '../controllers/haulingsAndFinance.controller.js';
 
 
 const haulingsAndFinanceRouter = express.Router();
@@ -80,6 +80,7 @@ haulingsAndFinanceRouter.get('/all-records', getAllActivitiesAndTransactionsReco
 
 haulingsAndFinanceRouter.get('/financial-records/grouped-by-vehicle', getAllFinancialRecordsGroupedByVehicle);
 
+haulingsAndFinanceRouter.get('/financial-records/vehicle-within-period', getFinancialRecordsByVehicleWithinPeriod);
 
 
 haulingsAndFinanceRouter.post('/transfers', createTransfer);

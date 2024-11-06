@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Table } from 'react-bootstrap';
-
-import { useMotorbike } from '../MotorBikeContext';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import ReportsHomeSidebar from '../../SideBar';
@@ -10,111 +8,104 @@ import ReportsHomeSidebar from '../../SideBar';
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const AllExpenseReport = () => {
-  const { selectedBikeId } = useMotorbike(); // Use the motorbike context to get the selected bike ID
-  const [expenses, setExpenses] = useState([]);
-  const [registrationNumber, setRegistrationNumber] = useState('');
+  const [vehicles, setVehicles] = useState([]);
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  
   useEffect(() => {
-    const fetchExpenses = async () => {
-      if (!selectedBikeId) return;
-
+    const fetchGroupedRecords = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/expenses-motorbike/${selectedBikeId}`);
+        const response = await fetch('/api/financial-records/grouped-by-vehicle');
         if (!response.ok) {
-          console.error('Error fetching expenses:', response.status);
+          console.error('Error fetching grouped records:', response.status);
           setLoading(false);
           return;
         }
 
-        const data = await response.json();
-        setExpenses(data); // Adjust to the data structure returned by the server
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching expenses:', error);
-        setLoading(false);
-      }
-    };
+        const { data } = await response.json();
+        const vehicleEntries = Object.entries(data);
 
-    const fetchMotorbikeDetails = async () => {
-      if (!selectedBikeId) return;
-
-      try {
-        const response = await fetch(`/api/motorbikes/${selectedBikeId}`);
-        if (!response.ok) {
-          console.error('Error fetching motorbike details:', response.status);
-          return;
+        if (vehicleEntries.length > 0) {
+          setVehicles(vehicleEntries); // Store all vehicles and their financial records
+          setSelectedVehicle(vehicleEntries[0]); // Set the first vehicle as default
         }
-
-        const data = await response.json();
-        setRegistrationNumber(data.registrationNumber); // Assuming the response contains the `registrationNumber`
+        setLoading(false);
       } catch (error) {
-        console.error('Error fetching motorbike details:', error);
+        console.error('Error fetching grouped records:', error);
+        setLoading(false);
       }
     };
 
-    fetchExpenses();
-    fetchMotorbikeDetails();
-  }, [selectedBikeId]);
+    fetchGroupedRecords();
+  }, []);
 
-  // Prepare data for the bar chart
-  const categories = expenses.map((expense) => expense.category.name);
-  const totals = expenses.map((expense) => expense.amount);
+  // Prepare data for the bar chart based on selected vehicle's expenses
+  const getChartData = () => {
+    if (!selectedVehicle) return { labels: [], datasets: [] };
 
-  const chartData = {
-    labels: categories,
-    datasets: [
-      {
-        label: 'Total Expenses by Category',
-        data: totals,
-        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-        borderColor: 'rgba(75, 192, 192, 1)',
-        borderWidth: 1,
-      },
-    ],
+    const [registrationNumber, vehicleData] = selectedVehicle;
+    const { primaryEvacuationExpenses, generalExpenses, otherTripExpenses } = vehicleData;
+
+    // Combine all expenses
+    const allExpenses = [
+      ...primaryEvacuationExpenses,
+      ...generalExpenses,
+      ...otherTripExpenses,
+    ];
+
+    // Group expenses by category
+    const expenseCategories = allExpenses.reduce((acc, expense) => {
+      const category = expense.category;
+      acc[category] = (acc[category] || 0) + expense.amount;
+      return acc;
+    }, {});
+
+    return {
+      labels: Object.keys(expenseCategories),
+      datasets: [
+        {
+          label: 'Total Expenses by Category',
+          data: Object.values(expenseCategories),
+          backgroundColor: 'rgba(75, 192, 192, 0.6)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1,
+        },
+      ],
+    };
   };
 
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
-    aspectRatio: 3, // Reduce the height of the chart
+    aspectRatio: 3,
     plugins: {
       legend: {
         position: 'top',
         labels: {
-          color: 'white', // Set legend text color to white
+          color: 'white',
         },
       },
       title: {
         display: true,
         text: 'Total Expenses by Category',
-        color: 'white', // Set title text color to white
+        color: 'white',
       },
     },
     scales: {
       x: {
         ticks: {
-          color: 'white', // Set x-axis labels color to white
+          color: 'white',
         },
       },
       y: {
         ticks: {
-          color: 'white', // Set y-axis labels color to white
+          color: 'white',
         },
       },
     },
   };
-
-  // Group expenses by category
-  const groupedExpenses = expenses.reduce((acc, expense) => {
-    const { category } = expense;
-    if (!acc[category.name]) {
-      acc[category.name] = [];
-    }
-    acc[category.name].push(expense);
-    return acc;
-  }, {});
 
   return (
     <Container fluid style={{ padding: 0, width: '100vw', margin: 0, overflowX: 'hidden' }}>
@@ -122,57 +113,61 @@ const AllExpenseReport = () => {
       <ReportsHomeSidebar />
 
       <Container fluid style={{ padding: '20px', margin: '0 auto' }}>
-        <h2 style={{ color: 'white', marginBottom: '20px', textAlign: 'center' }}>
-          All Expense Report for Motorbike: {registrationNumber}
-        </h2>
+        {selectedVehicle && (
+          <h2 style={{ color: 'white', marginBottom: '20px', textAlign: 'center' }}>
+            All Expense Report for Vehicle: {selectedVehicle[1].vehicleInfo.registrationNumber}
+          </h2>
+        )}
 
         {loading ? (
           <p style={{ color: 'white', textAlign: 'center' }}>Loading...</p>
         ) : (
-          <>
-            {/* Bar Chart */}
-            <div style={{ marginBottom: '40px', width: '100vw', height: '300px', margin: '0 auto' }}>
-              <Bar data={chartData} options={chartOptions} />
-            </div>
-
-            {/* Render each category's expenses in its own table */}
-            {Object.keys(groupedExpenses).map((categoryName) => (
-              <div key={categoryName} style={{ marginBottom: '40px' }}>
-                <h3 style={{ color: 'white', marginBottom: '15px' }}>
-                  Category: {categoryName}
-                </h3>
-                <Table striped bordered hover variant="dark" responsive>
-                  <thead>
-                    <tr>
-                      <th>Date</th>
-                      <th>Amount (Ghc)</th>
-                      <th>Payment Method</th>
-                      <th>Notes</th>
-                      <th>Recorded By</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {groupedExpenses[categoryName].map((expense) => (
-                      <tr key={expense._id}>
-                        <td>
-                          {new Date(expense.date).toLocaleDateString('en-US', {
-                            weekday: 'short',
-                            month: 'short',
-                            day: 'numeric',
-                            year: '2-digit',
-                          })}
-                        </td>
-                        <td>{expense.amount.toLocaleString()}</td>
-                        <td>{expense.paymentMethod}</td>
-                        <td>{expense.notes || 'N/A'}</td>
-                        <td>{expense.recordedBy}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
+          selectedVehicle && (
+            <>
+              {/* Bar Chart */}
+              <div style={{ marginBottom: '40px', width: '100vw', height: '300px', margin: '0 auto' }}>
+                <Bar data={getChartData()} options={chartOptions} />
               </div>
-            ))}
-          </>
+
+              {/* Render each category's expenses in its own table */}
+              {['primaryEvacuationExpenses', 'generalExpenses', 'otherTripExpenses'].map((expenseType) => (
+                <div key={expenseType} style={{ marginBottom: '40px' }}>
+                  <h3 style={{ color: 'white', marginBottom: '15px' }}>
+                    Category: {expenseType.replace(/([A-Z])/g, ' $1').trim()}
+                  </h3>
+                  <Table striped bordered hover variant="dark" responsive>
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Amount (Ghc)</th>
+                        <th>Payment Method</th>
+                        <th>Notes</th>
+                        <th>Recorded By</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {selectedVehicle[1][expenseType].map((expense) => (
+                        <tr key={expense._id}>
+                          <td>
+                            {new Date(expense.dateOfExpense || expense.date).toLocaleDateString('en-US', {
+                              weekday: 'short',
+                              month: 'short',
+                              day: 'numeric',
+                              year: '2-digit',
+                            })}
+                          </td>
+                          <td>{expense.amount.toLocaleString()}</td>
+                          <td>{expense.paymentMethod || 'N/A'}</td>
+                          <td>{expense.notes || 'N/A'}</td>
+                          <td>{expense.recordedBy || 'N/A'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                </div>
+              ))}
+            </>
+          )
         )}
       </Container>
     </Container>

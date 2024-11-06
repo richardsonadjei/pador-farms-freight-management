@@ -10,7 +10,6 @@ import {
   Legend,
 } from 'chart.js';
 
-// Register necessary chart elements
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -24,7 +23,6 @@ const PrimaryEvacuationContent = () => {
   const [evacuationData, setEvacuationData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Function to fetch primary evacuation data
   const fetchEvacuationData = async () => {
     try {
       const response = await fetch('/api/primary-evacuations');
@@ -39,25 +37,21 @@ const PrimaryEvacuationContent = () => {
     }
   };
 
-  // Fetch data on component mount
   useEffect(() => {
     fetchEvacuationData();
   }, []);
 
-  // Aggregate data by month and year
   const aggregateDataByMonthAndYear = () => {
-    const monthlyData = new Array(12).fill(0); // Array to store the total number of bags per month
-    const yearlyData = {}; // Object to store the total number of bags per year
+    const monthlyData = new Array(12).fill(0);
+    const yearlyData = {};
 
     evacuationData.forEach((item) => {
       const evacuationDate = new Date(item.dateOfEvacuation);
-      const month = evacuationDate.getMonth(); // Get month (0 - 11)
-      const year = evacuationDate.getFullYear(); // Get year
+      const month = evacuationDate.getMonth();
+      const year = evacuationDate.getFullYear();
 
-      // Add number of bags to the corresponding month
       monthlyData[month] += item.numberOfBags;
 
-      // Add number of bags to the corresponding year
       if (!yearlyData[year]) {
         yearlyData[year] = 0;
       }
@@ -69,7 +63,6 @@ const PrimaryEvacuationContent = () => {
 
   const { monthlyData, yearlyData } = aggregateDataByMonthAndYear();
 
-  // Prepare data for the monthly chart
   const monthlyChartData = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
     datasets: [
@@ -81,13 +74,12 @@ const PrimaryEvacuationContent = () => {
     ],
   };
 
-  // Prepare data for the yearly chart
   const yearlyChartData = {
-    labels: Object.keys(yearlyData), // Array of years
+    labels: Object.keys(yearlyData),
     datasets: [
       {
         label: 'Number of Bags Hauled (Yearly)',
-        data: Object.values(yearlyData), // Array of total number of bags per year
+        data: Object.values(yearlyData),
         backgroundColor: '#ff6384',
       },
     ],
@@ -95,7 +87,7 @@ const PrimaryEvacuationContent = () => {
 
   const chartOptions = {
     responsive: true,
-    maintainAspectRatio: false, // Ensure charts resize properly
+    maintainAspectRatio: false,
     scales: {
       y: {
         beginAtZero: true,
@@ -106,8 +98,8 @@ const PrimaryEvacuationContent = () => {
         position: 'top',
       },
     },
-    barPercentage: 0.4, // Reduce the thickness of the bars
-    categoryPercentage: 0.4, // Reduce the thickness of the bars
+    barPercentage: 0.4,
+    categoryPercentage: 0.4,
   };
 
   return (
@@ -116,19 +108,18 @@ const PrimaryEvacuationContent = () => {
         <p>Loading data...</p>
       ) : (
         <div>
-          {/* Responsive container for charts */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
             <div style={{ height: '300px', width: '100%' }}>
-              <h3>Total Bags Hauled per Month</h3>
+              <h3 style={{ textAlign: 'center' }}>Monthly Bags Hauled</h3>
               <Bar data={monthlyChartData} options={chartOptions} />
             </div>
             <div style={{ height: '300px', width: '100%' }}>
-              <h3>Total Bags Hauled per Year</h3>
+            <h3 style={{ textAlign: 'center' }}>Year-Year Bags Hauled</h3>
+
               <Bar data={yearlyChartData} options={chartOptions} />
             </div>
           </div>
 
-          {/* Adding margin and scrollable table */}
           <div style={{ marginTop: '70px', maxHeight: '250px', overflowY: 'auto' }}>
             <table
               border="1"
@@ -136,32 +127,34 @@ const PrimaryEvacuationContent = () => {
               style={{
                 width: '100%',
                 marginTop: '20px',
-                tableLayout: 'fixed', // Ensures the table adjusts to small screens
+                tableLayout: 'fixed',
               }}
             >
               <thead>
                 <tr style={{ position: 'sticky', top: 0, background: 'white', zIndex: 1 }}>
                   <th>#</th>
+                  <th>Date</th>
                   <th>Vehicle</th>
                   <th>Driver</th>
                   <th>Location</th>
-                  <th>Date of Evacuation</th>
+                 
                   <th>Number of Bags</th>
                   <th>Price Per Bag (Ghc)</th>
-                  <th>Total Value (Ghc)</th> {/* New column for total value */}
+                  <th>Total Value (Ghc)</th>
                 </tr>
               </thead>
               <tbody>
                 {evacuationData.map((item, index) => (
                   <tr key={item._id}>
                     <td>{index + 1}</td>
+                    <td>{new Date(item.dateOfEvacuation).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</td>
                     <td>{item.vehicle.registrationNumber}</td>
                     <td>{`${item.driver.firstName} ${item.driver.lastName}`}</td>
                     <td>{item.evacuationLocation}</td>
-                    <td>{new Date(item.dateOfEvacuation).toLocaleDateString()}</td>
+                    
                     <td>{item.numberOfBags}</td>
                     <td>{item.cocoaPricePerBag.pricePerBagAfterTax}</td>
-                    <td>{(item.numberOfBags * item.cocoaPricePerBag.pricePerBagAfterTax).toFixed(2)}</td> {/* Calculated total value */}
+                    <td>{(item.numberOfBags * item.cocoaPricePerBag.pricePerBagAfterTax).toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>

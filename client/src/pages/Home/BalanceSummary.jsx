@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Row, Col, Table } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 
-// Utility function to get the date range for the current month
 const getCurrentMonthRange = () => {
   const now = new Date();
   const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -14,7 +13,6 @@ const getCurrentMonthRange = () => {
   return `${formatDate(firstDayOfMonth)} - ${formatDate(lastDayOfMonth)}`;
 };
 
-// Utility function to check if a date is in the current month
 const isDateInCurrentMonth = (date) => {
   const now = new Date();
   return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
@@ -24,7 +22,6 @@ const BalanceSummary = () => {
   const [motorbikeData, setMotorbikeData] = useState({});
   const currentUser = useSelector((state) => state.user.currentUser?.userName || '');
 
-  // Fetch transactions from the API
   const fetchData = async () => {
     try {
       const response = await fetch('/api/financial-records/grouped-by-vehicle');
@@ -43,7 +40,7 @@ const BalanceSummary = () => {
 
   useEffect(() => {
     fetchData();
-    const intervalId = setInterval(fetchData, 10000); // Update every 10000 milliseconds (10 seconds)
+    const intervalId = setInterval(fetchData, 10000);
 
     return () => clearInterval(intervalId);
   }, []);
@@ -58,7 +55,7 @@ const BalanceSummary = () => {
     <div className="balance-summary">
       <Row className="justify-content-center">
         {Object.keys(motorbikeData)
-          .filter((motorbike) => !(currentUser === 'Pinkrah' && motorbike === 'M-24-GR 4194')) // Filter out the motorbike for Pinkrah
+          .filter((motorbike) => !(currentUser === 'Pinkrah' && motorbike === 'M-24-GR 4194'))
           .map((motorbike, index) => {
             const data = motorbikeData[motorbike];
             if (!data) return null;
@@ -75,6 +72,7 @@ const BalanceSummary = () => {
             const primaryEvacuationIncomes = incomes.filter(
               (income) => income.source === 'Primary Evacuation' && isDateInCurrentMonth(new Date(income.date))
             );
+            const numberOfPrimaryEvacuations = primaryEvacuationIncomes.length; // Number of primary evacuations
             const totalBagsHauled = primaryEvacuationIncomes.reduce(
               (sum, income) => sum + parseFloat(income.notes.match(/([\d.]+)\s+bags/)?.[1] || 0),
               0
@@ -90,6 +88,7 @@ const BalanceSummary = () => {
             const otherTripsIncomes = incomes.filter(
               (income) => income.source === 'Other Trips' && isDateInCurrentMonth(new Date(income.date))
             );
+            const numberOfOtherTrips = otherTripsIncomes.length; // Number of other trips
             const totalOtherTripsIncome = otherTripsIncomes.reduce((acc, income) => acc + (income.amount || 0), 0);
             const totalOtherTripsExpense = calculateTotal(otherTripExpenses, isDateInCurrentMonth);
             const driverCommissionOtherTrips = totalOtherTripsIncome * 0.2;
@@ -99,14 +98,12 @@ const BalanceSummary = () => {
 
             // Total Income, Expenses, and Balance
             const totalIncome = totalPrimaryEvacuationIncome + totalOtherTripsIncome;
-            const totalExpenses =
-              totalPrimaryEvacuationExpense + totalOtherTripsExpense + totalGeneralExpenses;
+            const totalExpenses = totalPrimaryEvacuationExpense + totalOtherTripsExpense + totalGeneralExpenses;
             const balance = totalIncome - totalExpenses;
 
             return (
               <Col xs={12} md={8} className="mb-4" key={index}>
                 <div className="summary-card motorbike-summary">
-                  {/* Motorbike Summary */}
                   <div className="summary-header" style={{ textAlign: 'center', padding: '2px 0' }}>
                     <h5>Truck: {vehicleInfo?.registrationNumber || 'Unknown'}</h5>
                     <span>{getCurrentMonthRange()}</span>
@@ -129,6 +126,7 @@ const BalanceSummary = () => {
                     <Table striped bordered hover variant="light" className="mb-4">
                       <thead>
                         <tr>
+                          <th>Number of PEs</th>
                           <th>Total Bags Hauled</th>
                           <th>Total Income</th>
                           <th>Total Expenses</th>
@@ -138,6 +136,7 @@ const BalanceSummary = () => {
                       </thead>
                       <tbody>
                         <tr>
+                          <td style={{ textAlign: 'center' }}>{numberOfPrimaryEvacuations}</td>
                           <td style={{ textAlign: 'center' }}>{totalBagsHauled.toFixed(2)}</td>
                           <td style={{ textAlign: 'center' }}>{totalPrimaryEvacuationIncome.toLocaleString()}</td>
                           <td style={{ textAlign: 'center', color: '#e74c3c' }}>
@@ -160,6 +159,7 @@ const BalanceSummary = () => {
                     <Table striped bordered hover variant="light">
                       <thead>
                         <tr>
+                          <th>Number of Trips</th>
                           <th>Total Income</th>
                           <th>Total Expenses</th>
                           <th>Driver's Commission</th>
@@ -168,6 +168,7 @@ const BalanceSummary = () => {
                       </thead>
                       <tbody>
                         <tr>
+                          <td style={{ textAlign: 'center' }}>{numberOfOtherTrips}</td>
                           <td style={{ textAlign: 'center' }}>{totalOtherTripsIncome.toLocaleString()}</td>
                           <td style={{ textAlign: 'center', color: '#e74c3c' }}>
                             {totalOtherTripsExpense.toLocaleString()}

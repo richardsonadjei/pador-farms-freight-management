@@ -1,63 +1,63 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Container } from 'react-bootstrap';
+import { Container, Table } from 'react-bootstrap';
 import ReportsHomeSidebar from '../SideBar';
-import { useMotorbike } from './MotorBikeContext';
 
-const AllIncome = () => {
-  const { selectedBikeId } = useMotorbike(); // Use the context to get the selectedBikeId
-  const [incomes, setIncomes] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [registrationNumber, setRegistrationNumber] = useState(''); // State to store the registration number
+const AllIncomeReport = () => {
+  const [vehicles, setVehicles] = useState([]);
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
+  const [loading, setLoading] = useState(false);
 
+  // Fetch all vehicles and set the first one as default
   useEffect(() => {
-    const fetchRegistrationNumber = async () => {
-      if (!selectedBikeId) return;
-
-      try {
-        const response = await fetch(`/api/motorbikes/${selectedBikeId}`);
-        if (!response.ok) {
-          console.error('Error fetching motorbike details:', response.status);
-          return;
-        }
-
-        const data = await response.json();
-        setRegistrationNumber(data.registrationNumber);
-      } catch (error) {
-        console.error('Error fetching motorbike details:', error);
-      }
-    };
-
-    fetchRegistrationNumber();
-  }, [selectedBikeId]);
-
-  useEffect(() => {
-    const fetchIncomes = async () => {
-      console.log('Selected Bike ID:', selectedBikeId); // Log the selectedBikeId to debug
-      if (!selectedBikeId) return;
-
+    const fetchVehicles = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/incomes/${selectedBikeId}`);
+        const response = await fetch('/api/financial-records/grouped-by-vehicle');
         if (!response.ok) {
-          console.error('Error fetching incomes:', response.status);
+          console.error('Error fetching vehicles:', response.status);
           setLoading(false);
           return;
         }
 
-        const data = await response.json();
-        setIncomes(data.incomes);
+        const { data } = await response.json();
+        const vehicleEntries = Object.entries(data);
+
+        if (vehicleEntries.length > 0) {
+          setVehicles(vehicleEntries);
+          setSelectedVehicle(vehicleEntries[0]); // Set the first vehicle as default
+        }
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching incomes:', error);
+        console.error('Error fetching vehicles:', error);
         setLoading(false);
       }
     };
 
-    fetchIncomes();
-  }, [selectedBikeId]);
+    fetchVehicles();
+  }, []);
 
-  // Calculate the sum of all incomes
-  const totalIncome = incomes.reduce((sum, income) => sum + income.amount, 0);
+  // Calculate total income by source
+  const getIncomeSummaryBySource = () => {
+    if (!selectedVehicle) return [];
+    const incomeSummary = selectedVehicle[1].incomes.reduce((acc, income) => {
+      acc[income.source] = (acc[income.source] || 0) + income.amount;
+      return acc;
+    }, {});
+    return Object.entries(incomeSummary).map(([source, amount]) => ({ source, amount }));
+  };
+
+  // Group incomes by source for individual tables
+  const getIncomesBySource = () => {
+    if (!selectedVehicle) return {};
+    return selectedVehicle[1].incomes.reduce((acc, income) => {
+      acc[income.source] = acc[income.source] || [];
+      acc[income.source].push(income);
+      return acc;
+    }, {});
+  };
+
+  const incomeSummary = getIncomeSummaryBySource();
+  const incomesBySource = getIncomesBySource();
 
   return (
     <Container fluid style={{ padding: 0, width: '100vw', margin: 0, overflowX: 'hidden' }}>
@@ -65,63 +65,75 @@ const AllIncome = () => {
       <ReportsHomeSidebar />
 
       <Container fluid style={{ maxWidth: '100vw', overflowX: 'hidden', padding: '20px' }}>
-        <h2 style={{ color: 'white', marginBottom: '20px', textAlign: 'center' }}>
-          All Income for Motorbike: {registrationNumber ? registrationNumber : 'N/A'}
-        </h2>
+        {selectedVehicle && (
+          <h2 style={{ color: 'white', marginBottom: '20px', textAlign: 'center' }}>
+            All Income Report for Vehicle: {selectedVehicle[1].vehicleInfo.registrationNumber}
+          </h2>
+        )}
 
-        {/* Display the total income */}
-        <p style={{ color: 'white', textAlign: 'center', fontSize: '1.2rem', fontWeight: 'bold' }}>
-          Total Income: Ghc {totalIncome.toLocaleString()}
-        </p>
+        {/* Summary Table of Total Income by Source */}
+        <Table striped bordered hover variant="dark" responsive>
+          <thead>
+            <tr>
+              <th>Source</th>
+              <th>Total Income (Ghc)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {incomeSummary.map((summary, index) => (
+              <tr key={index}>
+                <td>{summary.source}</td>
+                <td>{summary.amount.toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
 
         {loading ? (
           <p style={{ color: 'white', textAlign: 'center' }}>Loading...</p>
         ) : (
-          <Table striped bordered hover variant="dark" responsive>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Date</th>
-                <th>Amount (Ghc)</th>
-                <th>Category</th>
-                <th>Payment Method</th>
-                <th>Notes</th>
-                <th>Recorded By</th>
-              </tr>
-            </thead>
-            <tbody>
-              {incomes.length > 0 ? (
-                incomes.map((income, index) => (
-                  <tr key={income._id}>
-                    <td>{index + 1}</td>
-                    <td>
-                      {new Date(income.date).toLocaleDateString('en-US', {
-                        weekday: 'short',
-                        month: 'short',
-                        day: 'numeric',
-                        year: '2-digit'
-                      })}
-                    </td>
-                    <td>{income.amount.toLocaleString()}</td>
-                    <td>{income.category}</td>
-                    <td>{income.paymentMethod}</td>
-                    <td>{income.notes}</td>
-                    <td>{income.recordedBy}</td>
+          Object.keys(incomesBySource).map((source, index) => (
+            <div key={index}>
+              <h3 style={{ color: 'lightblue', marginTop: '20px', textAlign: 'center' }}>
+                Income from {source}
+              </h3>
+              <Table striped bordered hover variant="dark" responsive>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Date</th>
+                    <th>Amount (Ghc)</th>
+                 
+                    <th>Notes</th>
+                    <th>Recorded By</th>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="7" style={{ textAlign: 'center' }}>
-                    No income records found for this motorbike.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </Table>
+                </thead>
+                <tbody>
+                  {incomesBySource[source].map((income, idx) => (
+                    <tr key={income._id}>
+                      <td>{idx + 1}</td>
+                      <td>
+                        {new Date(income.date).toLocaleDateString('en-US', {
+                          weekday: 'short',
+                          month: 'short',
+                          day: 'numeric',
+                          year: '2-digit',
+                        })}
+                      </td>
+                      <td>{income.amount.toLocaleString()}</td>
+              
+                      <td>{income.notes || 'N/A'}</td>
+                      <td>{income.recordedBy || 'N/A'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </div>
+          ))
         )}
       </Container>
     </Container>
   );
 };
 
-export default AllIncome;
+export default AllIncomeReport;
