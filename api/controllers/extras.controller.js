@@ -1,6 +1,8 @@
 import ExpenseCategory from "../models/expenseCategory.model.js";
 import Partner from "../models/partner.model.js";
+import PEDriversCommission from "../models/pEsDriversCommission.model.js";
 import CocoaPricePerBag from "../models/pricePerBag.model.js";
+import WeightPerBag from "../models/standardWeight.model.js";
 
 
 // Create a new cocoa price record
@@ -301,5 +303,171 @@ export const deletePartner = async (req, res) => {
       success: false,
       message: error.message,
     });
+  }
+};
+
+
+
+
+// Create a new weight record
+export const createWeightRecord = async (req, res, next) => {
+  const { date, weight } = req.body;
+
+  try {
+    const newRecord = new WeightPerBag({ date, weight });
+    const savedRecord = await newRecord.save();
+    res.status(201).json({ success: true, data: savedRecord });
+  } catch (error) {
+    console.error('Error creating weight record:', error);
+    next(error);
+  }
+};
+
+// Get all weight records
+export const getAllWeightRecords = async (req, res, next) => {
+  try {
+    const records = await WeightPerBag.find();
+    res.status(200).json({ success: true, data: records });
+  } catch (error) {
+    console.error('Error fetching weight records:', error);
+    next(error);
+  }
+};
+
+// Get a specific weight record by ID
+export const getWeightRecordById = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const record = await WeightPerBag.findById(id);
+    if (!record) {
+      return res.status(404).json({ success: false, message: 'Record not found' });
+    }
+    res.status(200).json({ success: true, data: record });
+  } catch (error) {
+    console.error('Error fetching weight record:', error);
+    next(error);
+  }
+};
+
+// Update a weight record by ID
+export const updateWeightRecord = async (req, res, next) => {
+  const { id } = req.params;
+  const { date, weight } = req.body;
+
+  try {
+    const updatedRecord = await WeightPerBag.findByIdAndUpdate(
+      id,
+      { date, weight },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedRecord) {
+      return res.status(404).json({ success: false, message: 'Record not found' });
+    }
+
+    res.status(200).json({ success: true, data: updatedRecord });
+  } catch (error) {
+    console.error('Error updating weight record:', error);
+    next(error);
+  }
+};
+
+// Delete a weight record by ID
+export const deleteWeightRecord = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const deletedRecord = await WeightPerBag.findByIdAndDelete(id);
+    if (!deletedRecord) {
+      return res.status(404).json({ success: false, message: 'Record not found' });
+    }
+    res.status(200).json({ success: true, message: 'Record deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting weight record:', error);
+    next(error);
+  }
+};
+
+
+
+
+// Create a new driver's commission record
+export const createCommission = async (req, res, next) => {
+  const { date, amount } = req.body;
+
+  try {
+    const newCommission = new PEDriversCommission({ date, amount });
+    const savedCommission = await newCommission.save();
+    res.status(201).json({ success: true, data: savedCommission });
+  } catch (error) {
+    console.error('Error creating commission record:', error);
+    next(error);
+  }
+};
+
+// Get all driver's commission records
+export const getAllCommissions = async (req, res, next) => {
+  try {
+    const commissions = await PEDriversCommission.find();
+    res.status(200).json({ success: true, data: commissions });
+  } catch (error) {
+    console.error('Error fetching commission records:', error);
+    next(error);
+  }
+};
+
+// Get a specific driver's commission record by ID
+export const getCommissionById = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const commission = await PEDriversCommission.findById(id);
+    if (!commission) {
+      return res.status(404).json({ success: false, message: 'Commission record not found' });
+    }
+    res.status(200).json({ success: true, data: commission });
+  } catch (error) {
+    console.error('Error fetching commission record:', error);
+    next(error);
+  }
+};
+
+// Update a driver's commission record by ID
+export const updateCommission = async (req, res, next) => {
+  const { id } = req.params;
+  const { date, amount } = req.body;
+
+  try {
+    const updatedCommission = await PEDriversCommission.findByIdAndUpdate(
+      id,
+      { date, amount },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedCommission) {
+      return res.status(404).json({ success: false, message: 'Commission record not found' });
+    }
+
+    res.status(200).json({ success: true, data: updatedCommission });
+  } catch (error) {
+    console.error('Error updating commission record:', error);
+    next(error);
+  }
+};
+
+// Delete a driver's commission record by ID
+export const deleteCommission = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const deletedCommission = await PEDriversCommission.findByIdAndDelete(id);
+    if (!deletedCommission) {
+      return res.status(404).json({ success: false, message: 'Commission record not found' });
+    }
+    res.status(200).json({ success: true, message: 'Commission record deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting commission record:', error);
+    next(error);
   }
 };

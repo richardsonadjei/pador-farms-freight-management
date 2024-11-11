@@ -19,7 +19,7 @@ export const createPrimaryEvacuation = async (req, res, next) => {
     cocoaPricePerBag,
     vehicle,
     driver,
-    overallWeight,
+    overallWeight, // Ensure this is provided by the user in the request
     dateOfEvacuation,
     evacuationLocation,
     notes,
@@ -27,20 +27,20 @@ export const createPrimaryEvacuation = async (req, res, next) => {
   } = req.body;
 
   try {
-    // Calculate the number of bags based on the overall weight and round to 2 decimal places
+    // Validate overall weight provided by the user
     if (!overallWeight || overallWeight < 1) {
       return res.status(400).json({ success: false, message: 'Invalid overall weight' });
     }
 
+    // Calculate the number of bags based on the overall weight
     const numberOfBags = parseFloat((overallWeight / 63.3).toFixed(2));
 
-    // Find the cocoa price per bag record to calculate the income
+    // Retrieve cocoa price and calculate income
     const cocoaPrice = await CocoaPricePerBag.findById(cocoaPricePerBag);
     if (!cocoaPrice) {
       return res.status(404).json({ success: false, message: 'Cocoa price not found' });
     }
 
-    // Calculate the income amount
     const incomeAmount = parseFloat((cocoaPrice.pricePerBagAfterTax * numberOfBags).toFixed(4));
 
     // Create the Primary Evacuation record
@@ -61,7 +61,7 @@ export const createPrimaryEvacuation = async (req, res, next) => {
     // Create the Income record associated with the vehicle
     const newIncome = new Income({
       source: 'Primary Evacuation',
-      vehicle, // Associate the income with the vehicle
+      vehicle,
       amount: incomeAmount,
       currency: cocoaPrice.currency,
       date: dateOfEvacuation,
@@ -83,6 +83,7 @@ export const createPrimaryEvacuation = async (req, res, next) => {
     next(error);
   }
 };
+
 
 
 

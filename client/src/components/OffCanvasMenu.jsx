@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Offcanvas, Nav, Dropdown } from 'react-bootstrap';
-import { FaBell, FaHome, FaUser, FaSignOutAlt, FaSignInAlt, FaPlus, FaEllipsisV, FaUsers, FaList, FaTruck, FaRoad, FaIdCard, FaGasPump, FaDollarSign, FaMapMarkerAlt, FaChartBar, FaCog, FaUserCircle } from 'react-icons/fa';
-
-
+import {
+  FaHome, FaUser, FaSignOutAlt, FaSignInAlt, FaEllipsisV,
+  FaTruck, FaUsers, FaClipboardList, FaMoneyBillWave, FaBalanceScale,
+  FaDollarSign
+} from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+
 import NewExpenseCategoryModal from '../pages/finance/expensecategory';
 import RegisterVehicleModal from '../pages/extras/Vehicle/RegisterVehicleModal';
 import SignUpModal from '../pages/SignUp';
 import AddCocoaPriceModal from '../pages/extras/PricePerBag/NewPricePerBag';
-import NewPartnerModal from '../pages/extras/Partners/NewPartnerModal';
+import NewWeightModal from '../pages/extras/StandardWeight/Weight';
+import PEDriversCommissionModal from '../pages/extras/DriversCommisions/PEDriversCommission';
 
 
 const OffcanvasMenu = ({ showOffcanvasRight, handleClose, handleItemClick }) => {
@@ -18,7 +22,8 @@ const OffcanvasMenu = ({ showOffcanvasRight, handleClose, handleItemClick }) => 
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showRegisterVehicleModal, setShowRegisterVehicleModal] = useState(false);
   const [showCocoaPriceModal, setShowCocoaPriceModal] = useState(false);
-  const [showAddPartnerModal, setShowAddPartnerModal] = useState(false); // State for Add Partner Modal
+  const [showWeightModal, setShowWeightModal] = useState(false);
+  const [showCommissionModal, setShowCommissionModal] = useState(false); // State for Commission Modal
 
   const handleAddExpenseCategoryClick = () => {
     setShowExpenseCategoryModal(true);
@@ -56,13 +61,22 @@ const OffcanvasMenu = ({ showOffcanvasRight, handleClose, handleItemClick }) => 
     setShowCocoaPriceModal(false);
   };
 
-  const handleAddPartnerClick = () => {
-    setShowAddPartnerModal(true);
+  const handleUpdateWeightClick = () => {
+    setShowWeightModal(true);
     handleClose();
   };
 
-  const handleAddPartnerModalClose = () => {
-    setShowAddPartnerModal(false);
+  const handleWeightModalClose = () => {
+    setShowWeightModal(false);
+  };
+
+  const handleAddCommissionClick = () => {
+    setShowCommissionModal(true);
+    handleClose();
+  };
+
+  const handleCommissionModalClose = () => {
+    setShowCommissionModal(false);
   };
 
   return (
@@ -78,6 +92,27 @@ const OffcanvasMenu = ({ showOffcanvasRight, handleClose, handleItemClick }) => 
             </Nav.Link>
 
             <Dropdown className="mt-3">
+              <Dropdown.Toggle variant="link" id="dropdown-others" className="dropdown-toggle-new nav-link-new no-underline">
+                <FaEllipsisV /> Business Settings
+              </Dropdown.Toggle>
+              <Dropdown.Menu className="dropdown-menu-new">
+                
+                <Dropdown.Item onClick={handleAddCocoaPriceClick} className="dropdown-item-new">
+                  <FaMoneyBillWave /> Update Cocoa Price Per Bag
+                </Dropdown.Item>
+                <Dropdown.Item onClick={handleUpdateWeightClick} className="dropdown-item-new">
+                  <FaBalanceScale /> Update Standard Weight Per Bag
+                </Dropdown.Item>
+                <Dropdown.Item onClick={handleAddCommissionClick} className="dropdown-item-new">
+                  <FaDollarSign /> Update PE Driver's Commission
+                </Dropdown.Item>
+                <Dropdown.Item onClick={handleAddExpenseCategoryClick} className="dropdown-item-new">
+                  <FaClipboardList /> Add Expense Category
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+
+            <Dropdown className="mt-3">
               <Dropdown.Toggle variant="link" id="dropdown-vehicles" className="dropdown-toggle-new nav-link-new no-underline">
                 <FaTruck /> Vehicle's
               </Dropdown.Toggle>
@@ -90,31 +125,6 @@ const OffcanvasMenu = ({ showOffcanvasRight, handleClose, handleItemClick }) => 
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
-
-            {/* <Dropdown className="mt-3">
-              <Dropdown.Toggle variant="link" id="dropdown-drivers" className="dropdown-toggle-new nav-link-new no-underline">
-                <FaIdCard /> Driver's
-              </Dropdown.Toggle>
-              <Dropdown.Menu className="dropdown-menu-new">
-                <Dropdown.Item as={Link} to="/driver-list" onClick={handleItemClick} className="dropdown-item-new">
-                  Driver List
-                </Dropdown.Item>
-                <Dropdown.Item as={Link} to="/add-driver" onClick={handleItemClick} className="dropdown-item-new">
-                  Add Driver
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown> */}
-
-         
-
-
-            {/* <Nav.Link as={Link} to="/reports" onClick={handleItemClick} className="nav-link-new mt-3">
-              <FaChartBar /> Reports
-            </Nav.Link> */}
-
-            {/* <Nav.Link as={Link} to="/settings" onClick={handleItemClick} className="nav-link-new mt-3">
-              <FaCog /> Setting's
-            </Nav.Link> */}
 
             <Dropdown className="mt-3">
               <Dropdown.Toggle variant="link" id="dropdown-hr" className="dropdown-toggle-new nav-link-new no-underline">
@@ -129,23 +139,6 @@ const OffcanvasMenu = ({ showOffcanvasRight, handleClose, handleItemClick }) => 
                 </Dropdown.Item>
                 <Dropdown.Item as={Link} to="/payrolls" onClick={handleItemClick} className="dropdown-item-new">
                   View PayRoll
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-
-            <Dropdown className="mt-3">
-              <Dropdown.Toggle variant="link" id="dropdown-others" className="dropdown-toggle-new nav-link-new no-underline">
-                <FaEllipsisV /> Others
-              </Dropdown.Toggle>
-              <Dropdown.Menu className="dropdown-menu-new">
-                <Dropdown.Item onClick={handleAddExpenseCategoryClick} className="dropdown-item-new">
-                  Add Expense Category
-                </Dropdown.Item>
-                <Dropdown.Item onClick={handleAddCocoaPriceClick} className="dropdown-item-new">
-                  Cocoa Price Per Bag
-                </Dropdown.Item>
-                <Dropdown.Item onClick={handleAddPartnerClick} className="dropdown-item-new">
-                  Add New Partner
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
@@ -181,17 +174,20 @@ const OffcanvasMenu = ({ showOffcanvasRight, handleClose, handleItemClick }) => 
         <AddCocoaPriceModal 
           show={showCocoaPriceModal}
           handleClose={handleCocoaPriceModalClose}
-          handleSave={() => {
-            console.log('Cocoa Price Per Bag Added');
-          }}
         />
       )}
-      {showAddPartnerModal && (
-        <NewPartnerModal
-          show={showAddPartnerModal}
-          handleClose={handleAddPartnerModalClose}
-          handleSave={() => {
-            console.log('New Partner Added');
+      {showWeightModal && (
+        <NewWeightModal
+          show={showWeightModal}
+          onClose={handleWeightModalClose}
+        />
+      )}
+      {showCommissionModal && (
+        <PEDriversCommissionModal
+          show={showCommissionModal}
+          onClose={handleCommissionModalClose}
+          onSave={() => {
+            console.log("Driver's commission recorded");
           }}
         />
       )}

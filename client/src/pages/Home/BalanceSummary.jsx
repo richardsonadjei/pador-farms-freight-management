@@ -20,6 +20,7 @@ const isDateInCurrentMonth = (date) => {
 
 const BalanceSummary = () => {
   const [motorbikeData, setMotorbikeData] = useState({});
+  const [latestCommissionRate, setLatestCommissionRate] = useState(0); // State to hold latest commission rate
   const currentUser = useSelector((state) => state.user.currentUser?.userName || '');
 
   const fetchData = async () => {
@@ -38,10 +39,34 @@ const BalanceSummary = () => {
     }
   };
 
+  const fetchLatestCommissionRate = async () => {
+    try {
+      const response = await fetch('/api/pe-commissions');
+      const { data } = await response.json();
+  
+      if (data && data.length > 0) {
+       
+  
+        // Sort records by date in descending order and take the first record as the latest
+        const sortedData = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        const latestCommission = sortedData[0];
+  
+        setLatestCommissionRate(latestCommission.amount); // Set latest commission rate amount
+ 
+      } else {
+        console.error('No commission data available');
+      }
+    } catch (error) {
+      console.error('Error fetching commission data:', error);
+    }
+  };
+  
+
   useEffect(() => {
     fetchData();
-    const intervalId = setInterval(fetchData, 10000);
+    fetchLatestCommissionRate();
 
+    const intervalId = setInterval(fetchData, 10000);
     return () => clearInterval(intervalId);
   }, []);
 
@@ -77,12 +102,17 @@ const BalanceSummary = () => {
               (sum, income) => sum + parseFloat(income.notes.match(/([\d.]+)\s+bags/)?.[1] || 0),
               0
             );
+
+            // Calculate driver's commission based on the latest rate and total bags hauled
+            const driverCommissionPrimaryEvacuation = totalBagsHauled * latestCommissionRate;
+            console.log(`Total bags hauled: ${totalBagsHauled}, Commission rate: ${latestCommissionRate}`);
+            console.log('Calculated driverCommissionPrimaryEvacuation:', driverCommissionPrimaryEvacuation);
+
             const totalPrimaryEvacuationIncome = primaryEvacuationIncomes.reduce(
               (acc, income) => acc + (income.amount || 0),
               0
             );
             const totalPrimaryEvacuationExpense = calculateTotal(primaryEvacuationExpenses, isDateInCurrentMonth);
-            const driverCommissionPrimaryEvacuation = totalPrimaryEvacuationIncome * 0.2;
 
             // Calculations for Other Trips
             const otherTripsIncomes = incomes.filter(

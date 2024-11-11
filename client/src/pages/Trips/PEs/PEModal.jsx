@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col, InputGroup } from 'react-bootstrap';
-import { FaCalendarAlt, FaTruck, FaUser, FaMapMarkerAlt, FaWeightHanging, FaGasPump } from 'react-icons/fa'; // Import icon
+import {
+  FaCalendarAlt, FaTruck, FaUser, FaMapMarkerAlt, FaWeightHanging, FaGasPump, FaBalanceScale
+} from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import AddPrimaryEvacuationExpenseModal from '../../finance/Expense/PeExpenseModal';
 
@@ -11,7 +13,8 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
     cocoaPricePerBag: '',
     vehicle: '',
     driver: '',
-    overallWeight: '', // Added overallWeight for user input
+    overallWeight: '',
+    standardWeightPerBag: '', // New field for standard weight per bag
     dateOfEvacuation: today,
     evacuationLocation: 'Asikuma-Odoben-Ajumako General Area',
     notes: `Haulage of cocoa weighing on ${new Date(today).toLocaleDateString('en-GB', {
@@ -92,6 +95,24 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
         } else {
           throw new Error('Failed to fetch drivers');
         }
+
+        // Fetch Standard Weight Per Bag
+        const weightResponse = await fetch('/api/weight');
+        if (weightResponse.ok) {
+          const weightData = await weightResponse.json();
+          const weights = Array.isArray(weightData) ? weightData : weightData.data;
+          if (weights && weights.length > 0) {
+            const latestWeight = weights[0].weight;
+            setFormData((prev) => ({
+              ...prev,
+              standardWeightPerBag: latestWeight,
+            }));
+          } else {
+            alert('No standard weight per bag record found. Please update the standard weight.');
+          }
+        } else {
+          throw new Error('Failed to fetch standard weight');
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -105,7 +126,6 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Update the formData
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -174,7 +194,7 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
                   }}
                 >
                   <FaGasPump style={{ marginRight: '5px' }} />
-                  Click here to record Fuel Purchase Before Proceeding .
+                  Click here to record Fuel Purchase Before Proceeding.
                 </Button>
               </p>
               <Col md={6}>
@@ -186,18 +206,37 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
                     value={formData.cocoaPricePerBag}
                     onChange={handleChange}
                     readOnly
-                    disabled
                   >
                     <option value="">Select Cocoa Price</option>
-                    {Array.isArray(cocoaPrices) &&
-                      cocoaPrices.map((price) => (
-                        <option key={price._id} value={price._id}>
-                          {`${price.currency}${price.pricePerBagAfterTax} `}
-                        </option>
-                      ))}
+                    {cocoaPrices.map((price) => (
+                      <option key={price._id} value={price._id}>
+                        {`${price.currency}${price.pricePerBagAfterTax}`}
+                      </option>
+                    ))}
                   </Form.Control>
                 </Form.Group>
               </Col>
+
+              {/* New Standard Weight Per Bag Field */}
+              <Col md={6}>
+                <Form.Group controlId="standardWeightPerBag">
+                  <Form.Label>Standard Weight Per Bag (kg)</Form.Label>
+                  <InputGroup>
+                    <InputGroup.Text>
+                      <FaBalanceScale />
+                    </InputGroup.Text>
+                    <Form.Control
+                      type="number"
+                      name="standardWeightPerBag"
+                      value={formData.standardWeightPerBag}
+                      onChange={handleChange}
+                    />
+                  </InputGroup>
+                </Form.Group>
+              </Col>
+            </Row>
+
+            <Row className="mb-3">
               <Col md={6}>
                 <Form.Group controlId="vehicle">
                   <Form.Label>Vehicle</Form.Label>
@@ -214,19 +253,16 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
                       disabled
                     >
                       <option value="">Select Vehicle</option>
-                      {Array.isArray(vehicles) &&
-                        vehicles.map((vehicle) => (
-                          <option key={vehicle._id} value={vehicle._id}>
-                            {vehicle.registrationNumber}
-                          </option>
-                        ))}
+                      {vehicles.map((vehicle) => (
+                        <option key={vehicle._id} value={vehicle._id}>
+                          {vehicle.registrationNumber}
+                        </option>
+                      ))}
                     </Form.Control>
                   </InputGroup>
                 </Form.Group>
               </Col>
-            </Row>
 
-            <Row className="mb-3">
               <Col md={6}>
                 <Form.Group controlId="driver">
                   <Form.Label>Driver</Form.Label>
@@ -243,16 +279,18 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
                       disabled
                     >
                       <option value="">Select Driver</option>
-                      {Array.isArray(drivers) &&
-                        drivers.map((driver) => (
-                          <option key={driver._id} value={driver._id}>
-                            {`${driver.firstName} ${driver.lastName}`}
-                          </option>
-                        ))}
+                      {drivers.map((driver) => (
+                        <option key={driver._id} value={driver._id}>
+                          {`${driver.firstName} ${driver.lastName}`}
+                        </option>
+                      ))}
                     </Form.Control>
                   </InputGroup>
                 </Form.Group>
               </Col>
+            </Row>
+
+            <Row className="mb-3">
               <Col md={6}>
                 <Form.Group controlId="overallWeight">
                   <Form.Label>Overall Weight (kg)</Form.Label>
@@ -272,9 +310,7 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
                   </InputGroup>
                 </Form.Group>
               </Col>
-            </Row>
 
-            <Row className="mb-3">
               <Col md={6}>
                 <Form.Group controlId="dateOfEvacuation">
                   <Form.Label>Date of Evacuation</Form.Label>
@@ -293,7 +329,10 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
                   </InputGroup>
                 </Form.Group>
               </Col>
-              <Col md={6}>
+            </Row>
+
+            <Row className="mb-3">
+              <Col md={12}>
                 <Form.Group controlId="evacuationLocation">
                   <Form.Label>Evacuation Location</Form.Label>
                   <InputGroup>
@@ -339,7 +378,7 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
       <AddPrimaryEvacuationExpenseModal
         show={showFuelModal}
         handleClose={() => setShowFuelModal(false)}
-        handleSave={() => setShowFuelModal(false)} // Handle fuel modal save
+        handleSave={() => setShowFuelModal(false)}
       />
 
       {/* Inline CSS for blinking text and scaling animation */}
