@@ -323,8 +323,7 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
                       name="dateOfEvacuation"
                       value={formData.dateOfEvacuation}
                       onChange={handleChange}
-                      readOnly
-                      disabled
+                      
                     />
                   </InputGroup>
                 </Form.Group>
