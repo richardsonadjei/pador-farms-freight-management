@@ -50,19 +50,25 @@ const AddPrimaryEvacuationModal = ({ show, handleClose, handleSave }) => {
         if (cocoaPricesResponse.ok) {
           const cocoaPricesData = await cocoaPricesResponse.json();
           const prices = Array.isArray(cocoaPricesData) ? cocoaPricesData : cocoaPricesData.data;
+      
           if (Array.isArray(prices)) {
-            const sortedPrices = prices.sort((a, b) => new Date(b.date) - new Date(a.date));
-            setCocoaPrices(sortedPrices);
-            if (sortedPrices.length > 0) {
-              setFormData((prev) => ({
-                ...prev,
-                cocoaPricePerBag: sortedPrices[0]._id,
-              }));
-            }
+            // Sort prices by createdAt (most recent first)
+            const sortedPrices = prices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+setCocoaPrices(sortedPrices);
+if (sortedPrices.length > 0) {
+ setFormData((prev) => ({
+   ...prev,
+   cocoaPricePerBag: sortedPrices[0]._id,
+ }));
+}
           }
         } else {
           throw new Error('Failed to fetch cocoa prices');
         }
+      } catch (error) {
+        console.error('Error fetching cocoa prices:', error);
+      }
+      
 
         // Fetch Vehicles
         const vehiclesResponse = await fetch('/api/vehicle');
