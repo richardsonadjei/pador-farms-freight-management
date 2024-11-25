@@ -41,33 +41,54 @@ const PrimaryEvacuationContent = () => {
     fetchEvacuationData();
   }, []);
 
-  const aggregateDataByMonthAndYear = () => {
-    const monthlyData = new Array(12).fill(0);
+  const getMonthRange = (date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+
+    const start = new Date(year, month, 21); 
+    const end = new Date(year, month + 1, 20); 
+
+    return { start, end };
+  };
+
+  const aggregateDataByCustomMonth = () => {
+    const monthlyData = Array(12).fill(0);
     const yearlyData = {};
 
     evacuationData.forEach((item) => {
       const evacuationDate = new Date(item.dateOfEvacuation);
-      const month = evacuationDate.getMonth();
-      const year = evacuationDate.getFullYear();
 
-      monthlyData[month] += item.numberOfBags;
+      for (let i = 0; i < 12; i++) {
+        const year = evacuationDate.getFullYear();
+        const monthStart = new Date(year, i, 21); 
+        const monthEnd = new Date(year, i + 1, 20); 
 
-      if (!yearlyData[year]) {
-        yearlyData[year] = 0;
+        if (evacuationDate >= monthStart && evacuationDate <= monthEnd) {
+          monthlyData[i] += item.numberOfBags;
+
+          if (!yearlyData[year]) {
+            yearlyData[year] = 0;
+          }
+          yearlyData[year] += item.numberOfBags;
+
+          break;
+        }
       }
-      yearlyData[year] += item.numberOfBags;
     });
 
     return { monthlyData, yearlyData };
   };
 
-  const { monthlyData, yearlyData } = aggregateDataByMonthAndYear();
+  const { monthlyData, yearlyData } = aggregateDataByCustomMonth();
 
   const monthlyChartData = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+    labels: [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ],
     datasets: [
       {
-        label: 'Number of Bags Hauled (Monthly)',
+        label: 'Bags Hauled (Monthly)',
         data: monthlyData,
         backgroundColor: '#36a2eb',
       },
@@ -78,7 +99,7 @@ const PrimaryEvacuationContent = () => {
     labels: Object.keys(yearlyData),
     datasets: [
       {
-        label: 'Number of Bags Hauled (Yearly)',
+        label: 'Bags Hauled (Yearly)',
         data: Object.values(yearlyData),
         backgroundColor: '#ff6384',
       },
@@ -114,33 +135,32 @@ const PrimaryEvacuationContent = () => {
               <Bar data={monthlyChartData} options={chartOptions} />
             </div>
             <div style={{ height: '300px', width: '100%' }}>
-            <h3 style={{ textAlign: 'center' }}>Year-Year Bags Hauled</h3>
-
+              <h3 style={{ textAlign: 'center' }}>Yearly Bags Hauled</h3>
               <Bar data={yearlyChartData} options={chartOptions} />
             </div>
           </div>
 
-          <div style={{ marginTop: '70px', maxHeight: '250px', overflowY: 'auto' }}>
+          <div style={{ marginTop: '70px', overflowX: 'auto' }}>
             <table
               border="1"
               cellPadding="10"
               style={{
                 width: '100%',
                 marginTop: '20px',
-                tableLayout: 'fixed',
+                tableLayout: 'auto',
+                borderCollapse: 'collapse',
               }}
             >
               <thead>
                 <tr style={{ position: 'sticky', top: 0, background: 'white', zIndex: 1 }}>
-                  <th>#</th>
-                  <th>Date</th>
-                  <th>Vehicle</th>
-                  <th>Driver</th>
-                  <th>Location</th>
-                 
-                  <th>Number of Bags</th>
-                  <th>Price Per Bag (Ghc)</th>
-                  <th>Total Value (Ghc)</th>
+                  <th style={{ minWidth: '50px' }}>#</th>
+                  <th style={{ minWidth: '100px' }}>Date</th>
+                  <th style={{ minWidth: '120px' }}>Vehicle</th>
+                  <th style={{ minWidth: '120px' }}>Driver</th>
+                  <th style={{ minWidth: '150px' }}>Location</th>
+                  <th style={{ minWidth: '100px' }}>Bags</th>
+                  <th style={{ minWidth: '120px' }}>Price/Bag (Ghc)</th>
+                  <th style={{ minWidth: '150px' }}>Total Value (Ghc)</th>
                 </tr>
               </thead>
               <tbody>
@@ -151,7 +171,6 @@ const PrimaryEvacuationContent = () => {
                     <td>{item.vehicle.registrationNumber}</td>
                     <td>{`${item.driver.firstName} ${item.driver.lastName}`}</td>
                     <td>{item.evacuationLocation}</td>
-                    
                     <td>{item.numberOfBags}</td>
                     <td>{item.cocoaPricePerBag.pricePerBagAfterTax}</td>
                     <td>{(item.numberOfBags * item.cocoaPricePerBag.pricePerBagAfterTax).toFixed(2)}</td>

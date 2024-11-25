@@ -6,7 +6,7 @@ import {
   LinearScale,
   BarElement,
   LineElement,
-  PointElement, // Added PointElement here
+  PointElement,
   Title,
   Tooltip,
   Legend,
@@ -17,7 +17,7 @@ ChartJS.register(
   LinearScale,
   BarElement,
   LineElement,
-  PointElement, // Registered PointElement here for the Line chart
+  PointElement,
   Title,
   Tooltip,
   Legend
@@ -54,18 +54,35 @@ const DashboardContent = () => {
     const totalExpenses = vehicleData.generalExpenses.reduce((acc, curr) => acc + curr.amount, 0);
     const netIncome = totalIncome - totalExpenses;
 
-    // Monthly income and expense data
     const monthlyIncome = new Array(12).fill(0);
     const monthlyExpenses = new Array(12).fill(0);
-    const monthlyNetIncome = new Array(12).fill(0); // Calculate net income per month
+    const monthlyNetIncome = new Array(12).fill(0); // To calculate net income per month
+
+    const isWithinCustomMonthRange = (date, monthIndex) => {
+      const year = date.getFullYear();
+      const monthStart = new Date(year, monthIndex, 21); // 21st of the current month
+      const monthEnd = new Date(year, monthIndex + 1, 20); // 20th of the next month
+      return date >= monthStart && date <= monthEnd;
+    };
 
     vehicleData.incomes.forEach((income) => {
-      const month = new Date(income.date).getMonth();
-      monthlyIncome[month] += income.amount;
+      const incomeDate = new Date(income.date);
+      for (let i = 0; i < 12; i++) {
+        if (isWithinCustomMonthRange(incomeDate, i)) {
+          monthlyIncome[i] += income.amount;
+          break;
+        }
+      }
     });
+
     vehicleData.generalExpenses.forEach((expense) => {
-      const month = new Date(expense.dateOfExpense).getMonth();
-      monthlyExpenses[month] += expense.amount;
+      const expenseDate = new Date(expense.dateOfExpense);
+      for (let i = 0; i < 12; i++) {
+        if (isWithinCustomMonthRange(expenseDate, i)) {
+          monthlyExpenses[i] += expense.amount;
+          break;
+        }
+      }
     });
 
     // Calculate net income for each month
@@ -77,7 +94,7 @@ const DashboardContent = () => {
     const currentMonthIndex = new Date().getMonth();
     const monthNames = [
       'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      'July', 'August', 'September', 'October', 'November', 'December',
     ];
     const currentMonthName = monthNames[currentMonthIndex]; // Get current month name
 
@@ -109,10 +126,7 @@ const DashboardContent = () => {
     };
 
     const monthlyIncomeExpenseData = {
-      labels: [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December',
-      ],
+      labels: monthNames,
       datasets: [
         {
           label: 'Monthly Income',
@@ -151,7 +165,7 @@ const DashboardContent = () => {
             <h4>Total Income vs Expenses ({vehicleName})</h4>
             <Bar data={totalIncomeExpenseData} options={chartOptions} />
             <p style={{ marginTop: '10px', color: '#4bc0c0' }}>
-              Net Total Income: Ghc {netIncome.toFixed(2)} 
+              Net Total Income: Ghc {netIncome.toFixed(2)}
             </p>
           </div>
 
@@ -160,7 +174,7 @@ const DashboardContent = () => {
             <h4>Monthly Income vs Expenses ({vehicleName})</h4>
             <Line data={monthlyIncomeExpenseData} options={chartOptions} />
             <p style={{ marginTop: '10px', color: '#4bc0c0' }}>
-              Net Income for {currentMonthName}:Ghc {monthlyNetIncome[currentMonthIndex].toFixed(2)} 
+              Net Income for {currentMonthName}: Ghc {monthlyNetIncome[currentMonthIndex].toFixed(2)}
             </p>
           </div>
 
